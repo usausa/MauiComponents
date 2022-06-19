@@ -1,12 +1,11 @@
-namespace MauiComponentsExample
-{
-    public partial class App
-    {
-        public App()
-        {
-            InitializeComponent();
+namespace MauiComponentsExample;
 
-            MainPage = new MainPage();
-        }
+public partial class App
+{
+    public App(IServiceProvider provider)
+    {
+        InitializeComponent();
+
+        MainPage = provider.GetRequiredService<MainPage>();
     }
 }

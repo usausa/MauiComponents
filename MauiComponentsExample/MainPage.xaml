@@ -1,26 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    x:Class="MauiComponentsExample.MainPage"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MauiComponentsExample"
+             x:Class="MauiComponentsExample.MainPage"
+             x:DataType="local:MainPageViewModel">
 
     <ScrollView>
-        <VerticalStackLayout
-            Padding="30,0"
-            Spacing="25"
-            VerticalOptions="Center">
+        <VerticalStackLayout Padding="30,0"
+                             Spacing="25" VerticalOptions="Center">
 
-            <Image
-                HeightRequest="200"
-                HorizontalOptions="Center"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                Source="dotnet_bot.png" />
-
-            <Label
-                FontSize="32"
-                HorizontalOptions="Center"
-                SemanticProperties.HeadingLevel="Level1"
-                Text="Hello, World!" />
+            <Button Command="{Binding InformationCommand}"
+                    Text="Information" />
+            <Button Command="{Binding ConfirmCommand}"
+                    Text="Confirm" />
+            <Button Command="{Binding SelectCommand}"
+                    Text="Select" />
 
         </VerticalStackLayout>
     </ScrollView>
