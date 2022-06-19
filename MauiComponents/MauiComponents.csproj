@@ -9,6 +9,14 @@
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">31.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>MauiComponents</PackageId>
+    <Title>MauiComponents</Title>
+    <Description>Components for MAUI application</Description>
+    <Summary>Components for MAUI application</Summary>
+    <PackageTags>maui</PackageTags>
+  </PropertyGroup>
+
   <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-android')) != true">
     <Compile Remove="**\**\*.Android.cs" />
     <None Include="**\**\*.Android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
