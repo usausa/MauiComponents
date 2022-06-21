@@ -8,21 +8,21 @@ using Android.Views;
 internal partial class DialogImplementation
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
-    public async partial ValueTask Information(string message, string? title, string ok)
+    public async partial ValueTask InformationAsync(string message, string? title, string ok)
     {
         using var dialog = new InformationDialog(ActivityResolver.CurrentActivity);
         await dialog.ShowAsync(message, title, ok).ConfigureAwait(true);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
-    public async partial ValueTask<bool> Confirm(string message, bool defaultPositive, string? title, string ok, string cancel)
+    public async partial ValueTask<bool> ConfirmAsync(string message, bool defaultPositive, string? title, string ok, string cancel)
     {
         using var dialog = new ConfirmDialog(ActivityResolver.CurrentActivity);
         return await dialog.ShowAsync(message, defaultPositive, title, ok, cancel).ConfigureAwait(true);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
-    public async partial ValueTask<int> Select(string[] items, int selected, string? title)
+    public async partial ValueTask<int> SelectAsync(string[] items, int selected, string? title)
     {
         using var dialog = new SelectDialog(ActivityResolver.CurrentActivity);
         return await dialog.ShowAsync(items, selected, title).ConfigureAwait(true);
