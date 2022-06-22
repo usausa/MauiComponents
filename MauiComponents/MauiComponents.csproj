@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageId>MauiComponents</PackageId>
-    <Title>MauiComponents</Title>
+    <PackageId>Components.Maui</PackageId>
+    <Title>MAUI component library</Title>
     <Description>Components for MAUI application</Description>
     <Summary>Components for MAUI application</Summary>
     <PackageTags>maui</PackageTags>
