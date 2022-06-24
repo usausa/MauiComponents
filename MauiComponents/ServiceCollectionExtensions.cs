@@ -2,12 +2,23 @@ namespace MauiComponents;
 
 using System.Text.Json;
 
+using Microsoft.Extensions.DependencyInjection.Extensions;
+
 public static class ServiceCollectionExtensions
 {
 #if ANDROID
     public static IServiceCollection AddComponentsDialog(this IServiceCollection service)
     {
-        service.AddSingleton<IDialog>(Dialog.Current);
+        service.AddSingleton(Dialog.Current);
+        return service;
+    }
+#endif
+
+#if ANDROID
+    public static IServiceCollection AddComponentsLocation(this IServiceCollection service)
+    {
+        service.TryAddSingleton(Geolocation.Default);
+        service.AddSingleton<ILocationManager, LocationManager>();
         return service;
     }
 #endif
