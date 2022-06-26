@@ -180,7 +180,7 @@ public sealed class PopupNavigator : IPopupNavigator
 
         var popup = popupFactory.Create(type);
 
-        var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(false);
+        var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(true);
 
         if (popup.Content is not null)
         {
@@ -212,10 +212,10 @@ public sealed class PopupNavigator : IPopupNavigator
 
         if (popup.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
         {
-            await initializeAsync.Initialize(parameter).ConfigureAwait(false);
+            await initializeAsync.Initialize(parameter).ConfigureAwait(true);
         }
 
-        var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(false);
+        var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(true);
 
         if (popup.Content is not null)
         {
@@ -240,7 +240,7 @@ public sealed class PopupNavigator : IPopupNavigator
 
         var popup = popupFactory.Create(type);
 
-        var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(false);
+        var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(true);
 
         if (popup.Content is not null)
         {
@@ -272,10 +272,10 @@ public sealed class PopupNavigator : IPopupNavigator
 
         if (popup.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
         {
-            await initializeAsync.Initialize(parameter).ConfigureAwait(false);
+            await initializeAsync.Initialize(parameter).ConfigureAwait(true);
         }
 
-        var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(false);
+        var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(true);
 
         if (popup.Content is not null)
         {
