@@ -9,9 +9,4 @@ public partial class SampleDialog
     {
         InitializeComponent();
     }
-
-    private void Button_OnClicked(object? sender, EventArgs e)
-    {
-        Close();
-    }
 }

@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<views:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:dialogs="clr-namespace:MauiComponentsExample.Dialogs" xmlns:views="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="MauiComponentsExample.Dialogs.SampleDialog"
-             CanBeDismissedByTappingOutsideOfPopup="False"
-             Size="{x:Static dialogs:DialogSize.Large}">
+<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+           xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+           xmlns:mcs="clr-namespace:MauiComponents;assembly=MauiComponents"
+           xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+           xmlns:dialogs="clr-namespace:MauiComponentsExample.Dialogs"
+           x:Class="MauiComponentsExample.Dialogs.SampleDialog"
+           x:DataType="{x:Type dialogs:SampleDialogViewModel}"
+           sr:BindingContextResolver.Type="{x:Type dialogs:SampleDialogViewModel}"
+           CanBeDismissedByTappingOutsideOfPopup="False"
+           Size="{x:Static dialogs:DialogSize.Large}"
+           mcs:PopupBind.Controller="{Binding Popup}">
 
-    <StackLayout>
-        <Button Text="Close"
-                Clicked="Button_OnClicked" />
-    </StackLayout>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-</views:Popup>
+        <StackLayout Grid.Row="0">
+            <Label Text="{Binding Text.Value}" />
+        </StackLayout>
+
+        <Grid Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                        Command="{Binding CancelCommand}"
+                        Text="Cancel" />
+                <Button Grid.Column="1"
+                        Command="{Binding ExecuteCommand}"
+                        Text="Execute" />
+            </Grid>
+        </Grid>
+    </Grid>
+
+</mct:Popup>

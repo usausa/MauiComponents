@@ -1,5 +1,6 @@
 namespace MauiComponentsExample;
 
+using System.Globalization;
 using System.Windows.Input;
 
 using MauiComponents;
@@ -53,7 +54,8 @@ public class MainPageViewModel : ViewModelBase
         });
         PopupCommand = MakeAsyncCommand(async () =>
         {
-            await popupNavigator.PopupAsync(DialogId.Sample);
+            var result = await popupNavigator.PopupAsync<string, bool>(DialogId.Sample, DateTime.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture));
+            await dialog.InformationAsync($"Result={result}");
         });
     }
 }

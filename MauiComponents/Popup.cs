@@ -22,23 +22,85 @@ public interface IPopupInitialize<in T>
     void Initialize(T parameter);
 }
 
-public sealed class PopupBehavior : Behavior<Popup>
+public interface IPopupControllerHandler
 {
-    // TODO Behavior
-    protected override void OnAttachedTo(Popup bindable)
+    void Close(object? value);
+}
+
+internal sealed class PopupControllerHandler : IPopupControllerHandler
+{
+    private readonly Popup popup;
+
+    public PopupControllerHandler(Popup popup)
     {
-        // TODO
-        base.OnAttachedTo(bindable);
+        this.popup = popup;
     }
 
-    protected override void OnDetachingFrom(Popup bindable)
+    public void Close(object? value) => popup.Close(value);
+}
+
+public interface IPopupController
+{
+    IPopupControllerHandler? Handler { get; set; }
+}
+
+public sealed class PopupController<T> : IPopupController
+{
+    private IPopupControllerHandler? handler;
+
+    IPopupControllerHandler? IPopupController.Handler
     {
-        // TODO
-        base.OnDetachingFrom(bindable);
+        get => handler;
+        set => handler = value;
+    }
+
+    public void Close(T value = default!)
+    {
+        handler?.Close(value);
     }
 }
 
-// TODO Controller
+public sealed class PopupBind
+{
+    public static readonly BindableProperty ControllerProperty = BindableProperty.CreateAttached(
+        "Controller",
+        typeof(IPopupController),
+        typeof(PopupBind),
+        null,
+        propertyChanged: BindChanged);
+
+    public static IPopupController? GetController(BindableObject bindable) =>
+        (IPopupController?)bindable.GetValue(ControllerProperty);
+
+    public static void SetController(BindableObject bindable, IPopupController? value) =>
+        bindable.SetValue(ControllerProperty, value);
+
+    private static void BindChanged(BindableObject bindable, object? oldValue, object? newValue)
+    {
+        if (bindable is not Popup popup)
+        {
+            return;
+        }
+
+        if (oldValue is not null)
+        {
+            var controller = PopupBind.GetController(bindable);
+            if (controller is not null)
+            {
+                controller.Handler = null;
+            }
+        }
+
+        if (newValue is not null)
+        {
+            var controller = PopupBind.GetController(bindable);
+            if (controller is not null)
+            {
+                controller.Handler = new PopupControllerHandler(popup);
+            }
+        }
+    }
+}
 
 public interface IPopupInitializeAsync<in T>
 {
@@ -120,7 +182,10 @@ public sealed class PopupNavigator : IPopupNavigator
 
         var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(false);
 
-        Cleanup(popup);
+        if (popup.Content is not null)
+        {
+            Cleanup(popup.Content);
+        }
         (popup as IDisposable)?.Dispose();
         if (popup.BindingContext != popup.Parent.BindingContext)
         {
@@ -152,7 +217,10 @@ public sealed class PopupNavigator : IPopupNavigator
 
         var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(false);
 
-        Cleanup(popup);
+        if (popup.Content is not null)
+        {
+            Cleanup(popup.Content);
+        }
         (popup as IDisposable)?.Dispose();
         if (popup.BindingContext != popup.Parent.BindingContext)
         {
@@ -174,7 +242,10 @@ public sealed class PopupNavigator : IPopupNavigator
 
         var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(false);
 
-        Cleanup(popup);
+        if (popup.Content is not null)
+        {
+            Cleanup(popup.Content);
+        }
         (popup as IDisposable)?.Dispose();
         if (popup.BindingContext != popup.Parent.BindingContext)
         {
@@ -206,7 +277,10 @@ public sealed class PopupNavigator : IPopupNavigator
 
         var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(false);
 
-        Cleanup(popup);
+        if (popup.Content is not null)
+        {
+            Cleanup(popup.Content);
+        }
         (popup as IDisposable)?.Dispose();
         if (popup.BindingContext != popup.Parent.BindingContext)
         {
@@ -236,7 +310,7 @@ public static partial class ServiceCollectionExtensions
 {
     public static IServiceCollection AddComponentsPopup(this IServiceCollection service, Action<PopupNavigatorConfig> action)
     {
-        service.AddSingleton(p =>
+        service.AddSingleton(_ =>
         {
             var config = new PopupNavigatorConfig();
             action(config);
