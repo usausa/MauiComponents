@@ -2,9 +2,8 @@ namespace MauiComponentsExample;
 
 public partial class MainPage
 {
-    public MainPage(MainPageViewModel vm)
+    public MainPage()
     {
         InitializeComponent();
-        BindingContext = vm;
     }
 }

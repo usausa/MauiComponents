@@ -8,6 +8,9 @@ using MauiComponents;
 
 using MauiComponentsExample.Dialogs;
 
+using Smart.Maui;
+using Smart.Resolver;
+
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
@@ -15,28 +18,38 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             })
-            .UseMauiCommunityToolkit();
-
+            .ConfigureService(services =>
+            {
 #if ANDROID
-        builder.Services.AddComponentsDialog();
+                services.AddComponentsDialog();
 #endif
-        builder.Services.AddComponentsPopup(c =>
-        {
-            var ns = typeof(DialogId).Namespace!;
-            c.AutoRegister(Assembly.GetExecutingAssembly().ExportedTypes
-                .Where(x => x.Namespace?.StartsWith(ns, StringComparison.Ordinal) ?? false));
-        });
-        builder.Services.AddComponentsSerializer();
-
-        builder.Services.AddTransient<MainPageViewModel>();
-        builder.Services.AddTransient<MainPage>();
-        builder.Services.AddTransient<SampleDialog>();
+                services.AddComponentsPopup(c =>
+                {
+                    var ns = typeof(DialogId).Namespace!;
+                    c.AutoRegister(Assembly.GetExecutingAssembly().ExportedTypes
+                        .Where(x => x.Namespace?.StartsWith(ns, StringComparison.Ordinal) ?? false));
+                });
+                services.AddComponentsSerializer();
+            })
+            .ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
 
         return builder.Build();
+    }
+
+    private static void ConfigureContainer(ResolverConfig config)
+    {
+        config
+            .UseAutoBinding()
+            .UseArrayBinding()
+            .UseAssignableBinding()
+            .UsePropertyInjector();
+
+        config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();
     }
 }
