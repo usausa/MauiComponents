@@ -184,3 +184,12 @@ internal sealed class SelectDialog : Java.Lang.Object, IDialogInterfaceOnShowLis
         return false;
     }
 }
+
+public static partial class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddComponentsDialog(this IServiceCollection service)
+    {
+        service.AddSingleton(Dialog.Current);
+        return service;
+    }
+}

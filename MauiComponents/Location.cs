@@ -2,6 +2,7 @@ namespace MauiComponents;
 
 using System.Diagnostics;
 
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Maui.Devices.Sensors;
 
 public sealed class LocationEventArgs : EventArgs
@@ -158,5 +159,15 @@ public sealed class LocationManager : ILocationManager, IDisposable
             Trace.WriteLine(e);
         }
 #pragma warning restore CA1031
+    }
+}
+
+public static partial class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddComponentsLocation(this IServiceCollection service)
+    {
+        service.TryAddSingleton(Geolocation.Default);
+        service.AddSingleton<ILocationManager, LocationManager>();
+        return service;
     }
 }

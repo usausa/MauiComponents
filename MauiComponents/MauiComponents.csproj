@@ -6,7 +6,7 @@
     <SingleProject>true</SingleProject>
     <CodeAnalysisRuleSet>..\MauiComponents.ruleset</CodeAnalysisRuleSet>
 
-    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">31.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">27.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -22,6 +22,11 @@
     <None Include="**\**\*.Android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
     <Compile Remove="**\**\*.Shared.cs" />
     <None Include="**\**\*.Shared.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Maui" Version="1.0.0" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.1.0" />
   </ItemGroup>
 
 </Project>

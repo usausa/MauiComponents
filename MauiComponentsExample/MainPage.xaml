@@ -9,18 +9,8 @@
         <VerticalStackLayout Padding="30,0"
                              Spacing="25" VerticalOptions="Center">
 
-            <Button Command="{Binding InformationCommand}"
-                    Text="Information" />
-            <Button Command="{Binding ConfirmCommand}"
-                    Text="Confirm" />
-            <Button Command="{Binding SelectCommand}"
-                    Text="Select" />
-            <Button Command="{Binding LockCommand}"
-                    Text="Lock" />
-            <Button Command="{Binding LoadingCommand}"
-                    Text="Loading" />
-            <Button Command="{Binding ProgressCommand}"
-                    Text="Progress" />
+            <Button Command="{Binding PopupCommand}"
+                    Text="Popup" />
 
         </VerticalStackLayout>
     </ScrollView>
