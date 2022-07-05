@@ -20,7 +20,7 @@ public interface IDialog
 
     IDisposable Lock();
 
-    ILoading Loading(string text);
+    ILoading Loading(string text = "");
 
     IProgress Progress();
 }

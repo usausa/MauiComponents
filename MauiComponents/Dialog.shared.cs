@@ -18,7 +18,7 @@ public static class Dialog
     public static IDisposable Lock() =>
         Current.Lock();
 
-    public static ILoading Loading(string text) =>
+    public static ILoading Loading(string text = "") =>
         Current.Loading(text);
 
     public static IProgress Progress() =>
@@ -39,7 +39,7 @@ internal partial class DialogImplementation : IDialog
         return new LockOverlay(window);
     }
 
-    public ILoading Loading(string text)
+    public ILoading Loading(string text = "")
     {
         var window = Application.Current!.MainPage!.GetParentWindow();
         return new LoadingOverlay(window, text);
@@ -114,14 +114,17 @@ internal sealed class LoadingOverlay : WindowOverlay, ILoading
             canvas.FillColor = Color.FromRgba(0, 0, 0, 128);
             canvas.FillRectangle(dirtyRect);
 
-            var messageRect = new RectF(32, (dirtyRect.Height / 2) - 32, dirtyRect.Width - 64, 64);
+            if (!String.IsNullOrEmpty(Text))
+            {
+                var messageRect = new RectF(32, (dirtyRect.Height / 2) - 32, dirtyRect.Width - 64, 64);
 
-            canvas.FillColor = Color.FromRgba(0, 0, 0, 128);
-            canvas.FillRoundedRectangle(messageRect, 8);
+                canvas.FillColor = Color.FromRgba(0, 0, 0, 128);
+                canvas.FillRoundedRectangle(messageRect, 8);
 
-            canvas.FontColor = Colors.White;
-            canvas.FontSize = 24;
-            canvas.DrawString(Text, messageRect, HorizontalAlignment.Center, VerticalAlignment.Center);
+                canvas.FontColor = Colors.White;
+                canvas.FontSize = 24;
+                canvas.DrawString(Text, messageRect, HorizontalAlignment.Center, VerticalAlignment.Center);
+            }
         }
 
         public bool Contains(Point point) => true;
