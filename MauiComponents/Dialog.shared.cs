@@ -18,7 +18,7 @@ public static class Dialog
     public static IDisposable Lock() =>
         Current.Lock();
 
-    public static ILoading Loading(string text = "") =>
+    public static ILoading Loading(string text) =>
         Current.Loading(text);
 
     public static IProgress Progress() =>
@@ -39,7 +39,7 @@ internal partial class DialogImplementation : IDialog
         return new LockOverlay(window);
     }
 
-    public ILoading Loading(string text = "")
+    public ILoading Loading(string text)
     {
         var window = Application.Current!.MainPage!.GetParentWindow();
         return new LoadingOverlay(window, text);
