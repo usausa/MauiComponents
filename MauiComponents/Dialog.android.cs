@@ -42,6 +42,16 @@ internal sealed class InformationDialog : Java.Lang.Object, IDialogInterfaceOnSh
         this.activity = activity;
     }
 
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            alertDialog.Dispose();
+        }
+
+        base.Dispose(disposing);
+    }
+
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
     public Task ShowAsync(string message, string? title, string ok)
     {
@@ -91,6 +101,16 @@ internal sealed class ConfirmDialog : Java.Lang.Object, IDialogInterfaceOnShowLi
     public ConfirmDialog(Activity activity)
     {
         this.activity = activity;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            alertDialog.Dispose();
+        }
+
+        base.Dispose(disposing);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
@@ -143,6 +163,16 @@ internal sealed class SelectDialog : Java.Lang.Object, IDialogInterfaceOnShowLis
     public SelectDialog(Activity activity)
     {
         this.activity = activity;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            alertDialog.Dispose();
+        }
+
+        base.Dispose(disposing);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
