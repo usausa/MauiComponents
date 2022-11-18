@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net6.0-android</TargetFrameworks>
+    <TargetFrameworks>net6.0;net6.0-android;net7.0;net7.0-android</TargetFrameworks>
     <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
     <CodeAnalysisRuleSet>..\MauiComponents.ruleset</CodeAnalysisRuleSet>
@@ -17,15 +17,22 @@
     <PackageTags>maui</PackageTags>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-android')) != true">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-android')) != true and $(TargetFramework.StartsWith('net7.0-android')) != true">
     <Compile Remove="**\**\*.Android.cs" />
     <None Include="**\**\*.Android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
     <Compile Remove="**\**\*.Shared.cs" />
     <None Include="**\**\*.Shared.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0')) == true">
     <PackageReference Include="CommunityToolkit.Maui" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0')) == true">
+    <PackageReference Include="CommunityToolkit.Maui" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Usa.Smart.Core" Version="2.2.0" />
   </ItemGroup>
 
