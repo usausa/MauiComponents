@@ -5,7 +5,7 @@ using Android.Content;
 using Android.Graphics.Drawables;
 using Android.Views;
 
-internal partial class DialogImplementation
+internal sealed partial class DialogImplementation
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask InformationAsync(string message, string? title, string ok)

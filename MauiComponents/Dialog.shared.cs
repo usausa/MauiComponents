@@ -10,7 +10,7 @@ public static class Dialog
         Current.InformationAsync(message, title, ok);
 
     public static ValueTask<bool> ConfirmAsync(string message, bool defaultPositive = false, string? title = null, string ok = "OK", string cancel = "Cancel") =>
-        Current.ConfirmAsync(message, defaultPositive, title, ok);
+        Current.ConfirmAsync(message, defaultPositive, title, ok, cancel);
 
     public static ValueTask<int> SelectAsync(string[] items, int selected = -1, string? title = null) =>
         Current.SelectAsync(items, selected, title);
@@ -25,7 +25,7 @@ public static class Dialog
         Current.Progress();
 }
 
-internal partial class DialogImplementation : IDialog
+internal sealed partial class DialogImplementation : IDialog
 {
     public partial ValueTask InformationAsync(string message, string? title, string ok);
 
@@ -68,7 +68,7 @@ internal sealed class LockOverlay : WindowOverlay, IDisposable
         Window.RemoveOverlay(this);
     }
 
-    private class ElementOverlay : IWindowOverlayElement
+    private sealed class ElementOverlay : IWindowOverlayElement
     {
         public void Draw(ICanvas canvas, RectF dirtyRect)
         {
@@ -105,7 +105,7 @@ internal sealed class LoadingOverlay : WindowOverlay, ILoading
         Invalidate();
     }
 
-    private class ElementOverlay : IWindowOverlayElement
+    private sealed class ElementOverlay : IWindowOverlayElement
     {
         public string Text { get; set; } = string.Empty;
 
@@ -161,7 +161,7 @@ internal sealed class ProgressOverlay : WindowOverlay, IProgress
         Invalidate();
     }
 
-    private class ElementOverlay : IWindowOverlayElement
+    private sealed class ElementOverlay : IWindowOverlayElement
     {
         public double Value { get; set; }
 

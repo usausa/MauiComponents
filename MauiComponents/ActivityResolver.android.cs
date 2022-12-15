@@ -14,9 +14,9 @@ public static class ActivityResolver
     {
         CurrentActivity = activity;
         activity.Application!.RegisterActivityLifecycleCallbacks(new ActivityLifecycleCallbacks());
-}
+    }
 
-    private class ActivityLifecycleCallbacks : Java.Lang.Object, Application.IActivityLifecycleCallbacks
+    private sealed class ActivityLifecycleCallbacks : Java.Lang.Object, Application.IActivityLifecycleCallbacks
     {
         public void OnActivityCreated(Activity activity, Bundle? savedInstanceState)
         {
