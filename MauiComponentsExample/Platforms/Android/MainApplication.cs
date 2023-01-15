@@ -1,4 +1,5 @@
-// ReSharper disable once CheckNamespace
+// ReSharper disable BuiltInTypeReferenceStyle
+// ReSharper disable CheckNamespace
 namespace MauiComponentsExample;
 
 using Android.App;
