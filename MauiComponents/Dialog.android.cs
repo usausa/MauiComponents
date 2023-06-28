@@ -5,6 +5,8 @@ using Android.Content;
 using Android.Graphics.Drawables;
 using Android.Views;
 
+using Google.Android.Material.Dialog;
+
 internal sealed partial class DialogImplementation
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
@@ -35,7 +37,7 @@ internal sealed class InformationDialog : Java.Lang.Object, IDialogInterfaceOnSh
 
     private readonly Activity activity;
 
-    private AlertDialog alertDialog = default!;
+    private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
 
     public InformationDialog(Activity activity)
     {
@@ -55,12 +57,12 @@ internal sealed class InformationDialog : Java.Lang.Object, IDialogInterfaceOnSh
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
     public Task ShowAsync(string message, string? title, string ok)
     {
-        alertDialog = new AlertDialog.Builder(activity)
+        alertDialog = new MaterialAlertDialogBuilder(activity)
             .SetTitle(title)!
             .SetMessage(message)!
             .SetOnKeyListener(this)!
             .SetCancelable(false)!
-            .Create()!;
+            .Create();
         alertDialog.SetOnShowListener(this);
         alertDialog.SetButton((int)DialogButtonType.Positive, ok, (_, _) => result.TrySetResult(true));
 
@@ -94,7 +96,7 @@ internal sealed class ConfirmDialog : Java.Lang.Object, IDialogInterfaceOnShowLi
 
     private readonly Activity activity;
 
-    private AlertDialog alertDialog = default!;
+    private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
 
     private bool positive;
 
@@ -118,12 +120,12 @@ internal sealed class ConfirmDialog : Java.Lang.Object, IDialogInterfaceOnShowLi
     {
         positive = defaultPositive;
 
-        alertDialog = new AlertDialog.Builder(activity)
+        alertDialog = new MaterialAlertDialogBuilder(activity)
             .SetTitle(title)!
             .SetMessage(message)!
-            .SetOnKeyListener(this)!
             .SetCancelable(false)!
-            .Create()!;
+            .SetOnKeyListener(this)!
+            .Create();
         alertDialog.SetOnShowListener(this);
         alertDialog.SetButton((int)DialogButtonType.Positive, ok, (_, _) => result.TrySetResult(true));
         alertDialog.SetButton((int)DialogButtonType.Negative, cancel, (_, _) => result.TrySetResult(false));
@@ -158,7 +160,7 @@ internal sealed class SelectDialog : Java.Lang.Object, IDialogInterfaceOnShowLis
 
     private readonly Activity activity;
 
-    private AlertDialog alertDialog = default!;
+    private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
 
     public SelectDialog(Activity activity)
     {
@@ -178,12 +180,12 @@ internal sealed class SelectDialog : Java.Lang.Object, IDialogInterfaceOnShowLis
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
     public Task<int> ShowAsync(string[] items, int selected, string? title)
     {
-        alertDialog = new AlertDialog.Builder(activity)
+        alertDialog = new MaterialAlertDialogBuilder(activity)
             .SetTitle(title)!
-            .SetItems(items, (_, args) => result.TrySetResult(args.Which))!
+            .SetItems(items, (_, args) => result.TrySetResult(args.Which))
             .SetOnKeyListener(this)!
             .SetCancelable(false)!
-            .Create()!;
+            .Create();
         alertDialog.SetOnShowListener(this);
         alertDialog.ListView!.Selector = new ColorDrawable(Android.Graphics.Color.OrangeRed) { Alpha = 64 };
 
