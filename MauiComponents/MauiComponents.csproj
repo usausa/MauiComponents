@@ -18,10 +18,10 @@
   </PropertyGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0-android')) != true and $(TargetFramework.StartsWith('net7.0-android')) != true">
-    <Compile Remove="**\**\*.Android.cs" />
-    <None Include="**\**\*.Android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
-    <Compile Remove="**\**\*.Shared.cs" />
-    <None Include="**\**\*.Shared.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    <Compile Remove="**\**\*.android.cs" />
+    <None Include="**\**\*.android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+    <Compile Remove="**\**\*.shared.cs" />
+    <None Include="**\**\*.shared.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('net6.0')) == true">
