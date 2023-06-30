@@ -13,6 +13,7 @@ public class MainPageViewModel : ViewModelBase
 {
     public ICommand InformationCommand { get; }
     public ICommand ConfirmCommand { get; }
+    public ICommand Confirm3Command { get; }
     public ICommand SelectCommand { get; }
     public ICommand LockCommand { get; }
     public ICommand LoadingCommand { get; }
@@ -24,6 +25,7 @@ public class MainPageViewModel : ViewModelBase
     {
         InformationCommand = MakeAsyncCommand(async () => await dialog.InformationAsync("information"));
         ConfirmCommand = MakeAsyncCommand(async () => await dialog.ConfirmAsync("confirm"));
+        Confirm3Command = MakeAsyncCommand(async () => await dialog.Confirm3Async("confirm"));
         SelectCommand = MakeAsyncCommand(async () => await dialog.SelectAsync(new[] { "Item-1", "Item-2", "Item-3" }));
         LockCommand = MakeAsyncCommand(async () =>
         {

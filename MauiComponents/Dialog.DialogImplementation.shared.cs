@@ -30,6 +30,8 @@ public static class Dialog
 
 internal sealed partial class DialogImplementation : IDialog
 {
+    public DialogOptions Options { get; } = new();
+
     public partial ValueTask InformationAsync(string message, string? title, string ok);
 
     public partial ValueTask<bool> ConfirmAsync(string message, bool defaultPositive, string? title, string ok, string cancel);

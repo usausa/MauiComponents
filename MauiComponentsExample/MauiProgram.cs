@@ -2,6 +2,10 @@ namespace MauiComponentsExample;
 
 using System.Reflection;
 
+#if ANDROID
+using Android.Views;
+#endif
+
 using CommunityToolkit.Maui;
 
 using MauiComponents;
@@ -27,7 +31,10 @@ public static class MauiProgram
             .ConfigureService(services =>
             {
 #if ANDROID
-                services.AddComponentsDialog();
+                services.AddComponentsDialog(c =>
+                {
+                    c.DismissKeys = new[] { Keycode.Escape };
+                });
 #endif
                 services.AddComponentsPopup(c =>
                 {

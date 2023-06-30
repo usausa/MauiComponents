@@ -12,28 +12,28 @@ internal sealed partial class DialogImplementation
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask InformationAsync(string message, string? title, string ok)
     {
-        using var dialog = new InformationDialog(ActivityResolver.CurrentActivity);
+        using var dialog = new InformationDialog(ActivityResolver.CurrentActivity, Options);
         await dialog.ShowAsync(message, title, ok).ConfigureAwait(true);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<bool> ConfirmAsync(string message, bool defaultPositive, string? title, string ok, string cancel)
     {
-        using var dialog = new ConfirmDialog(ActivityResolver.CurrentActivity);
+        using var dialog = new ConfirmDialog(ActivityResolver.CurrentActivity, Options);
         return await dialog.ShowAsync(message, defaultPositive, title, ok, cancel).ConfigureAwait(true);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<Confirm3Result> Confirm3Async(string message, bool defaultPositive, string? title, string ok, string cancel, string neutral)
     {
-        using var dialog = new Confirm3Dialog(ActivityResolver.CurrentActivity);
+        using var dialog = new Confirm3Dialog(ActivityResolver.CurrentActivity, Options);
         return await dialog.ShowAsync(message, defaultPositive, title, ok, cancel, neutral).ConfigureAwait(true);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<int> SelectAsync(string[] items, int selected, string? title)
     {
-        using var dialog = new SelectDialog(ActivityResolver.CurrentActivity);
+        using var dialog = new SelectDialog(ActivityResolver.CurrentActivity, Options);
         return await dialog.ShowAsync(items, selected, title).ConfigureAwait(true);
     }
 
@@ -43,11 +43,14 @@ internal sealed partial class DialogImplementation
 
         private readonly Activity activity;
 
+        private readonly DialogOptions options;
+
         private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
 
-        public InformationDialog(Activity activity)
+        public InformationDialog(Activity activity, DialogOptions options)
         {
             this.activity = activity;
+            this.options = options;
         }
 
         protected override void Dispose(bool disposing)
@@ -85,7 +88,7 @@ internal sealed partial class DialogImplementation
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e!.KeyCode == Keycode.Del) && (e.Action == KeyEventActions.Up))
+            if ((e!.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
             {
                 dialog!.Dismiss();
                 result.TrySetResult(false);
@@ -102,13 +105,16 @@ internal sealed partial class DialogImplementation
 
         private readonly Activity activity;
 
+        private readonly DialogOptions options;
+
         private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
 
         private bool positive;
 
-        public ConfirmDialog(Activity activity)
+        public ConfirmDialog(Activity activity, DialogOptions options)
         {
             this.activity = activity;
+            this.options = options;
         }
 
         protected override void Dispose(bool disposing)
@@ -149,7 +155,7 @@ internal sealed partial class DialogImplementation
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e!.KeyCode == Keycode.Del) && (e.Action == KeyEventActions.Up))
+            if ((e!.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
             {
                 dialog!.Dismiss();
                 result.TrySetResult(false);
@@ -166,13 +172,16 @@ internal sealed partial class DialogImplementation
 
         private readonly Activity activity;
 
+        private readonly DialogOptions options;
+
         private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
 
         private bool positive;
 
-        public Confirm3Dialog(Activity activity)
+        public Confirm3Dialog(Activity activity, DialogOptions options)
         {
             this.activity = activity;
+            this.options = options;
         }
 
         protected override void Dispose(bool disposing)
@@ -214,7 +223,7 @@ internal sealed partial class DialogImplementation
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e!.KeyCode == Keycode.Del) && (e.Action == KeyEventActions.Up))
+            if ((e!.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
             {
                 dialog!.Dismiss();
                 result.TrySetResult(Confirm3Result.Negative);
@@ -231,11 +240,14 @@ internal sealed partial class DialogImplementation
 
         private readonly Activity activity;
 
+        private readonly DialogOptions options;
+
         private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
 
-        public SelectDialog(Activity activity)
+        public SelectDialog(Activity activity, DialogOptions options)
         {
             this.activity = activity;
+            this.options = options;
         }
 
         protected override void Dispose(bool disposing)
@@ -277,7 +289,7 @@ internal sealed partial class DialogImplementation
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e!.KeyCode == Keycode.Del) && (e.Action == KeyEventActions.Up))
+            if ((e!.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
             {
                 dialog!.Dismiss();
                 result.TrySetResult(-1);
