@@ -24,6 +24,13 @@ internal sealed partial class DialogImplementation
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
+    public async partial ValueTask<Confirm3Result> Confirm3Async(string message, bool defaultPositive, string? title, string ok, string cancel, string neutral)
+    {
+        using var dialog = new Confirm3Dialog(ActivityResolver.CurrentActivity);
+        return await dialog.ShowAsync(message, defaultPositive, title, ok, cancel, neutral).ConfigureAwait(true);
+    }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<int> SelectAsync(string[] items, int selected, string? title)
     {
         using var dialog = new SelectDialog(ActivityResolver.CurrentActivity);
@@ -61,9 +68,9 @@ internal sealed partial class DialogImplementation
                 .SetMessage(message)!
                 .SetOnKeyListener(this)!
                 .SetCancelable(false)!
+                .SetPositiveButton(ok, (_, _) => result.TrySetResult(true))
                 .Create();
             alertDialog.SetOnShowListener(this);
-            alertDialog.SetButton((int)DialogButtonType.Positive, ok, (_, _) => result.TrySetResult(true));
 
             alertDialog.Show();
 
@@ -124,10 +131,10 @@ internal sealed partial class DialogImplementation
                 .SetMessage(message)!
                 .SetCancelable(false)!
                 .SetOnKeyListener(this)!
+                .SetPositiveButton(ok, (_, _) => result.TrySetResult(true))
+                .SetNegativeButton(cancel, (_, _) => result.TrySetResult(false))
                 .Create();
             alertDialog.SetOnShowListener(this);
-            alertDialog.SetButton((int)DialogButtonType.Positive, ok, (_, _) => result.TrySetResult(true));
-            alertDialog.SetButton((int)DialogButtonType.Negative, cancel, (_, _) => result.TrySetResult(false));
 
             alertDialog.Show();
 
@@ -146,6 +153,71 @@ internal sealed partial class DialogImplementation
             {
                 dialog!.Dismiss();
                 result.TrySetResult(false);
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    private sealed class Confirm3Dialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener
+    {
+        private readonly TaskCompletionSource<Confirm3Result> result = new();
+
+        private readonly Activity activity;
+
+        private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
+
+        private bool positive;
+
+        public Confirm3Dialog(Activity activity)
+        {
+            this.activity = activity;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                alertDialog.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
+        public Task<Confirm3Result> ShowAsync(string message, bool defaultPositive, string? title, string ok, string cancel, string neutral)
+        {
+            positive = defaultPositive;
+
+            alertDialog = new MaterialAlertDialogBuilder(activity)
+                .SetTitle(title)!
+                .SetMessage(message)!
+                .SetCancelable(false)!
+                .SetOnKeyListener(this)!
+                .SetPositiveButton(ok, (_, _) => result.TrySetResult(Confirm3Result.Positive))
+                .SetNegativeButton(cancel, (_, _) => result.TrySetResult(Confirm3Result.Negative))
+                .SetNeutralButton(neutral, (_, _) => result.TrySetResult(Confirm3Result.Neutral))
+                .Create();
+            alertDialog.SetOnShowListener(this);
+
+            alertDialog.Show();
+
+            return result.Task;
+        }
+
+        public void OnShow(IDialogInterface? dialog)
+        {
+            var button = alertDialog.GetButton(positive ? (int)DialogButtonType.Positive : (int)DialogButtonType.Negative)!;
+            button.RequestFocus();
+        }
+
+        public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
+        {
+            if ((e!.KeyCode == Keycode.Del) && (e.Action == KeyEventActions.Up))
+            {
+                dialog!.Dismiss();
+                result.TrySetResult(Confirm3Result.Negative);
                 return true;
             }
 

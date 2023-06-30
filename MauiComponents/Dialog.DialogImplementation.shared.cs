@@ -12,6 +12,9 @@ public static class Dialog
     public static ValueTask<bool> ConfirmAsync(string message, bool defaultPositive = false, string? title = null, string ok = "OK", string cancel = "Cancel") =>
         Current.ConfirmAsync(message, defaultPositive, title, ok, cancel);
 
+    public static ValueTask<Confirm3Result> Confirm3Async(string message, bool defaultPositive = false, string? title = null, string ok = "OK", string cancel = "Cancel", string neutral = "Maybe") =>
+        Current.Confirm3Async(message, defaultPositive, title, ok, cancel, neutral);
+
     public static ValueTask<int> SelectAsync(string[] items, int selected = -1, string? title = null) =>
         Current.SelectAsync(items, selected, title);
 
@@ -30,6 +33,8 @@ internal sealed partial class DialogImplementation : IDialog
     public partial ValueTask InformationAsync(string message, string? title, string ok);
 
     public partial ValueTask<bool> ConfirmAsync(string message, bool defaultPositive, string? title, string ok, string cancel);
+
+    public partial ValueTask<Confirm3Result> Confirm3Async(string message, bool defaultPositive, string? title, string ok, string cancel, string neutral);
 
     public partial ValueTask<int> SelectAsync(string[] items, int selected, string? title);
 
