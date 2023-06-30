@@ -6,6 +6,7 @@ using Android.Graphics.Drawables;
 using Android.Views;
 
 using Google.Android.Material.Dialog;
+using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 
 internal sealed partial class DialogImplementation
 {
@@ -270,7 +271,7 @@ internal sealed partial class DialogImplementation
                 .SetCancelable(false)!
                 .Create();
             alertDialog.SetOnShowListener(this);
-            alertDialog.ListView!.Selector = new ColorDrawable(Android.Graphics.Color.OrangeRed) { Alpha = 64 };
+            alertDialog.ListView!.Selector = new ColorDrawable(options.SelectColor.ToAndroid()) { Alpha = options.SelectColorAlpha };
 
             alertDialog.Show();
 
