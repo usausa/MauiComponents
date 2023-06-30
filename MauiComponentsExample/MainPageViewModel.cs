@@ -15,6 +15,7 @@ public class MainPageViewModel : ViewModelBase
     public ICommand ConfirmCommand { get; }
     public ICommand Confirm3Command { get; }
     public ICommand SelectCommand { get; }
+    public ICommand InputCommand { get; }
     public ICommand IndicatorCommand { get; }
     public ICommand LockCommand { get; }
     public ICommand LoadingCommand { get; }
@@ -26,9 +27,29 @@ public class MainPageViewModel : ViewModelBase
     public MainPageViewModel(IDialog dialog, IPopupNavigator popupNavigator)
     {
         InformationCommand = MakeAsyncCommand(async () => await dialog.InformationAsync("information"));
-        ConfirmCommand = MakeAsyncCommand(async () => await dialog.ConfirmAsync("confirm"));
-        Confirm3Command = MakeAsyncCommand(async () => await dialog.Confirm3Async("confirm"));
-        SelectCommand = MakeAsyncCommand(async () => await dialog.SelectAsync(new[] { "Item-1", "Item-2", "Item-3" }));
+        ConfirmCommand = MakeAsyncCommand(async () =>
+        {
+            var result = await dialog.ConfirmAsync("confirm");
+            await dialog.InformationAsync($"Result={result}");
+        });
+        Confirm3Command = MakeAsyncCommand(async () =>
+        {
+            var result = await dialog.Confirm3Async("confirm");
+            await dialog.InformationAsync($"Result={result}");
+        });
+        SelectCommand = MakeAsyncCommand(async () =>
+        {
+            var result = await dialog.SelectAsync(new[] { "Item-1", "Item-2", "Item-3" });
+            await dialog.InformationAsync($"Result={result}");
+        });
+        InputCommand = MakeAsyncCommand(async () =>
+        {
+            var result = await dialog.InputAsync(defaultValue: "123", inputType: InputType.Number, maxLength: 5);
+            if (result.Accepted)
+            {
+                await dialog.InformationAsync($"Result={result.Text}");
+            }
+        });
         IndicatorCommand = MakeAsyncCommand(async () =>
         {
             using var loading = dialog.Indicator();

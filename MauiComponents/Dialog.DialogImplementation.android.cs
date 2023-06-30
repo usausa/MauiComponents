@@ -5,8 +5,12 @@ using Android.Content;
 using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.OS;
+using Android.Text;
+using Android.Text.Method;
 using Android.Views;
 using Android.Widget;
+
+using AndroidX.Core.OS;
 
 using Google.Android.Material.Dialog;
 using Google.Android.Material.Snackbar;
@@ -44,13 +48,20 @@ internal sealed partial class DialogImplementation
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
+    public async partial ValueTask<InputResult> InputAsync(string? defaultValue, string? message, string? title, string ok, string cancel, InputType inputType, int maxLength, string? placeHolder)
+    {
+        using var dialog = new InputDialog(ActivityResolver.CurrentActivity, Options);
+        return await dialog.ShowAsync(defaultValue, message, title, ok, cancel, inputType, maxLength, placeHolder).ConfigureAwait(true);
+    }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
     public partial IDisposable Indicator()
     {
         var activity = ActivityResolver.CurrentActivity;
 
         var size = (int)(DeviceDisplay.MainDisplayInfo.Density * Options.IndicatorSize);
-        var input = new ProgressBar(activity)
+        var progress = new ProgressBar(activity)
         {
             Indeterminate = true,
             LayoutParameters = new FrameLayout.LayoutParams(size, size)
@@ -64,13 +75,13 @@ internal sealed partial class DialogImplementation
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Q)
             {
 #pragma warning disable CA1416
-                input.IndeterminateDrawable!.SetColorFilter(new BlendModeColorFilter(Options.IndicatorColor.ToAndroid(), BlendMode.SrcAtop!));
+                progress.IndeterminateDrawable!.SetColorFilter(new BlendModeColorFilter(Options.IndicatorColor.ToAndroid(), BlendMode.SrcAtop!));
 #pragma warning restore CA1416
             }
             else
             {
 #pragma warning disable CS0618
-                input.IndeterminateDrawable!.SetColorFilter(Colors.Blue.ToAndroid(), PorterDuff.Mode.SrcAtop!);
+                progress.IndeterminateDrawable!.SetColorFilter(Colors.Blue.ToAndroid(), PorterDuff.Mode.SrcAtop!);
 #pragma warning restore CS0618
             }
         }
@@ -79,7 +90,7 @@ internal sealed partial class DialogImplementation
         {
             LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent)
         };
-        layout.AddView(input);
+        layout.AddView(progress);
 
         var builder = new MaterialAlertDialogBuilder(activity);
         builder
@@ -383,6 +394,99 @@ internal sealed partial class DialogImplementation
             {
                 dialog!.Dismiss();
                 result.TrySetResult(-1);
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    private sealed class InputDialog : Java.Lang.Object, IDialogInterfaceOnKeyListener
+    {
+        private readonly TaskCompletionSource<InputResult> result = new();
+
+        private readonly Activity activity;
+
+        private readonly DialogOptions options;
+
+        private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
+
+        public InputDialog(Activity activity, DialogOptions options)
+        {
+            this.activity = activity;
+            this.options = options;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                alertDialog.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
+        public Task<InputResult> ShowAsync(string? defaultValue, string? message, string? title, string ok, string cancel, InputType inputType, int maxLength, string? placeHolder)
+        {
+            var input = new EditText(activity)
+            {
+                Hint = placeHolder,
+                Text = defaultValue
+            };
+
+            // TODO Ex
+            switch (inputType)
+            {
+                case InputType.Default:
+                    input.InputType = InputTypes.ClassText;
+                    break;
+                case InputType.Email:
+                    input.InputType = InputTypes.ClassText | InputTypes.TextVariationEmailAddress;
+                    break;
+                case InputType.Number:
+                    input.InputType = InputTypes.ClassNumber | InputTypes.NumberFlagSigned;
+                    break;
+                case InputType.Decimal:
+                    input.InputType = InputTypes.ClassNumber | InputTypes.NumberFlagSigned | InputTypes.NumberFlagDecimal;
+                    var locale = LocaleListCompat.Default.Get(0);
+                    input.KeyListener = new DigitsKeyListener(locale, true, true);
+                    break;
+            }
+
+            if (maxLength > 0)
+            {
+                var filters = input.GetFilters()?.ToList() ?? new List<IInputFilter>();
+                filters.Add(new InputFilterLengthFilter(maxLength));
+                input.SetFilters(filters.ToArray());
+            }
+
+            // TODO show keyboard
+            alertDialog = new MaterialAlertDialogBuilder(activity)
+                .SetTitle(title)!
+                .SetMessage(message)!
+                .SetView(input)!
+                .SetCancelable(false)!
+                .SetOnKeyListener(this)!
+                .SetPositiveButton(ok, (_, _) => result.TrySetResult(new InputResult(true, input.Text!)))
+                .SetNegativeButton(cancel, (_, _) => result.TrySetResult(InputResult.Cancel))
+                .Create();
+
+            alertDialog.Show();
+
+            input.RequestFocus();
+
+            return result.Task;
+        }
+
+        public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
+        {
+            // TODO enter?
+            if ((e!.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
+            {
+                dialog!.Dismiss();
+                result.TrySetResult(InputResult.Cancel);
                 return true;
             }
 

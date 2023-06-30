@@ -19,6 +19,8 @@
                     Text="Confirm3" />
             <Button Command="{Binding SelectCommand}"
                     Text="Select" />
+            <Button Command="{Binding InputCommand}"
+                    Text="Input" />
             <Button Command="{Binding IndicatorCommand}"
                     Text="Indicator" />
             <Button Command="{Binding LockCommand}"

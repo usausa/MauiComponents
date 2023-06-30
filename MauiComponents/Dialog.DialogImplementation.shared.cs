@@ -18,6 +18,9 @@ public static class Dialog
     public static ValueTask<int> SelectAsync(string[] items, int selected = -1, string? title = null) =>
         Current.SelectAsync(items, selected, title);
 
+    public static ValueTask<InputResult> InputAsync(string? defaultValue = null, string? message = null, string? title = null, string ok = "OK", string cancel = "Cancel", InputType inputType = InputType.Default, int maxLength = 0, string? placeHolder = null) =>
+        Current.InputAsync(defaultValue, message, title, ok, cancel, inputType, maxLength, placeHolder);
+
     public static IDisposable Lock() =>
         Current.Lock();
 
@@ -45,6 +48,8 @@ internal sealed partial class DialogImplementation : IDialog
     public partial ValueTask<Confirm3Result> Confirm3Async(string message, bool defaultPositive, string? title, string ok, string cancel, string neutral);
 
     public partial ValueTask<int> SelectAsync(string[] items, int selected, string? title);
+
+    public partial ValueTask<InputResult> InputAsync(string? defaultValue, string? message, string? title, string ok, string cancel, InputType inputType, int maxLength, string? placeHolder);
 
     public partial IDisposable Indicator();
 
