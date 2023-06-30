@@ -43,27 +43,27 @@ internal sealed partial class DialogImplementation : IDialog
     public IDisposable Lock()
     {
         var window = Application.Current!.MainPage!.GetParentWindow();
-        return new LockOverlay(window);
+        return new LockOverlay(window, Options);
     }
 
     public ILoading Loading(string text = "")
     {
         var window = Application.Current!.MainPage!.GetParentWindow();
-        return new LoadingOverlay(window, text);
+        return new LoadingOverlay(window, Options, text);
     }
 
     public IProgress Progress()
     {
         var window = Application.Current!.MainPage!.GetParentWindow();
-        return new ProgressOverlay(window);
+        return new ProgressOverlay(window, Options);
     }
 
     private sealed class LockOverlay : WindowOverlay, IDisposable
     {
-        public LockOverlay(IWindow window)
+        public LockOverlay(IWindow window, DialogOptions options)
             : base(window)
         {
-            AddWindowElement(new ElementOverlay());
+            AddWindowElement(new ElementOverlay(options));
             EnableDrawableTouchHandling = true;
 
             window.AddOverlay(this);
@@ -76,9 +76,16 @@ internal sealed partial class DialogImplementation : IDialog
 
         private sealed class ElementOverlay : IWindowOverlayElement
         {
+            private readonly DialogOptions options;
+
+            public ElementOverlay(DialogOptions options)
+            {
+                this.options = options;
+            }
+
             public void Draw(ICanvas canvas, RectF dirtyRect)
             {
-                canvas.FillColor = Color.FromRgba(0, 0, 0, 128);
+                canvas.FillColor = options.LockBackgroundColor;
                 canvas.FillRectangle(dirtyRect);
             }
 
@@ -90,10 +97,10 @@ internal sealed partial class DialogImplementation : IDialog
     {
         private readonly ElementOverlay overlay;
 
-        public LoadingOverlay(IWindow window, string text)
+        public LoadingOverlay(IWindow window, DialogOptions options, string text)
             : base(window)
         {
-            overlay = new ElementOverlay { Text = text };
+            overlay = new ElementOverlay(options) { Text = text };
             AddWindowElement(overlay);
             EnableDrawableTouchHandling = true;
 
@@ -113,22 +120,33 @@ internal sealed partial class DialogImplementation : IDialog
 
         private sealed class ElementOverlay : IWindowOverlayElement
         {
+            private readonly DialogOptions options;
+
             public string Text { get; set; } = string.Empty;
+
+            public ElementOverlay(DialogOptions options)
+            {
+                this.options = options;
+            }
 
             public void Draw(ICanvas canvas, RectF dirtyRect)
             {
-                canvas.FillColor = Color.FromRgba(0, 0, 0, 128);
+                canvas.FillColor = options.LoadingBackgroundColor;
                 canvas.FillRectangle(dirtyRect);
 
                 if (!String.IsNullOrEmpty(Text))
                 {
-                    var messageRect = new RectF(32, (dirtyRect.Height / 2) - 32, dirtyRect.Width - 64, 64);
+                    var messageRect = new RectF(
+                        options.LoadingMessageSideMargin,
+                        (dirtyRect.Height / 2) - (options.LoadingMessageHeight / 2),
+                        dirtyRect.Width - (options.LoadingMessageSideMargin * 2),
+                        options.LoadingMessageHeight);
 
-                    canvas.FillColor = Color.FromRgba(0, 0, 0, 128);
-                    canvas.FillRoundedRectangle(messageRect, 8);
+                    canvas.FillColor = options.LoadingMessageBackgroundColor;
+                    canvas.FillRoundedRectangle(messageRect, options.LoadingMessageCornerRadius);
 
-                    canvas.FontColor = Colors.White;
-                    canvas.FontSize = 24;
+                    canvas.FontColor = options.LoadingMessageColor;
+                    canvas.FontSize = options.LoadingMessageFontSize;
                     canvas.DrawString(Text, messageRect, HorizontalAlignment.Center, VerticalAlignment.Center);
                 }
             }
@@ -141,10 +159,10 @@ internal sealed partial class DialogImplementation : IDialog
     {
         private readonly ElementOverlay overlay;
 
-        public ProgressOverlay(IWindow window)
+        public ProgressOverlay(IWindow window, DialogOptions options)
             : base(window)
         {
-            overlay = new ElementOverlay();
+            overlay = new ElementOverlay(options);
             AddWindowElement(overlay);
             EnableDrawableTouchHandling = true;
 
@@ -169,27 +187,44 @@ internal sealed partial class DialogImplementation : IDialog
 
         private sealed class ElementOverlay : IWindowOverlayElement
         {
+            private readonly DialogOptions options;
+
             public double Value { get; set; }
+
+            public ElementOverlay(DialogOptions options)
+            {
+                this.options = options;
+            }
 
             public void Draw(ICanvas canvas, RectF dirtyRect)
             {
-                canvas.FillColor = Color.FromRgba(0, 0, 0, 128);
+                canvas.FillColor = options.ProgressBackgroundColor;
                 canvas.FillRectangle(dirtyRect);
 
-                canvas.FillColor = Color.FromRgba(0, 0, 0, 128);
-                canvas.FillRoundedRectangle(new RectF((dirtyRect.Width / 2) - 80, (dirtyRect.Height / 2) - 80, 160, 160), 16);
+                canvas.FillColor = options.ProgressAreaBackgroundColor;
+                canvas.FillRoundedRectangle(
+                    new RectF(
+                        (dirtyRect.Width / 2) - options.ProgressAreaSize,
+                        (dirtyRect.Height / 2) - options.ProgressAreaSize,
+                        options.ProgressAreaSize * 2,
+                        options.ProgressAreaSize * 2),
+                    options.ProgressAreaCornerRadius);
 
-                var arcRect = new RectF((dirtyRect.Width / 2) - 64, (dirtyRect.Height / 2) - 64, 128, 128);
+                var arcRect = new RectF(
+                    (dirtyRect.Width / 2) - options.ProgressSize,
+                    (dirtyRect.Height / 2) - options.ProgressSize,
+                    options.ProgressSize * 2,
+                    options.ProgressSize * 2);
 
-                canvas.StrokeSize = 8;
-                canvas.StrokeColor = Colors.Gray;
+                canvas.StrokeSize = options.ProgressWidth;
+                canvas.StrokeColor = options.ProgressCircleColor2;
                 canvas.DrawArc(arcRect, 0, 360, false, false);
 
-                canvas.StrokeColor = Colors.White;
+                canvas.StrokeColor = options.ProgressCircleColor1;
                 canvas.DrawArc(arcRect, 90, 90 - (int)(360 * Value / 100), true, false);
 
-                canvas.FontColor = Colors.White;
-                canvas.FontSize = 24;
+                canvas.FontColor = options.ProgressValueColor;
+                canvas.FontSize = options.ProgressValueFontSize;
                 canvas.DrawString($"{Value:F1}%", arcRect, HorizontalAlignment.Center, VerticalAlignment.Center);
             }
 
