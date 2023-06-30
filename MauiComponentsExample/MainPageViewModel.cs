@@ -15,6 +15,7 @@ public class MainPageViewModel : ViewModelBase
     public ICommand ConfirmCommand { get; }
     public ICommand Confirm3Command { get; }
     public ICommand SelectCommand { get; }
+    public ICommand IndicatorCommand { get; }
     public ICommand LockCommand { get; }
     public ICommand LoadingCommand { get; }
     public ICommand ProgressCommand { get; }
@@ -28,6 +29,12 @@ public class MainPageViewModel : ViewModelBase
         ConfirmCommand = MakeAsyncCommand(async () => await dialog.ConfirmAsync("confirm"));
         Confirm3Command = MakeAsyncCommand(async () => await dialog.Confirm3Async("confirm"));
         SelectCommand = MakeAsyncCommand(async () => await dialog.SelectAsync(new[] { "Item-1", "Item-2", "Item-3" }));
+        IndicatorCommand = MakeAsyncCommand(async () =>
+        {
+            using var loading = dialog.Indicator();
+
+            await Task.Delay(3000);
+        });
         LockCommand = MakeAsyncCommand(async () =>
         {
             using var loading = dialog.Lock();

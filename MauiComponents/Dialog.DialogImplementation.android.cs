@@ -2,8 +2,11 @@ namespace MauiComponents;
 
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.Graphics.Drawables;
+using Android.OS;
 using Android.Views;
+using Android.Widget;
 
 using Google.Android.Material.Dialog;
 using Google.Android.Material.Snackbar;
@@ -41,7 +44,57 @@ internal sealed partial class DialogImplementation
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
-    public partial void Snackbar(string message, int duration, Color? color, Color? textColor)
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
+    public partial IDisposable Indicator()
+    {
+        var activity = ActivityResolver.CurrentActivity;
+
+        var size = (int)(DeviceDisplay.MainDisplayInfo.Density * Options.IndicatorSize);
+        var input = new ProgressBar(activity)
+        {
+            Indeterminate = true,
+            LayoutParameters = new FrameLayout.LayoutParams(size, size)
+            {
+                Gravity = GravityFlags.Center
+            }
+        };
+
+        if (Options.IndicatorColor is not null)
+        {
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.Q)
+            {
+#pragma warning disable CA1416
+                input.IndeterminateDrawable!.SetColorFilter(new BlendModeColorFilter(Options.IndicatorColor.ToAndroid(), BlendMode.SrcAtop!));
+#pragma warning restore CA1416
+            }
+            else
+            {
+#pragma warning disable CS0618
+                input.IndeterminateDrawable!.SetColorFilter(Colors.Blue.ToAndroid(), PorterDuff.Mode.SrcAtop!);
+#pragma warning restore CS0618
+            }
+        }
+
+        var layout = new FrameLayout(activity)
+        {
+            LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent)
+        };
+        layout.AddView(input);
+
+        var builder = new MaterialAlertDialogBuilder(activity);
+        builder
+            .SetView(layout)!
+            .SetCancelable(false);
+
+        builder.SetBackground(new ColorDrawable(Android.Graphics.Color.Transparent));
+
+        var dialog = builder.Show()!;
+
+        return new DialogDismiss(dialog);
+    }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
+    public partial void Snackbar(string message, int duration, Microsoft.Maui.Graphics.Color? color, Microsoft.Maui.Graphics.Color? textColor)
     {
         var activity = ActivityResolver.CurrentActivity;
         var view = activity.Window!.DecorView.RootView!;
@@ -60,6 +113,18 @@ internal sealed partial class DialogImplementation
         }
 
         snackBar.Show();
+    }
+
+    private sealed class DialogDismiss : IDisposable
+    {
+        private readonly AndroidX.AppCompat.App.AlertDialog alertDialog;
+
+        public DialogDismiss(AndroidX.AppCompat.App.AlertDialog alertDialog)
+        {
+            this.alertDialog = alertDialog;
+        }
+
+        public void Dispose() => alertDialog.Dismiss();
     }
 
     private sealed class InformationDialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener

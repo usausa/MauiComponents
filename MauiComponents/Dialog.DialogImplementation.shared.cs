@@ -21,6 +21,9 @@ public static class Dialog
     public static IDisposable Lock() =>
         Current.Lock();
 
+    public static IDisposable Indicator() =>
+        Current.Indicator();
+
     public static ILoading Loading(string text = "") =>
         Current.Loading(text);
 
@@ -42,6 +45,8 @@ internal sealed partial class DialogImplementation : IDialog
     public partial ValueTask<Confirm3Result> Confirm3Async(string message, bool defaultPositive, string? title, string ok, string cancel, string neutral);
 
     public partial ValueTask<int> SelectAsync(string[] items, int selected, string? title);
+
+    public partial IDisposable Indicator();
 
     public partial void Snackbar(string message, int duration, Color? color, Color? textColor);
 

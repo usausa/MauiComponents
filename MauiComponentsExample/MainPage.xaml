@@ -9,7 +9,7 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="30,0"
-                             Spacing="25" VerticalOptions="Center">
+                             Spacing="18" VerticalOptions="Center">
 
             <Button Command="{Binding InformationCommand}"
                     Text="Information" />
@@ -19,6 +19,8 @@
                     Text="Confirm3" />
             <Button Command="{Binding SelectCommand}"
                     Text="Select" />
+            <Button Command="{Binding IndicatorCommand}"
+                    Text="Indicator" />
             <Button Command="{Binding LockCommand}"
                     Text="Lock" />
             <Button Command="{Binding LoadingCommand}"

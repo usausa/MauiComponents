@@ -34,6 +34,7 @@ public static class MauiProgram
                 services.AddComponentsDialog(c =>
                 {
                     c.DismissKeys = new[] { Keycode.Escape };
+                    c.IndicatorColor = new Color(27, 110, 194);
                     c.LoadingMessageBackgroundColor = Colors.White;
                     c.LoadingMessageColor = Colors.Black;
                     c.ProgressValueColor = Colors.Black;

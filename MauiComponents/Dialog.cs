@@ -27,6 +27,8 @@ public interface IDialog
 
     ValueTask<int> SelectAsync(string[] items, int selected = -1, string? title = null);
 
+    IDisposable Indicator();
+
     IDisposable Lock();
 
     ILoading Loading(string text = "");
