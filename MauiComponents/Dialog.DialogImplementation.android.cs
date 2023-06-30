@@ -271,7 +271,7 @@ internal sealed partial class DialogImplementation
                 .SetCancelable(false)!
                 .Create();
             alertDialog.SetOnShowListener(this);
-            alertDialog.ListView!.Selector = new ColorDrawable(options.SelectColor.ToAndroid()) { Alpha = options.SelectColorAlpha };
+            alertDialog.ListView!.Selector = new ColorDrawable(options.SelectColor.ToAndroid());
 
             alertDialog.Show();
 

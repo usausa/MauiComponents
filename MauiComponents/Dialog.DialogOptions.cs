@@ -6,9 +6,7 @@ using Android.Views;
 
 public class DialogOptions
 {
-    public Color SelectColor { get; set; } = Colors.Red;
-
-    public int SelectColorAlpha { get; set; } = 64;
+    public Color SelectColor { get; set; } = new(255, 0, 0, 64);
 
 #if ANDROID
 #pragma warning disable CA1819
