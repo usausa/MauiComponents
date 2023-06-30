@@ -25,9 +25,12 @@
                     Text="Loading" />
             <Button Command="{Binding ProgressCommand}"
                     Text="Progress" />
+            <Button Command="{Binding SnackbarCommand}"
+                    Text="Snackbar" />
 
             <Button Command="{Binding PopupCommand}"
                     Text="Popup" />
+
 
         </VerticalStackLayout>
     </ScrollView>

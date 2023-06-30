@@ -26,6 +26,9 @@ public static class Dialog
 
     public static IProgress Progress() =>
         Current.Progress();
+
+    public static void Snackbar(string message, int duration = 1000, Color? color = null, Color? textColor = null) =>
+        Current.Snackbar(message, duration, color, textColor);
 }
 
 internal sealed partial class DialogImplementation : IDialog
@@ -39,6 +42,8 @@ internal sealed partial class DialogImplementation : IDialog
     public partial ValueTask<Confirm3Result> Confirm3Async(string message, bool defaultPositive, string? title, string ok, string cancel, string neutral);
 
     public partial ValueTask<int> SelectAsync(string[] items, int selected, string? title);
+
+    public partial void Snackbar(string message, int duration, Color? color, Color? textColor);
 
     public IDisposable Lock()
     {

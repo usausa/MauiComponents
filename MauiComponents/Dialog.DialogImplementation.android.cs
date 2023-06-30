@@ -6,6 +6,8 @@ using Android.Graphics.Drawables;
 using Android.Views;
 
 using Google.Android.Material.Dialog;
+using Google.Android.Material.Snackbar;
+
 using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 
 internal sealed partial class DialogImplementation
@@ -36,6 +38,28 @@ internal sealed partial class DialogImplementation
     {
         using var dialog = new SelectDialog(ActivityResolver.CurrentActivity, Options);
         return await dialog.ShowAsync(items, selected, title).ConfigureAwait(true);
+    }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
+    public partial void Snackbar(string message, int duration, Color? color, Color? textColor)
+    {
+        var activity = ActivityResolver.CurrentActivity;
+        var view = activity.Window!.DecorView.RootView!;
+
+        var snackBar = Google.Android.Material.Snackbar.Snackbar.Make(activity, view, message, BaseTransientBottomBar.LengthShort);
+        snackBar.SetDuration(duration);
+
+        if (color is not null)
+        {
+            snackBar.SetBackgroundTint(color.ToAndroid());
+        }
+
+        if (textColor is not null)
+        {
+            snackBar.SetTextColor(textColor.ToAndroid());
+        }
+
+        snackBar.Show();
     }
 
     private sealed class InformationDialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener

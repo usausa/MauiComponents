@@ -32,4 +32,6 @@ public interface IDialog
     ILoading Loading(string text = "");
 
     IProgress Progress();
+
+    void Snackbar(string message, int duration = 1000, Color? color = null, Color? textColor = null);
 }

@@ -18,6 +18,7 @@ public class MainPageViewModel : ViewModelBase
     public ICommand LockCommand { get; }
     public ICommand LoadingCommand { get; }
     public ICommand ProgressCommand { get; }
+    public ICommand SnackbarCommand { get; }
 
     public ICommand PopupCommand { get; }
 
@@ -54,6 +55,7 @@ public class MainPageViewModel : ViewModelBase
                 await Task.Delay(1);
             }
         });
+        SnackbarCommand = MakeDelegateCommand(() => dialog.Snackbar("Warning", 3000, Colors.Orange));
         PopupCommand = MakeAsyncCommand(async () =>
         {
             var result = await popupNavigator.PopupAsync<string, bool>(DialogId.Sample, DateTime.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture));
