@@ -8,7 +8,7 @@ public enum Confirm3Result
 }
 
 #pragma warning disable CA1720
-public enum InputType
+public enum PromptType
 {
     Default,
     Email,
@@ -17,15 +17,26 @@ public enum InputType
 }
 #pragma warning restore CA1720
 
-public sealed class InputResult
+public sealed class PromptParameter
 {
-    public static InputResult Cancel { get; } = new(false, string.Empty);
+    internal static PromptParameter Default { get; } = new();
+
+    public PromptType PromptType { get; set; }
+
+    public int MaxLength { get; set; }
+
+    // TODO sign, 小数点
+}
+
+public sealed class PromptResult
+{
+    public static PromptResult Cancel { get; } = new(false, string.Empty);
 
     public bool Accepted { get; }
 
     public string Text { get; }
 
-    public InputResult(bool accepted, string text)
+    public PromptResult(bool accepted, string text)
     {
         Accepted = accepted;
         Text = text;
@@ -52,7 +63,7 @@ public interface IDialog
 
     ValueTask<int> SelectAsync(string[] items, int selected = -1, string? title = null);
 
-    ValueTask<InputResult> InputAsync(string? defaultValue = null, string? message = null, string? title = null, string ok = "OK", string cancel = "Cancel", InputType inputType = InputType.Default, int maxLength = 0, string? placeHolder = null);
+    ValueTask<PromptResult> PromptAsync(string? defaultValue = null, string? message = null, string? title = null, string ok = "OK", string cancel = "Cancel", string? placeHolder = null, PromptParameter? parameter = null);
 
     IDisposable Indicator();
 

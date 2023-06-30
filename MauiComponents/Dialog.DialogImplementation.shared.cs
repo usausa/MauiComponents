@@ -18,8 +18,8 @@ public static class Dialog
     public static ValueTask<int> SelectAsync(string[] items, int selected = -1, string? title = null) =>
         Current.SelectAsync(items, selected, title);
 
-    public static ValueTask<InputResult> InputAsync(string? defaultValue = null, string? message = null, string? title = null, string ok = "OK", string cancel = "Cancel", InputType inputType = InputType.Default, int maxLength = 0, string? placeHolder = null) =>
-        Current.InputAsync(defaultValue, message, title, ok, cancel, inputType, maxLength, placeHolder);
+    public static ValueTask<PromptResult> PromptAsync(string? defaultValue = null, string? message = null, string? title = null, string ok = "OK", string cancel = "Cancel", string? placeHolder = null, PromptParameter? parameter = null) =>
+        Current.PromptAsync(defaultValue, message, title, ok, cancel, placeHolder, parameter);
 
     public static IDisposable Lock() =>
         Current.Lock();
@@ -49,7 +49,7 @@ internal sealed partial class DialogImplementation : IDialog
 
     public partial ValueTask<int> SelectAsync(string[] items, int selected, string? title);
 
-    public partial ValueTask<InputResult> InputAsync(string? defaultValue, string? message, string? title, string ok, string cancel, InputType inputType, int maxLength, string? placeHolder);
+    public partial ValueTask<PromptResult> PromptAsync(string? defaultValue, string? message, string? title, string ok, string cancel, string? placeHolder, PromptParameter? parameter);
 
     public partial IDisposable Indicator();
 

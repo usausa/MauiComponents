@@ -48,10 +48,10 @@ internal sealed partial class DialogImplementation
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
-    public async partial ValueTask<InputResult> InputAsync(string? defaultValue, string? message, string? title, string ok, string cancel, InputType inputType, int maxLength, string? placeHolder)
+    public async partial ValueTask<PromptResult> PromptAsync(string? defaultValue, string? message, string? title, string ok, string cancel, string? placeHolder, PromptParameter? parameter)
     {
-        using var dialog = new InputDialog(ActivityResolver.CurrentActivity, Options);
-        return await dialog.ShowAsync(defaultValue, message, title, ok, cancel, inputType, maxLength, placeHolder).ConfigureAwait(true);
+        using var dialog = new PromptDialog(ActivityResolver.CurrentActivity, Options);
+        return await dialog.ShowAsync(defaultValue, message, title, ok, cancel, placeHolder, parameter ?? PromptParameter.Default).ConfigureAwait(true);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
@@ -401,9 +401,9 @@ internal sealed partial class DialogImplementation
         }
     }
 
-    private sealed class InputDialog : Java.Lang.Object, IDialogInterfaceOnKeyListener
+    private sealed class PromptDialog : Java.Lang.Object, IDialogInterfaceOnKeyListener
     {
-        private readonly TaskCompletionSource<InputResult> result = new();
+        private readonly TaskCompletionSource<PromptResult> result = new();
 
         private readonly Activity activity;
 
@@ -411,7 +411,7 @@ internal sealed partial class DialogImplementation
 
         private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
 
-        public InputDialog(Activity activity, DialogOptions options)
+        public PromptDialog(Activity activity, DialogOptions options)
         {
             this.activity = activity;
             this.options = options;
@@ -428,7 +428,7 @@ internal sealed partial class DialogImplementation
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
-        public Task<InputResult> ShowAsync(string? defaultValue, string? message, string? title, string ok, string cancel, InputType inputType, int maxLength, string? placeHolder)
+        public Task<PromptResult> ShowAsync(string? defaultValue, string? message, string? title, string ok, string cancel, string? placeHolder, PromptParameter parameter)
         {
             var input = new EditText(activity)
             {
@@ -437,28 +437,28 @@ internal sealed partial class DialogImplementation
             };
 
             // TODO Ex
-            switch (inputType)
+            switch (parameter.PromptType)
             {
-                case InputType.Default:
+                case PromptType.Default:
                     input.InputType = InputTypes.ClassText;
                     break;
-                case InputType.Email:
+                case PromptType.Email:
                     input.InputType = InputTypes.ClassText | InputTypes.TextVariationEmailAddress;
                     break;
-                case InputType.Number:
+                case PromptType.Number:
                     input.InputType = InputTypes.ClassNumber | InputTypes.NumberFlagSigned;
                     break;
-                case InputType.Decimal:
+                case PromptType.Decimal:
                     input.InputType = InputTypes.ClassNumber | InputTypes.NumberFlagSigned | InputTypes.NumberFlagDecimal;
                     var locale = LocaleListCompat.Default.Get(0);
                     input.KeyListener = new DigitsKeyListener(locale, true, true);
                     break;
             }
 
-            if (maxLength > 0)
+            if (parameter.MaxLength > 0)
             {
                 var filters = input.GetFilters()?.ToList() ?? new List<IInputFilter>();
-                filters.Add(new InputFilterLengthFilter(maxLength));
+                filters.Add(new InputFilterLengthFilter(parameter.MaxLength));
                 input.SetFilters(filters.ToArray());
             }
 
@@ -469,8 +469,8 @@ internal sealed partial class DialogImplementation
                 .SetView(input)!
                 .SetCancelable(false)!
                 .SetOnKeyListener(this)!
-                .SetPositiveButton(ok, (_, _) => result.TrySetResult(new InputResult(true, input.Text!)))
-                .SetNegativeButton(cancel, (_, _) => result.TrySetResult(InputResult.Cancel))
+                .SetPositiveButton(ok, (_, _) => result.TrySetResult(new PromptResult(true, input.Text!)))
+                .SetNegativeButton(cancel, (_, _) => result.TrySetResult(PromptResult.Cancel))
                 .Create();
 
             alertDialog.Show();
@@ -486,7 +486,7 @@ internal sealed partial class DialogImplementation
             if ((e!.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
             {
                 dialog!.Dismiss();
-                result.TrySetResult(InputResult.Cancel);
+                result.TrySetResult(PromptResult.Cancel);
                 return true;
             }
 
