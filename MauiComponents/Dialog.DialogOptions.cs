@@ -54,6 +54,8 @@ public class DialogOptions
 
     public bool EnablePromptEnterAction { get; set; }
 
+    public bool EnablePromptSelectAll { get; set; }
+
     public Keycode[] DismissKeys { get; set; } = Array.Empty<Keycode>();
 
     public Keycode[] IgnorePromptDismissKeys { get; set; } = Array.Empty<Keycode>();

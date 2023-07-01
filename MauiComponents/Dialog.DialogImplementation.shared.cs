@@ -9,14 +9,14 @@ public static class Dialog
     public static ValueTask InformationAsync(string message, string? title = null, string ok = "OK") =>
         Current.InformationAsync(message, title, ok);
 
-    public static ValueTask<bool> ConfirmAsync(string message, bool defaultPositive = false, string? title = null, string ok = "OK", string cancel = "Cancel") =>
-        Current.ConfirmAsync(message, defaultPositive, title, ok, cancel);
+    public static ValueTask<bool> ConfirmAsync(string message, string? title = null, string ok = "OK", string cancel = "Cancel", bool defaultPositive = false) =>
+        Current.ConfirmAsync(message, title, ok, cancel, defaultPositive);
 
-    public static ValueTask<Confirm3Result> Confirm3Async(string message, bool defaultPositive = false, string? title = null, string ok = "OK", string cancel = "Cancel", string neutral = "Maybe") =>
-        Current.Confirm3Async(message, defaultPositive, title, ok, cancel, neutral);
+    public static ValueTask<Confirm3Result> Confirm3Async(string message, string? title = null, string ok = "OK", string cancel = "Cancel", string neutral = "Maybe", bool defaultPositive = false) =>
+        Current.Confirm3Async(message, title, ok, cancel, neutral, defaultPositive);
 
-    public static ValueTask<int> SelectAsync(string[] items, int selected = -1, string? title = null) =>
-        Current.SelectAsync(items, selected, title);
+    public static ValueTask<int> SelectAsync(string[] items, int selected = -1, string? title = null, string? cancel = null) =>
+        Current.SelectAsync(items, selected, title, cancel);
 
     public static ValueTask<PromptResult> PromptAsync(string? defaultValue = null, string? message = null, string? title = null, string ok = "OK", string cancel = "Cancel", string? placeHolder = null, PromptParameter? parameter = null) =>
         Current.PromptAsync(defaultValue, message, title, ok, cancel, placeHolder, parameter);
@@ -53,11 +53,11 @@ internal sealed partial class DialogImplementation : IDialog
 
     public partial ValueTask InformationAsync(string message, string? title, string ok);
 
-    public partial ValueTask<bool> ConfirmAsync(string message, bool defaultPositive, string? title, string ok, string cancel);
+    public partial ValueTask<bool> ConfirmAsync(string message, string? title, string ok, string cancel, bool defaultPositive);
 
-    public partial ValueTask<Confirm3Result> Confirm3Async(string message, bool defaultPositive, string? title, string ok, string cancel, string neutral);
+    public partial ValueTask<Confirm3Result> Confirm3Async(string message, string? title, string ok, string cancel, string neutral, bool defaultPositive);
 
-    public partial ValueTask<int> SelectAsync(string[] items, int selected, string? title);
+    public partial ValueTask<int> SelectAsync(string[] items, int selected, string? title, string? cancel);
 
     public partial ValueTask<PromptResult> PromptAsync(string? defaultValue, string? message, string? title, string ok, string cancel, string? placeHolder, PromptParameter? parameter);
 

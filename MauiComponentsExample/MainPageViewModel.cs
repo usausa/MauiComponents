@@ -26,20 +26,20 @@ public class MainPageViewModel : ViewModelBase
 
     public MainPageViewModel(IDialog dialog, IPopupNavigator popupNavigator)
     {
-        InformationCommand = MakeAsyncCommand(async () => await dialog.InformationAsync("information"));
+        InformationCommand = MakeAsyncCommand(async () => await dialog.InformationAsync("Information"));
         ConfirmCommand = MakeAsyncCommand(async () =>
         {
-            var result = await dialog.ConfirmAsync("confirm");
+            var result = await dialog.ConfirmAsync("Confirm");
             await dialog.InformationAsync($"Result={result}");
         });
         Confirm3Command = MakeAsyncCommand(async () =>
         {
-            var result = await dialog.Confirm3Async("confirm");
+            var result = await dialog.Confirm3Async("Confirm3");
             await dialog.InformationAsync($"Result={result}");
         });
         SelectCommand = MakeAsyncCommand(async () =>
         {
-            var result = await dialog.SelectAsync(new[] { "Item-1", "Item-2", "Item-3" });
+            var result = await dialog.SelectAsync(new[] { "Item-1", "Item-2", "Item-3" }, cancel: "Cancel");
             await dialog.InformationAsync($"Result={result}");
         });
         InputCommand = MakeAsyncCommand(async () =>

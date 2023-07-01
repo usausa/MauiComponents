@@ -57,11 +57,11 @@ public interface IDialog
 {
     ValueTask InformationAsync(string message, string? title = null, string ok = "OK");
 
-    ValueTask<bool> ConfirmAsync(string message, bool defaultPositive = false, string? title = null, string ok = "OK", string cancel = "Cancel");
+    ValueTask<bool> ConfirmAsync(string message, string? title = null, string ok = "OK", string cancel = "Cancel", bool defaultPositive = false);
 
-    ValueTask<Confirm3Result> Confirm3Async(string message, bool defaultPositive = false, string? title = null, string ok = "Yes", string cancel = "No", string neutral = "Maybe");
+    ValueTask<Confirm3Result> Confirm3Async(string message, string? title = null, string ok = "Yes", string cancel = "No", string neutral = "Maybe", bool defaultPositive = false);
 
-    ValueTask<int> SelectAsync(string[] items, int selected = -1, string? title = null);
+    ValueTask<int> SelectAsync(string[] items, int selected = -1, string? title = null, string? cancel = null);
 
     ValueTask<PromptResult> PromptAsync(string? defaultValue = null, string? message = null, string? title = null, string ok = "OK", string cancel = "Cancel", string? placeHolder = null, PromptParameter? parameter = null);
 

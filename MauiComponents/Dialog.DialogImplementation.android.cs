@@ -28,24 +28,24 @@ internal sealed partial class DialogImplementation
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
-    public async partial ValueTask<bool> ConfirmAsync(string message, bool defaultPositive, string? title, string ok, string cancel)
+    public async partial ValueTask<bool> ConfirmAsync(string message, string? title, string ok, string cancel, bool defaultPositive)
     {
         using var dialog = new ConfirmDialog(ActivityResolver.CurrentActivity, Options);
-        return await dialog.ShowAsync(message, defaultPositive, title, ok, cancel).ConfigureAwait(true);
+        return await dialog.ShowAsync(message, title, ok, cancel, defaultPositive).ConfigureAwait(true);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
-    public async partial ValueTask<Confirm3Result> Confirm3Async(string message, bool defaultPositive, string? title, string ok, string cancel, string neutral)
+    public async partial ValueTask<Confirm3Result> Confirm3Async(string message, string? title, string ok, string cancel, string neutral, bool defaultPositive)
     {
         using var dialog = new Confirm3Dialog(ActivityResolver.CurrentActivity, Options);
-        return await dialog.ShowAsync(message, defaultPositive, title, ok, cancel, neutral).ConfigureAwait(true);
+        return await dialog.ShowAsync(message, title, ok, cancel, neutral, defaultPositive).ConfigureAwait(true);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
-    public async partial ValueTask<int> SelectAsync(string[] items, int selected, string? title)
+    public async partial ValueTask<int> SelectAsync(string[] items, int selected, string? title, string? cancel)
     {
         using var dialog = new SelectDialog(ActivityResolver.CurrentActivity, Options);
-        return await dialog.ShowAsync(items, selected, title).ConfigureAwait(true);
+        return await dialog.ShowAsync(items, selected, title, cancel).ConfigureAwait(true);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
@@ -211,9 +211,6 @@ internal sealed partial class DialogImplementation
         private readonly DialogOptions options;
 
         private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
-
-        private bool positive;
-
         public ConfirmDialog(Activity activity, DialogOptions options)
         {
             this.activity = activity;
@@ -231,10 +228,8 @@ internal sealed partial class DialogImplementation
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
-        public Task<bool> ShowAsync(string message, bool defaultPositive, string? title, string ok, string cancel)
+        public Task<bool> ShowAsync(string message, string? title, string ok, string cancel, bool defaultPositive)
         {
-            positive = defaultPositive;
-
             alertDialog = new MaterialAlertDialogBuilder(activity)
                 .SetTitle(title)!
                 .SetMessage(message)!
@@ -248,7 +243,7 @@ internal sealed partial class DialogImplementation
 
             if (options.EnableDialogButtonFocus)
             {
-                var button = alertDialog.GetButton(positive ? (int)DialogButtonType.Positive : (int)DialogButtonType.Negative)!;
+                var button = alertDialog.GetButton(defaultPositive ? (int)DialogButtonType.Positive : (int)DialogButtonType.Negative)!;
                 button.Focusable = true;
                 button.FocusableInTouchMode = true;
                 button.RequestFocus();
@@ -280,8 +275,6 @@ internal sealed partial class DialogImplementation
 
         private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
 
-        private bool positive;
-
         public Confirm3Dialog(Activity activity, DialogOptions options)
         {
             this.activity = activity;
@@ -299,10 +292,8 @@ internal sealed partial class DialogImplementation
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
-        public Task<Confirm3Result> ShowAsync(string message, bool defaultPositive, string? title, string ok, string cancel, string neutral)
+        public Task<Confirm3Result> ShowAsync(string message, string? title, string ok, string cancel, string neutral, bool defaultPositive)
         {
-            positive = defaultPositive;
-
             alertDialog = new MaterialAlertDialogBuilder(activity)
                 .SetTitle(title)!
                 .SetMessage(message)!
@@ -317,7 +308,7 @@ internal sealed partial class DialogImplementation
 
             if (options.EnableDialogButtonFocus)
             {
-                var button = alertDialog.GetButton(positive ? (int)DialogButtonType.Positive : (int)DialogButtonType.Negative)!;
+                var button = alertDialog.GetButton(defaultPositive ? (int)DialogButtonType.Positive : (int)DialogButtonType.Negative)!;
                 button.Focusable = true;
                 button.FocusableInTouchMode = true;
                 button.RequestFocus();
@@ -366,13 +357,14 @@ internal sealed partial class DialogImplementation
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
-        public Task<int> ShowAsync(string[] items, int selected, string? title)
+        public Task<int> ShowAsync(string[] items, int selected, string? title, string? cancel)
         {
             alertDialog = new MaterialAlertDialogBuilder(activity)
                 .SetTitle(title)!
                 .SetItems(items, (_, args) => result.TrySetResult(args.Which))
                 .SetOnKeyListener(this)!
                 .SetCancelable(false)!
+                .SetNegativeButton(cancel!, (_, _) => result.TrySetResult(-1))
                 .Create();
             alertDialog.ListView!.Selector = new ColorDrawable(options.SelectColor.ToAndroid());
 
@@ -465,6 +457,11 @@ internal sealed partial class DialogImplementation
             if (options.EnablePromptEnterAction)
             {
                 input.SetOnEditorActionListener(this);
+            }
+
+            if (options.EnablePromptSelectAll)
+            {
+                input.SetSelectAllOnFocus(true);
             }
 
             alertDialog = new MaterialAlertDialogBuilder(activity)

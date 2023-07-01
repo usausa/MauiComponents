@@ -45,6 +45,7 @@ public static class MauiProgram
                     c.IgnorePromptDismissKeys = new[] { Keycode.Del };
                     c.EnableDialogButtonFocus = true;
                     c.EnablePromptEnterAction = true;
+                    c.EnablePromptSelectAll = true;
                 });
 #endif
                 services.AddComponentsPopup(c =>
