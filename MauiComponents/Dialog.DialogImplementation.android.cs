@@ -6,12 +6,9 @@ using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Text;
-using Android.Text.Method;
 using Android.Views;
 using Android.Views.InputMethods;
 using Android.Widget;
-
-using AndroidX.Core.OS;
 
 using Google.Android.Material.Dialog;
 using Google.Android.Material.Snackbar;
