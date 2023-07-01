@@ -8,6 +8,7 @@ using Android.OS;
 using Android.Text;
 using Android.Text.Method;
 using Android.Views;
+using Android.Views.InputMethods;
 using Android.Widget;
 
 using AndroidX.Core.OS;
@@ -138,7 +139,7 @@ internal sealed partial class DialogImplementation
         public void Dispose() => alertDialog.Dismiss();
     }
 
-    private sealed class InformationDialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener
+    private sealed class InformationDialog : Java.Lang.Object, IDialogInterfaceOnKeyListener
     {
         private readonly TaskCompletionSource<bool> result = new();
 
@@ -174,24 +175,25 @@ internal sealed partial class DialogImplementation
                 .SetCancelable(false)!
                 .SetPositiveButton(ok, (_, _) => result.TrySetResult(true))
                 .Create();
-            alertDialog.SetOnShowListener(this);
 
             alertDialog.Show();
+
+            if (options.EnableDialogButtonFocus)
+            {
+                var button = alertDialog.GetButton((int)DialogButtonType.Positive)!;
+                button.Focusable = true;
+                button.FocusableInTouchMode = true;
+                button.RequestFocus();
+            }
 
             return result.Task;
         }
 
-        public void OnShow(IDialogInterface? dialog)
-        {
-            var button = alertDialog.GetButton((int)DialogButtonType.Positive)!;
-            button.RequestFocus();
-        }
-
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e!.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
+            if ((e is not null) && (e.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
             {
-                dialog!.Dismiss();
+                alertDialog.Dismiss();
                 result.TrySetResult(false);
                 return true;
             }
@@ -200,7 +202,7 @@ internal sealed partial class DialogImplementation
         }
     }
 
-    private sealed class ConfirmDialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener
+    private sealed class ConfirmDialog : Java.Lang.Object, IDialogInterfaceOnKeyListener
     {
         private readonly TaskCompletionSource<bool> result = new();
 
@@ -241,24 +243,25 @@ internal sealed partial class DialogImplementation
                 .SetPositiveButton(ok, (_, _) => result.TrySetResult(true))
                 .SetNegativeButton(cancel, (_, _) => result.TrySetResult(false))
                 .Create();
-            alertDialog.SetOnShowListener(this);
 
             alertDialog.Show();
+
+            if (options.EnableDialogButtonFocus)
+            {
+                var button = alertDialog.GetButton(positive ? (int)DialogButtonType.Positive : (int)DialogButtonType.Negative)!;
+                button.Focusable = true;
+                button.FocusableInTouchMode = true;
+                button.RequestFocus();
+            }
 
             return result.Task;
         }
 
-        public void OnShow(IDialogInterface? dialog)
-        {
-            var button = alertDialog.GetButton(positive ? (int)DialogButtonType.Positive : (int)DialogButtonType.Negative)!;
-            button.RequestFocus();
-        }
-
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e!.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
+            if ((e is not null) && (e.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
             {
-                dialog!.Dismiss();
+                alertDialog.Dismiss();
                 result.TrySetResult(false);
                 return true;
             }
@@ -267,7 +270,7 @@ internal sealed partial class DialogImplementation
         }
     }
 
-    private sealed class Confirm3Dialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener
+    private sealed class Confirm3Dialog : Java.Lang.Object, IDialogInterfaceOnKeyListener
     {
         private readonly TaskCompletionSource<Confirm3Result> result = new();
 
@@ -309,24 +312,25 @@ internal sealed partial class DialogImplementation
                 .SetNegativeButton(cancel, (_, _) => result.TrySetResult(Confirm3Result.Negative))
                 .SetNeutralButton(neutral, (_, _) => result.TrySetResult(Confirm3Result.Neutral))
                 .Create();
-            alertDialog.SetOnShowListener(this);
 
             alertDialog.Show();
+
+            if (options.EnableDialogButtonFocus)
+            {
+                var button = alertDialog.GetButton(positive ? (int)DialogButtonType.Positive : (int)DialogButtonType.Negative)!;
+                button.Focusable = true;
+                button.FocusableInTouchMode = true;
+                button.RequestFocus();
+            }
 
             return result.Task;
         }
 
-        public void OnShow(IDialogInterface? dialog)
-        {
-            var button = alertDialog.GetButton(positive ? (int)DialogButtonType.Positive : (int)DialogButtonType.Negative)!;
-            button.RequestFocus();
-        }
-
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e!.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
+            if ((e is not null) && (e.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
             {
-                dialog!.Dismiss();
+                alertDialog.Dismiss();
                 result.TrySetResult(Confirm3Result.Negative);
                 return true;
             }
@@ -335,7 +339,7 @@ internal sealed partial class DialogImplementation
         }
     }
 
-    private sealed class SelectDialog : Java.Lang.Object, IDialogInterfaceOnShowListener, IDialogInterfaceOnKeyListener
+    private sealed class SelectDialog : Java.Lang.Object, IDialogInterfaceOnKeyListener
     {
         private readonly TaskCompletionSource<int> result = new();
 
@@ -370,7 +374,6 @@ internal sealed partial class DialogImplementation
                 .SetOnKeyListener(this)!
                 .SetCancelable(false)!
                 .Create();
-            alertDialog.SetOnShowListener(this);
             alertDialog.ListView!.Selector = new ColorDrawable(options.SelectColor.ToAndroid());
 
             alertDialog.Show();
@@ -380,19 +383,16 @@ internal sealed partial class DialogImplementation
                 alertDialog.ListView.SetSelection(selected);
             }
 
-            return result.Task;
-        }
-
-        public void OnShow(IDialogInterface? dialog)
-        {
             alertDialog.ListView?.RequestFocus();
+
+            return result.Task;
         }
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e!.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
+            if ((e is not null) && (e.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
             {
-                dialog!.Dismiss();
+                alertDialog.Dismiss();
                 result.TrySetResult(-1);
                 return true;
             }
@@ -401,7 +401,7 @@ internal sealed partial class DialogImplementation
         }
     }
 
-    private sealed class PromptDialog : Java.Lang.Object, IDialogInterfaceOnKeyListener
+    private sealed class PromptDialog : Java.Lang.Object, IDialogInterfaceOnKeyListener, TextView.IOnEditorActionListener
     {
         private readonly TaskCompletionSource<PromptResult> result = new();
 
@@ -462,7 +462,11 @@ internal sealed partial class DialogImplementation
                 input.SetFilters(filters.ToArray());
             }
 
-            // TODO show keyboard
+            if (options.EnablePromptEnterAction)
+            {
+                input.SetOnEditorActionListener(this);
+            }
+
             alertDialog = new MaterialAlertDialogBuilder(activity)
                 .SetTitle(title)!
                 .SetMessage(message)!
@@ -473,6 +477,8 @@ internal sealed partial class DialogImplementation
                 .SetNegativeButton(cancel, (_, _) => result.TrySetResult(PromptResult.Cancel))
                 .Create();
 
+            alertDialog.Window!.SetSoftInputMode(SoftInput.StateVisible);
+
             alertDialog.Show();
 
             input.RequestFocus();
@@ -482,11 +488,22 @@ internal sealed partial class DialogImplementation
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            // TODO enter?
-            if ((e!.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
+            if ((e is not null) && (e.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode) && !options.IgnorePromptDismissKeys.Contains(e.KeyCode))
             {
-                dialog!.Dismiss();
+                alertDialog.Dismiss();
                 result.TrySetResult(PromptResult.Cancel);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool OnEditorAction(TextView? v, ImeAction actionId, KeyEvent? e)
+        {
+            if ((e is not null) && (e.Action == KeyEventActions.Down) && e.KeyCode == Keycode.Enter)
+            {
+                alertDialog.Dismiss();
+                result.TrySetResult(new PromptResult(true, v?.Text!));
                 return true;
             }
 

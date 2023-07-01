@@ -50,7 +50,13 @@ public class DialogOptions
 
 #if ANDROID
 #pragma warning disable CA1819
+    public bool EnableDialogButtonFocus { get; set; }
+
+    public bool EnablePromptEnterAction { get; set; }
+
     public Keycode[] DismissKeys { get; set; } = Array.Empty<Keycode>();
+
+    public Keycode[] IgnorePromptDismissKeys { get; set; } = Array.Empty<Keycode>();
 #pragma warning restore CA1819
 #endif
 }

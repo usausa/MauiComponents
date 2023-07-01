@@ -10,9 +10,10 @@ public static partial class ServiceCollectionExtensions
     public static IServiceCollection AddComponentsDialog(this IServiceCollection service, Action<DialogOptions> configure)
     {
 #if ANDROID
-        configure(((DialogImplementation)Dialog.Current).Options);
+        var options = new DialogOptions();
+        configure(options);
 
-        service.AddSingleton(Dialog.Current);
+        service.AddSingleton<IDialog>(new DialogImplementation(options));
 #endif
         return service;
     }

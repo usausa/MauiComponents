@@ -44,7 +44,7 @@ public class MainPageViewModel : ViewModelBase
         });
         InputCommand = MakeAsyncCommand(async () =>
         {
-            var result = await dialog.InputAsync(defaultValue: "123", inputType: InputType.Number, maxLength: 5);
+            var result = await dialog.PromptAsync(defaultValue: "123", parameter: new PromptParameter { PromptType = PromptType.Number, MaxLength = 5 });
             if (result.Accepted)
             {
                 await dialog.InformationAsync($"Result={result.Text}");

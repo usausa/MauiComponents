@@ -33,7 +33,6 @@ public static class MauiProgram
 #if ANDROID
                 services.AddComponentsDialog(c =>
                 {
-                    c.DismissKeys = new[] { Keycode.Escape };
                     c.IndicatorColor = new Color(27, 110, 194);
                     c.LoadingMessageBackgroundColor = Colors.White;
                     c.LoadingMessageColor = Colors.Black;
@@ -41,6 +40,11 @@ public static class MauiProgram
                     c.ProgressAreaBackgroundColor = Colors.White;
                     c.ProgressCircleColor1 = new Color(27, 110, 194);
                     c.ProgressCircleColor2 = new Color(224, 224, 224);
+
+                    c.DismissKeys = new[] { Keycode.Escape, Keycode.Del };
+                    c.IgnorePromptDismissKeys = new[] { Keycode.Del };
+                    c.EnableDialogButtonFocus = true;
+                    c.EnablePromptEnterAction = true;
                 });
 #endif
                 services.AddComponentsPopup(c =>

@@ -39,7 +39,17 @@ public static class Dialog
 
 internal sealed partial class DialogImplementation : IDialog
 {
-    public DialogOptions Options { get; } = new();
+    public DialogOptions Options { get; }
+
+    public DialogImplementation()
+        : this(new DialogOptions())
+    {
+    }
+
+    public DialogImplementation(DialogOptions options)
+    {
+        Options = options;
+    }
 
     public partial ValueTask InformationAsync(string message, string? title, string ok);
 
