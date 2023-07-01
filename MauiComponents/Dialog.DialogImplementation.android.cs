@@ -428,22 +428,24 @@ internal sealed partial class DialogImplementation
                 Text = defaultValue
             };
 
-            // TODO Ex
             switch (parameter.PromptType)
             {
                 case PromptType.Default:
                     input.InputType = InputTypes.ClassText;
                     break;
-                case PromptType.Email:
-                    input.InputType = InputTypes.ClassText | InputTypes.TextVariationEmailAddress;
-                    break;
                 case PromptType.Number:
-                    input.InputType = InputTypes.ClassNumber | InputTypes.NumberFlagSigned;
+                    input.InputType = InputTypes.ClassNumber;
+                    if (parameter.Sign)
+                    {
+                        input.InputType |= InputTypes.NumberFlagSigned;
+                    }
                     break;
                 case PromptType.Decimal:
-                    input.InputType = InputTypes.ClassNumber | InputTypes.NumberFlagSigned | InputTypes.NumberFlagDecimal;
-                    var locale = LocaleListCompat.Default.Get(0);
-                    input.KeyListener = new DigitsKeyListener(locale, true, true);
+                    input.InputType = InputTypes.ClassNumber | InputTypes.NumberFlagDecimal;
+                    if (parameter.Sign)
+                    {
+                        input.InputType |= InputTypes.NumberFlagSigned;
+                    }
                     break;
             }
 

@@ -11,7 +11,6 @@ public enum Confirm3Result
 public enum PromptType
 {
     Default,
-    Email,
     Number,
     Decimal
 }
@@ -25,7 +24,7 @@ public sealed class PromptParameter
 
     public int MaxLength { get; set; }
 
-    // TODO sign, 小数点
+    public bool Sign { get; set; } = true;
 }
 
 public sealed class PromptResult
