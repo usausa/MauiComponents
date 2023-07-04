@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net7.0-android;net7.0-ios</TargetFrameworks>
+    <UseMaui>true</UseMaui>
+    <SingleProject>true</SingleProject>
+    <CodeAnalysisRuleSet>..\MauiComponents.ruleset</CodeAnalysisRuleSet>
+
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">27.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Components.Maui.Resolver</PackageId>
+    <Title>Components.Maui.Resolver</Title>
+    <Description>Components for MAUI application resolver integration</Description>
+    <Summary>Components for MAUI application resolver integration</Summary>
+    <PackageTags>maui smart ioc di dependencyinjection</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Usa.Smart.Core" Version="2.2.0" />
+    <PackageReference Include="Usa.Smart.Resolver" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MauiComponents\MauiComponents.csproj" />
+  </ItemGroup>
+
+</Project>
