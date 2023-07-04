@@ -31,11 +31,8 @@
     <None Include="**\ios\**\*.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
   </ItemGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net7.0')) == true">
-    <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
-  </ItemGroup>
-
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
     <PackageReference Include="Usa.Smart.Core" Version="2.2.0" />
   </ItemGroup>
 
