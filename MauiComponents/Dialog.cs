@@ -73,4 +73,6 @@ public interface IDialog
     IProgress Progress();
 
     void Snackbar(string message, int duration = 1000, Color? color = null, Color? textColor = null);
+
+    ValueTask Toast(string text, bool longDuration = false, double textSize = 14);
 }

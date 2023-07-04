@@ -11,6 +11,8 @@ using Smart.Maui.ViewModels;
 
 public class MainPageViewModel : ViewModelBase
 {
+    private int count;
+
     public ICommand InformationCommand { get; }
     public ICommand ConfirmCommand { get; }
     public ICommand Confirm3Command { get; }
@@ -21,6 +23,7 @@ public class MainPageViewModel : ViewModelBase
     public ICommand LoadingCommand { get; }
     public ICommand ProgressCommand { get; }
     public ICommand SnackbarCommand { get; }
+    public ICommand ToastCommand { get; }
 
     public ICommand PopupCommand { get; }
 
@@ -88,6 +91,11 @@ public class MainPageViewModel : ViewModelBase
         {
             var result = await popupNavigator.PopupAsync<string, bool>(DialogId.Sample, DateTime.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture));
             await dialog.InformationAsync($"Result={result}");
+        });
+        ToastCommand = MakeAsyncCommand(async () =>
+        {
+            count++;
+            await dialog.Toast($"Count={count}");
         });
     }
 }

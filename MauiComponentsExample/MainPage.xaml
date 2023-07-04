@@ -9,7 +9,7 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="30,0"
-                             Spacing="18" VerticalOptions="Center">
+                             Spacing="12" VerticalOptions="Center">
 
             <Button Command="{Binding InformationCommand}"
                     Text="Information" />
@@ -31,6 +31,8 @@
                     Text="Progress" />
             <Button Command="{Binding SnackbarCommand}"
                     Text="Snackbar" />
+            <Button Command="{Binding ToastCommand}"
+                    Text="Toast" />
 
             <Button Command="{Binding PopupCommand}"
                     Text="Popup" />

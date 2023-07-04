@@ -1,5 +1,7 @@
 namespace MauiComponents;
 
+using CommunityToolkit.Maui.Core;
+
 public static class Dialog
 {
     private static DialogImplementation? current;
@@ -35,6 +37,9 @@ public static class Dialog
 
     public static void Snackbar(string message, int duration = 1000, Color? color = null, Color? textColor = null) =>
         Current.Snackbar(message, duration, color, textColor);
+
+    public static ValueTask Toast(string text, bool longDuration = false, double textSize = 14) =>
+        Current.Toast(text, longDuration, textSize);
 }
 
 internal sealed partial class DialogImplementation : IDialog
@@ -64,6 +69,12 @@ internal sealed partial class DialogImplementation : IDialog
     public partial IDisposable Indicator();
 
     public partial void Snackbar(string message, int duration, Color? color, Color? textColor);
+
+    public async ValueTask Toast(string text, bool longDuration, double textSize)
+    {
+        var toast = CommunityToolkit.Maui.Alerts.Toast.Make(text, longDuration ? ToastDuration.Long : ToastDuration.Short, textSize);
+        await toast.Show().ConfigureAwait(false);
+    }
 
     public IDisposable Lock()
     {
