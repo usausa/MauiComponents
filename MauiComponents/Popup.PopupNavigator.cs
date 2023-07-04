@@ -36,7 +36,7 @@ public sealed class PopupNavigator : IPopupNavigator
         }
         popup.BindingContext = null;
 
-        return (TResult)result!;
+        return result is null ? default! : (TResult)result;
     }
 
     public async ValueTask<TResult> PopupAsync<TParameter, TResult>(object id, TParameter parameter)
@@ -71,7 +71,7 @@ public sealed class PopupNavigator : IPopupNavigator
         }
         popup.BindingContext = null;
 
-        return (TResult)result!;
+        return result is null ? default! : (TResult)result;
     }
 
     public async ValueTask<object?> PopupAsync(object id)
