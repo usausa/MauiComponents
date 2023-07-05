@@ -6,12 +6,12 @@ public static class ResolverConfigExtensions
 {
     // Serializer
 
-    public static ResolverConfig UseComponentsSerializer(this ResolverConfig config)
+    public static ResolverConfig AddComponentsSerializer(this ResolverConfig config)
     {
-        return config.UseComponentsSerializer(_ => { });
+        return config.AddComponentsSerializer(_ => { });
     }
 
-    public static ResolverConfig UseComponentsSerializer(this ResolverConfig config, Action<DefaultSerializerConfig> configure)
+    public static ResolverConfig AddComponentsSerializer(this ResolverConfig config, Action<DefaultSerializerConfig> configure)
     {
         config.BindSingleton(_ =>
         {
@@ -26,12 +26,12 @@ public static class ResolverConfigExtensions
     // Dialog
 
 #if ANDROID
-    public static ResolverConfig UseComponentsDialog(this ResolverConfig config)
+    public static ResolverConfig AddComponentsDialog(this ResolverConfig config)
     {
-        return config.UseComponentsDialog(_ => { });
+        return config.AddComponentsDialog(_ => { });
     }
 
-    public static ResolverConfig UseComponentsDialog(this ResolverConfig config, Action<DialogConfig> configure)
+    public static ResolverConfig AddComponentsDialog(this ResolverConfig config, Action<DialogConfig> configure)
     {
         config.BindSingleton(_ =>
         {
@@ -46,12 +46,12 @@ public static class ResolverConfigExtensions
 
     // Popup
 
-    public static ResolverConfig UseComponentsPopup(this ResolverConfig config)
+    public static ResolverConfig AddComponentsPopup(this ResolverConfig config)
     {
-        return config.UseComponentsPopup(_ => { });
+        return config.AddComponentsPopup(_ => { });
     }
 
-    public static ResolverConfig UseComponentsPopup(this ResolverConfig config, Action<PopupNavigatorConfig> configure)
+    public static ResolverConfig AddComponentsPopup(this ResolverConfig config, Action<PopupNavigatorConfig> configure)
     {
         config.BindSingleton(_ =>
         {
@@ -66,7 +66,7 @@ public static class ResolverConfigExtensions
 
     // Location
 
-    public static ResolverConfig UseComponentsLocation(this ResolverConfig config)
+    public static ResolverConfig AddComponentsLocation(this ResolverConfig config)
     {
         config.BindSingleton<ILocationManager, LocationManager>();
         return config;
