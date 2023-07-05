@@ -15,40 +15,40 @@ using Google.Android.Material.Snackbar;
 
 using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 
-internal sealed partial class DialogImplementation
+public sealed partial class DialogImplementation
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask InformationAsync(string message, string? title, string ok)
     {
-        using var dialog = new InformationDialog(ActivityResolver.CurrentActivity, Options);
+        using var dialog = new InformationDialog(ActivityResolver.CurrentActivity, Config);
         await dialog.ShowAsync(message, title, ok).ConfigureAwait(true);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<bool> ConfirmAsync(string message, string? title, string ok, string cancel, bool defaultPositive)
     {
-        using var dialog = new ConfirmDialog(ActivityResolver.CurrentActivity, Options);
+        using var dialog = new ConfirmDialog(ActivityResolver.CurrentActivity, Config);
         return await dialog.ShowAsync(message, title, ok, cancel, defaultPositive).ConfigureAwait(true);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<Confirm3Result> Confirm3Async(string message, string? title, string ok, string cancel, string neutral, bool defaultPositive)
     {
-        using var dialog = new Confirm3Dialog(ActivityResolver.CurrentActivity, Options);
+        using var dialog = new Confirm3Dialog(ActivityResolver.CurrentActivity, Config);
         return await dialog.ShowAsync(message, title, ok, cancel, neutral, defaultPositive).ConfigureAwait(true);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<int> SelectAsync(string[] items, int selected, string? title, string? cancel)
     {
-        using var dialog = new SelectDialog(ActivityResolver.CurrentActivity, Options);
+        using var dialog = new SelectDialog(ActivityResolver.CurrentActivity, Config);
         return await dialog.ShowAsync(items, selected, title, cancel).ConfigureAwait(true);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<PromptResult> PromptAsync(string? defaultValue, string? message, string? title, string ok, string cancel, string? placeHolder, PromptParameter? parameter)
     {
-        using var dialog = new PromptDialog(ActivityResolver.CurrentActivity, Options);
+        using var dialog = new PromptDialog(ActivityResolver.CurrentActivity, Config);
         return await dialog.ShowAsync(defaultValue, message, title, ok, cancel, placeHolder, parameter ?? PromptParameter.Default).ConfigureAwait(true);
     }
 
@@ -58,7 +58,7 @@ internal sealed partial class DialogImplementation
     {
         var activity = ActivityResolver.CurrentActivity;
 
-        var size = (int)(DeviceDisplay.MainDisplayInfo.Density * Options.IndicatorSize);
+        var size = (int)(DeviceDisplay.MainDisplayInfo.Density * Config.IndicatorSize);
         var progress = new ProgressBar(activity)
         {
             Indeterminate = true,
@@ -68,12 +68,12 @@ internal sealed partial class DialogImplementation
             }
         };
 
-        if (Options.IndicatorColor is not null)
+        if (Config.IndicatorColor is not null)
         {
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Q)
             {
 #pragma warning disable CA1416
-                progress.IndeterminateDrawable!.SetColorFilter(new BlendModeColorFilter(Options.IndicatorColor.ToAndroid(), BlendMode.SrcAtop!));
+                progress.IndeterminateDrawable!.SetColorFilter(new BlendModeColorFilter(Config.IndicatorColor.ToAndroid(), BlendMode.SrcAtop!));
 #pragma warning restore CA1416
             }
             else
@@ -142,14 +142,14 @@ internal sealed partial class DialogImplementation
 
         private readonly Activity activity;
 
-        private readonly DialogOptions options;
+        private readonly DialogConfig config;
 
         private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
 
-        public InformationDialog(Activity activity, DialogOptions options)
+        public InformationDialog(Activity activity, DialogConfig config)
         {
             this.activity = activity;
-            this.options = options;
+            this.config = config;
         }
 
         protected override void Dispose(bool disposing)
@@ -175,7 +175,7 @@ internal sealed partial class DialogImplementation
 
             alertDialog.Show();
 
-            if (options.EnableDialogButtonFocus)
+            if (config.EnableDialogButtonFocus)
             {
                 var button = alertDialog.GetButton((int)DialogButtonType.Positive)!;
                 button.Focusable = true;
@@ -188,7 +188,7 @@ internal sealed partial class DialogImplementation
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e is not null) && (e.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
+            if ((e is not null) && (e.Action == KeyEventActions.Up) && config.DismissKeys.Contains(e.KeyCode))
             {
                 alertDialog.Dismiss();
                 result.TrySetResult(false);
@@ -205,13 +205,13 @@ internal sealed partial class DialogImplementation
 
         private readonly Activity activity;
 
-        private readonly DialogOptions options;
+        private readonly DialogConfig config;
 
         private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
-        public ConfirmDialog(Activity activity, DialogOptions options)
+        public ConfirmDialog(Activity activity, DialogConfig config)
         {
             this.activity = activity;
-            this.options = options;
+            this.config = config;
         }
 
         protected override void Dispose(bool disposing)
@@ -238,7 +238,7 @@ internal sealed partial class DialogImplementation
 
             alertDialog.Show();
 
-            if (options.EnableDialogButtonFocus)
+            if (config.EnableDialogButtonFocus)
             {
                 var button = alertDialog.GetButton(defaultPositive ? (int)DialogButtonType.Positive : (int)DialogButtonType.Negative)!;
                 button.Focusable = true;
@@ -251,7 +251,7 @@ internal sealed partial class DialogImplementation
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e is not null) && (e.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
+            if ((e is not null) && (e.Action == KeyEventActions.Up) && config.DismissKeys.Contains(e.KeyCode))
             {
                 alertDialog.Dismiss();
                 result.TrySetResult(false);
@@ -268,14 +268,14 @@ internal sealed partial class DialogImplementation
 
         private readonly Activity activity;
 
-        private readonly DialogOptions options;
+        private readonly DialogConfig config;
 
         private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
 
-        public Confirm3Dialog(Activity activity, DialogOptions options)
+        public Confirm3Dialog(Activity activity, DialogConfig config)
         {
             this.activity = activity;
-            this.options = options;
+            this.config = config;
         }
 
         protected override void Dispose(bool disposing)
@@ -303,7 +303,7 @@ internal sealed partial class DialogImplementation
 
             alertDialog.Show();
 
-            if (options.EnableDialogButtonFocus)
+            if (config.EnableDialogButtonFocus)
             {
                 var button = alertDialog.GetButton(defaultPositive ? (int)DialogButtonType.Positive : (int)DialogButtonType.Negative)!;
                 button.Focusable = true;
@@ -316,7 +316,7 @@ internal sealed partial class DialogImplementation
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e is not null) && (e.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
+            if ((e is not null) && (e.Action == KeyEventActions.Up) && config.DismissKeys.Contains(e.KeyCode))
             {
                 alertDialog.Dismiss();
                 result.TrySetResult(Confirm3Result.Negative);
@@ -333,14 +333,14 @@ internal sealed partial class DialogImplementation
 
         private readonly Activity activity;
 
-        private readonly DialogOptions options;
+        private readonly DialogConfig config;
 
         private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
 
-        public SelectDialog(Activity activity, DialogOptions options)
+        public SelectDialog(Activity activity, DialogConfig config)
         {
             this.activity = activity;
-            this.options = options;
+            this.config = config;
         }
 
         protected override void Dispose(bool disposing)
@@ -363,7 +363,7 @@ internal sealed partial class DialogImplementation
                 .SetCancelable(false)!
                 .SetNegativeButton(cancel!, (_, _) => result.TrySetResult(-1))
                 .Create();
-            alertDialog.ListView!.Selector = new ColorDrawable(options.SelectColor.ToAndroid());
+            alertDialog.ListView!.Selector = new ColorDrawable(config.SelectColor.ToAndroid());
 
             alertDialog.Show();
 
@@ -379,7 +379,7 @@ internal sealed partial class DialogImplementation
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e is not null) && (e.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode))
+            if ((e is not null) && (e.Action == KeyEventActions.Up) && config.DismissKeys.Contains(e.KeyCode))
             {
                 alertDialog.Dismiss();
                 result.TrySetResult(-1);
@@ -396,14 +396,14 @@ internal sealed partial class DialogImplementation
 
         private readonly Activity activity;
 
-        private readonly DialogOptions options;
+        private readonly DialogConfig config;
 
         private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
 
-        public PromptDialog(Activity activity, DialogOptions options)
+        public PromptDialog(Activity activity, DialogConfig config)
         {
             this.activity = activity;
-            this.options = options;
+            this.config = config;
         }
 
         protected override void Dispose(bool disposing)
@@ -453,12 +453,12 @@ internal sealed partial class DialogImplementation
                 input.SetFilters(filters.ToArray());
             }
 
-            if (options.EnablePromptEnterAction)
+            if (config.EnablePromptEnterAction)
             {
                 input.SetOnEditorActionListener(this);
             }
 
-            if (options.EnablePromptSelectAll)
+            if (config.EnablePromptSelectAll)
             {
                 input.SetSelectAllOnFocus(true);
             }
@@ -484,7 +484,7 @@ internal sealed partial class DialogImplementation
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e is not null) && (e.Action == KeyEventActions.Up) && options.DismissKeys.Contains(e.KeyCode) && !options.IgnorePromptDismissKeys.Contains(e.KeyCode))
+            if ((e is not null) && (e.Action == KeyEventActions.Up) && config.DismissKeys.Contains(e.KeyCode) && !config.IgnorePromptDismissKeys.Contains(e.KeyCode))
             {
                 alertDialog.Dismiss();
                 result.TrySetResult(PromptResult.Cancel);

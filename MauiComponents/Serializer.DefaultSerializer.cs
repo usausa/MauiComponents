@@ -2,7 +2,7 @@ namespace MauiComponents;
 
 using System.Text.Json;
 
-public sealed class JsonSerializerConfig
+public sealed class DefaultSerializerConfig
 {
     public JsonSerializerOptions Options { get; } = new()
     {
@@ -10,16 +10,16 @@ public sealed class JsonSerializerConfig
     };
 }
 
-public sealed class JsonSerializer : ISerializer
+public sealed class DefaultSerializer : ISerializer
 {
     private readonly JsonSerializerOptions options;
 
-    public JsonSerializer()
-        : this(new JsonSerializerConfig())
+    public DefaultSerializer()
+        : this(new DefaultSerializerConfig())
     {
     }
 
-    public JsonSerializer(JsonSerializerConfig config)
+    public DefaultSerializer(DefaultSerializerConfig config)
     {
         options = config.Options;
     }

@@ -11,51 +11,55 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddComponentsSerializer(this IServiceCollection service)
     {
-        service.AddSingleton<ISerializer, JsonSerializer>();
-        return service;
+        return service.AddComponentsSerializer(_ => { });
     }
 
-    public static IServiceCollection AddComponentsSerializer(this IServiceCollection service, Action<JsonSerializerConfig> action)
+    public static IServiceCollection AddComponentsSerializer(this IServiceCollection service, Action<DefaultSerializerConfig> configure)
     {
-        service.AddSingleton<ISerializer>(_ =>
+        service.AddSingleton(_ =>
         {
-            var config = new JsonSerializerConfig();
-            action(config);
-            return new JsonSerializer(config);
+            var config = new DefaultSerializerConfig();
+            configure(config);
+            return config;
         });
+        service.AddSingleton<ISerializer, DefaultSerializer>();
         return service;
     }
 
     // Dialog
 
+#if ANDROID
     public static IServiceCollection AddComponentsDialog(this IServiceCollection service)
     {
         return service.AddComponentsDialog(_ => { });
     }
 
-    public static IServiceCollection AddComponentsDialog(this IServiceCollection service, Action<DialogOptions> configure)
+    public static IServiceCollection AddComponentsDialog(this IServiceCollection service, Action<DialogConfig> configure)
     {
-#if ANDROID
-
-        service.AddSingleton<DialogOptions>(_ =>
+        service.AddSingleton(_ =>
         {
-            var options = new DialogOptions();
-            configure(options);
-            return options;
+            var config = new DialogConfig();
+            configure(config);
+            return config;
         });
         service.AddSingleton<IDialog, DialogImplementation>();
-#endif
         return service;
     }
+#endif
 
     // Popup
 
-    public static IServiceCollection AddComponentsPopup(this IServiceCollection service, Action<PopupNavigatorConfig> action)
+    public static IServiceCollection AddComponentsPopup(this IServiceCollection service)
+    {
+        return service.AddComponentsPopup(_ => { });
+    }
+
+    public static IServiceCollection AddComponentsPopup(this IServiceCollection service, Action<PopupNavigatorConfig> configure)
     {
         service.AddSingleton(_ =>
         {
             var config = new PopupNavigatorConfig();
-            action(config);
+            configure(config);
             return config;
         });
         service.AddSingleton<IPopupFactory, DefaultPopupFactory>();

@@ -42,18 +42,18 @@ public static class Dialog
         Current.Toast(text, longDuration, textSize);
 }
 
-internal sealed partial class DialogImplementation : IDialog
+public sealed partial class DialogImplementation : IDialog
 {
-    public DialogOptions Options { get; }
+    public DialogConfig Config { get; }
 
     public DialogImplementation()
-        : this(new DialogOptions())
+        : this(new DialogConfig())
     {
     }
 
-    public DialogImplementation(DialogOptions options)
+    public DialogImplementation(DialogConfig config)
     {
-        Options = options;
+        Config = config;
     }
 
     public partial ValueTask InformationAsync(string message, string? title, string ok);
@@ -79,27 +79,27 @@ internal sealed partial class DialogImplementation : IDialog
     public IDisposable Lock()
     {
         var window = Application.Current!.MainPage!.GetParentWindow();
-        return new LockOverlay(window, Options);
+        return new LockOverlay(window, Config);
     }
 
     public ILoading Loading(string text = "")
     {
         var window = Application.Current!.MainPage!.GetParentWindow();
-        return new LoadingOverlay(window, Options, text);
+        return new LoadingOverlay(window, Config, text);
     }
 
     public IProgress Progress()
     {
         var window = Application.Current!.MainPage!.GetParentWindow();
-        return new ProgressOverlay(window, Options);
+        return new ProgressOverlay(window, Config);
     }
 
     private sealed class LockOverlay : WindowOverlay, IDisposable
     {
-        public LockOverlay(IWindow window, DialogOptions options)
+        public LockOverlay(IWindow window, DialogConfig configs)
             : base(window)
         {
-            AddWindowElement(new ElementOverlay(options));
+            AddWindowElement(new ElementOverlay(configs));
             EnableDrawableTouchHandling = true;
 
             window.AddOverlay(this);
@@ -112,16 +112,16 @@ internal sealed partial class DialogImplementation : IDialog
 
         private sealed class ElementOverlay : IWindowOverlayElement
         {
-            private readonly DialogOptions options;
+            private readonly DialogConfig configs;
 
-            public ElementOverlay(DialogOptions options)
+            public ElementOverlay(DialogConfig configs)
             {
-                this.options = options;
+                this.configs = configs;
             }
 
             public void Draw(ICanvas canvas, RectF dirtyRect)
             {
-                canvas.FillColor = options.LockBackgroundColor;
+                canvas.FillColor = configs.LockBackgroundColor;
                 canvas.FillRectangle(dirtyRect);
             }
 
@@ -133,7 +133,7 @@ internal sealed partial class DialogImplementation : IDialog
     {
         private readonly ElementOverlay overlay;
 
-        public LoadingOverlay(IWindow window, DialogOptions options, string text)
+        public LoadingOverlay(IWindow window, DialogConfig options, string text)
             : base(window)
         {
             overlay = new ElementOverlay(options) { Text = text };
@@ -156,11 +156,11 @@ internal sealed partial class DialogImplementation : IDialog
 
         private sealed class ElementOverlay : IWindowOverlayElement
         {
-            private readonly DialogOptions options;
+            private readonly DialogConfig options;
 
             public string Text { get; set; } = string.Empty;
 
-            public ElementOverlay(DialogOptions options)
+            public ElementOverlay(DialogConfig options)
             {
                 this.options = options;
             }
@@ -195,7 +195,7 @@ internal sealed partial class DialogImplementation : IDialog
     {
         private readonly ElementOverlay overlay;
 
-        public ProgressOverlay(IWindow window, DialogOptions options)
+        public ProgressOverlay(IWindow window, DialogConfig options)
             : base(window)
         {
             overlay = new ElementOverlay(options);
@@ -223,11 +223,11 @@ internal sealed partial class DialogImplementation : IDialog
 
         private sealed class ElementOverlay : IWindowOverlayElement
         {
-            private readonly DialogOptions options;
+            private readonly DialogConfig options;
 
             public double Value { get; set; }
 
-            public ElementOverlay(DialogOptions options)
+            public ElementOverlay(DialogConfig options)
             {
                 this.options = options;
             }
