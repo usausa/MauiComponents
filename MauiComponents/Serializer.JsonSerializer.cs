@@ -2,21 +2,26 @@ namespace MauiComponents;
 
 using System.Text.Json;
 
+public sealed class JsonSerializerConfig
+{
+    public JsonSerializerOptions Options { get; } = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+}
+
 public sealed class JsonSerializer : ISerializer
 {
     private readonly JsonSerializerOptions options;
 
     public JsonSerializer()
-        : this(new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        })
+        : this(new JsonSerializerConfig())
     {
     }
 
-    public JsonSerializer(JsonSerializerOptions options)
+    public JsonSerializer(JsonSerializerConfig config)
     {
-        this.options = options;
+        options = config.Options;
     }
 
     public async ValueTask SerializeAsync(Stream stream, object obj, CancellationToken cancel = default) =>
