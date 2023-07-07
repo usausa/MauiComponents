@@ -1,8 +1,5 @@
 namespace MauiComponents.Resolver;
 
-using CommunityToolkit.Maui.Media;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-
 using Smart.Resolver;
 
 public static class ResolverConfigExtensions
