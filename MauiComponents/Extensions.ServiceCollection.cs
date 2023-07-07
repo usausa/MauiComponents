@@ -28,7 +28,6 @@ public static class ServiceCollectionExtensions
 
     // Dialog
 
-#if ANDROID
     public static IServiceCollection AddComponentsDialog(this IServiceCollection service)
     {
         return service.AddComponentsDialog(_ => { });
@@ -45,7 +44,16 @@ public static class ServiceCollectionExtensions
         service.AddSingleton<IDialog, DialogImplementation>();
         return service;
     }
-#endif
+
+    // Screen
+
+    public static IServiceCollection AddComponentsScreen(this IServiceCollection service)
+    {
+        service.TryAddSingleton(DeviceDisplay.Current);
+        service.TryAddSingleton(Screenshot.Default);
+        service.AddSingleton<IScreen, ScreenImplementation>();
+        return service;
+    }
 
     // Popup
 

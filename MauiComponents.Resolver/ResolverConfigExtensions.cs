@@ -25,7 +25,6 @@ public static class ResolverConfigExtensions
 
     // Dialog
 
-#if ANDROID
     public static ResolverConfig AddComponentsDialog(this ResolverConfig config)
     {
         return config.AddComponentsDialog(_ => { });
@@ -42,7 +41,14 @@ public static class ResolverConfigExtensions
         config.BindSingleton<IDialog, DialogImplementation>();
         return config;
     }
-#endif
+
+    // Screen
+
+    public static ResolverConfig AddComponentsScreen(this ResolverConfig config)
+    {
+        config.BindSingleton<IScreen, ScreenImplementation>();
+        return config;
+    }
 
     // Popup
 
