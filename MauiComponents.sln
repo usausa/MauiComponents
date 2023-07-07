@@ -5,7 +5,7 @@ VisualStudioVersion = 17.3.32519.111
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiComponents", "MauiComponents\MauiComponents.csproj", "{64DBED25-8F2D-45E6-A73F-3FB7DC3C53E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MauiComponents.Resolver", "MauiComponents.Resolver\MauiComponents.Resolver.csproj", "{E677BA83-EFE9-4DC5-90B3-E67C8B1F2F56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiComponents.Resolver", "MauiComponents.Resolver\MauiComponents.Resolver.csproj", "{E677BA83-EFE9-4DC5-90B3-E67C8B1F2F56}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiComponentsExample", "MauiComponentsExample\MauiComponentsExample.csproj", "{EDBBA3DB-2CAE-4761-AD5A-431DC563F76D}"
 EndProject
@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 		Settings.XamlStyler = Settings.XamlStyler
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MauiComponents.SourceGenerator", "MauiComponents.SourceGenerator\MauiComponents.SourceGenerator.csproj", "{1AE512D4-43B8-4BDC-9F25-8BEC737AFA8A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{EDBBA3DB-2CAE-4761-AD5A-431DC563F76D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDBBA3DB-2CAE-4761-AD5A-431DC563F76D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EDBBA3DB-2CAE-4761-AD5A-431DC563F76D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{1AE512D4-43B8-4BDC-9F25-8BEC737AFA8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AE512D4-43B8-4BDC-9F25-8BEC737AFA8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AE512D4-43B8-4BDC-9F25-8BEC737AFA8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AE512D4-43B8-4BDC-9F25-8BEC737AFA8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

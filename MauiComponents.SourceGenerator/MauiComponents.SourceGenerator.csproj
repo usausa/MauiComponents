@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <CodeAnalysisRuleSet>..\MauiComponents.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Components.Maui.SourceGenerator</PackageId>
+    <Title>MAUI component library source generator</Title>
+    <Description>Components for MAUI application source generator</Description>
+    <Summary>Components for MAUI application source generator</Summary>
+    <PackageTags>maui</PackageTags>
+  </PropertyGroup>
+
+</Project>
