@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Smart.Navigation.SourceGenerator": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\MauiComponentsExample\\MauiComponentsExample.csproj"
+    }
+  }
+}

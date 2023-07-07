@@ -14,4 +14,12 @@ public static class PopupNavigatorExtensions
             }
         }
     }
+
+    public static void AutoRegister<T>(this PopupNavigatorConfig config, IEnumerable<KeyValuePair<T, Type>> source)
+    {
+        foreach (var pair in source)
+        {
+            config.Register(pair.Key!, pair.Value);
+        }
+    }
 }

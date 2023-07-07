@@ -1,7 +1,5 @@
 namespace MauiComponentsExample;
 
-using System.Reflection;
-
 #if ANDROID
 using Android.Views;
 #endif
@@ -50,9 +48,7 @@ public static class MauiProgram
 #endif
                 services.AddComponentsPopup(c =>
                 {
-                    var ns = typeof(DialogId).Namespace!;
-                    c.AutoRegister(Assembly.GetExecutingAssembly().ExportedTypes
-                        .Where(x => x.Namespace?.StartsWith(ns, StringComparison.Ordinal) ?? false));
+                    c.AutoRegister(ViewRegistry.DialogSource());
                 });
                 services.AddComponentsSerializer();
             })

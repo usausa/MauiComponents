@@ -76,7 +76,7 @@ public sealed class Generator : IIncrementalGenerator
         }
 
         var attributes = typeSymbol.GetAttributes()
-            .Where(x => x.AttributeClass!.ToDisplayString() == "Smart.Navigation.Attributes.ViewAttribute" &&
+            .Where(x => x.AttributeClass!.ToDisplayString() == "MauiComponents.PopupAttribute" &&
                         x.ConstructorArguments.Length == 1)
             .Select(x => x.ConstructorArguments[0])
             .ToList();
@@ -112,8 +112,12 @@ public sealed class Generator : IIncrementalGenerator
             return null;
         }
 
-        if ((methodSymbol.ReturnType is not INamedTypeSymbol returnTypeSymbol) ||
-            (returnTypeSymbol.TypeArguments.Length != 1) ||
+        if (methodSymbol.ReturnType is not INamedTypeSymbol returnTypeSymbol)
+        {
+            return null;
+        }
+
+        if ((returnTypeSymbol.TypeArguments.Length != 1) ||
             (returnTypeSymbol.ConstructedFrom.ToDisplayString() != "System.Collections.Generic.IEnumerable<T>"))
         {
             return null;

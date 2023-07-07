@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net7.0-android</TargetFrameworks>
@@ -22,6 +22,10 @@
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">27.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+  </PropertyGroup>
+
   <ItemGroup>
     <!-- App Icon -->
     <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
@@ -41,13 +45,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MauiComponents.SourceGenerator\MauiComponents.SourceGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="..\MauiComponents\MauiComponents.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Usa.Smart.Core" Version="2.2.0" />
-    <PackageReference Include="Usa.Smart.Maui" Version="1.0.0" />
-    <PackageReference Include="Usa.Smart.Maui.Reactive" Version="1.0.0" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.2.1" />
+    <PackageReference Include="Usa.Smart.Maui" Version="1.0.3" />
+    <PackageReference Include="Usa.Smart.Maui.Reactive" Version="1.0.3" />
     <PackageReference Include="Usa.Smart.Resolver" Version="2.3.0" />
     <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.3.0" />
   </ItemGroup>
