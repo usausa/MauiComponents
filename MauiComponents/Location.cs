@@ -12,7 +12,7 @@ public sealed class LocationEventArgs : EventArgs
     }
 }
 
-public interface ILocationManager
+public interface ILocationService
 {
     event EventHandler<LocationEventArgs> LocationChanged;
 

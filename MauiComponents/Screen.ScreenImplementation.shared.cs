@@ -1,24 +1,5 @@
 namespace MauiComponents;
 
-public static class Screen
-{
-    private static ScreenImplementation? current;
-
-    public static IScreen Current => current ??= new ScreenImplementation(DeviceDisplay.Current, Screenshot.Default);
-
-    public static DisplayOrientation GetOrientation() =>
-        Current.GetOrientation();
-
-    public static void SetOrientation(DisplayOrientation orientation) =>
-        Current.SetOrientation(orientation);
-
-    public static ValueTask<Stream> TakeScreenshotAsync() =>
-        Current.TakeScreenshotAsync();
-
-    public static void KeepScreenOn(bool value) =>
-        Current.KeepScreenOn(value);
-}
-
 public sealed partial class ScreenImplementation : IScreen
 {
     private readonly IDeviceDisplay deviceDisplay;

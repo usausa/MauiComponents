@@ -74,7 +74,7 @@ public static class ResolverConfigExtensions
 
     public static ResolverConfig AddComponentsLocation(this ResolverConfig config)
     {
-        config.BindSingleton<ILocationManager, LocationManager>();
+        config.BindSingleton<ILocationService, LocationService>();
         return config;
     }
 }

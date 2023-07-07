@@ -2,46 +2,6 @@ namespace MauiComponents;
 
 using CommunityToolkit.Maui.Core;
 
-public static class Dialog
-{
-    private static DialogImplementation? current;
-
-    public static IDialog Current => current ??= new DialogImplementation();
-
-    public static ValueTask InformationAsync(string message, string? title = null, string ok = "OK") =>
-        Current.InformationAsync(message, title, ok);
-
-    public static ValueTask<bool> ConfirmAsync(string message, string? title = null, string ok = "OK", string cancel = "Cancel", bool defaultPositive = false) =>
-        Current.ConfirmAsync(message, title, ok, cancel, defaultPositive);
-
-    public static ValueTask<Confirm3Result> Confirm3Async(string message, string? title = null, string ok = "OK", string cancel = "Cancel", string neutral = "Maybe", bool defaultPositive = false) =>
-        Current.Confirm3Async(message, title, ok, cancel, neutral, defaultPositive);
-
-    public static ValueTask<int> SelectAsync(string[] items, int selected = -1, string? title = null, string? cancel = null) =>
-        Current.SelectAsync(items, selected, title, cancel);
-
-    public static ValueTask<PromptResult> PromptAsync(string? defaultValue = null, string? message = null, string? title = null, string ok = "OK", string cancel = "Cancel", string? placeHolder = null, PromptParameter? parameter = null) =>
-        Current.PromptAsync(defaultValue, message, title, ok, cancel, placeHolder, parameter);
-
-    public static IDisposable Lock() =>
-        Current.Lock();
-
-    public static IDisposable Indicator() =>
-        Current.Indicator();
-
-    public static ILoading Loading(string text = "") =>
-        Current.Loading(text);
-
-    public static IProgress Progress() =>
-        Current.Progress();
-
-    public static void Snackbar(string message, int duration = 1000, Color? color = null, Color? textColor = null) =>
-        Current.Snackbar(message, duration, color, textColor);
-
-    public static ValueTask Toast(string text, bool longDuration = false, double textSize = 14) =>
-        Current.Toast(text, longDuration, textSize);
-}
-
 public sealed partial class DialogImplementation : IDialog
 {
     public DialogConfig Config { get; }

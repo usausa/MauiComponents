@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 using Microsoft.Maui.Devices.Sensors;
 
-public sealed class LocationManager : ILocationManager, IDisposable
+public sealed class LocationService : ILocationService, IDisposable
 {
     public event EventHandler<LocationEventArgs>? LocationChanged;
 
@@ -20,12 +20,7 @@ public sealed class LocationManager : ILocationManager, IDisposable
 
     public int Interval { get; set; } = 5000;
 
-    public LocationManager()
-        : this(Geolocation.Default)
-    {
-    }
-
-    public LocationManager(IGeolocation geolocation)
+    public LocationService(IGeolocation geolocation)
     {
         this.geolocation = geolocation;
     }

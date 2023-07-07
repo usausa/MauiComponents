@@ -80,7 +80,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddComponentsLocation(this IServiceCollection service)
     {
         service.TryAddSingleton(Geolocation.Default);
-        service.AddSingleton<ILocationManager, LocationManager>();
+        service.AddSingleton<ILocationService, LocationService>();
         return service;
     }
 
