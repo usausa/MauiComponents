@@ -1,5 +1,8 @@
 namespace MauiComponents.Resolver;
 
+using CommunityToolkit.Maui.Media;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+
 using Smart.Resolver;
 
 public static class ResolverConfigExtensions
@@ -75,6 +78,14 @@ public static class ResolverConfigExtensions
     public static ResolverConfig AddComponentsLocation(this ResolverConfig config)
     {
         config.BindSingleton<ILocationService, LocationService>();
+        return config;
+    }
+
+    // Speech
+
+    public static ResolverConfig AddComponentsSpeech(this ResolverConfig config)
+    {
+        config.BindSingleton<ISpeechService, SpeechService>();
         return config;
     }
 }

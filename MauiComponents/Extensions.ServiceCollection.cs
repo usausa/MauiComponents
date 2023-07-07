@@ -84,6 +84,16 @@ public static class ServiceCollectionExtensions
         return service;
     }
 
+    // Speech
+
+    public static IServiceCollection AddComponentsSpeech(this IServiceCollection service)
+    {
+        service.TryAddSingleton(TextToSpeech.Default);
+        service.TryAddSingleton(SpeechToText.Default);
+        service.AddSingleton<ISpeechService, SpeechService>();
+        return service;
+    }
+
     // Community Toolkit
 
     public static IServiceCollection AddCommunityToolkitInterfaces(this IServiceCollection services)
