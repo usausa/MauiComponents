@@ -27,6 +27,11 @@ public interface IPopupFactory
     Popup Create(Type type);
 }
 
+public interface IPopupPlugin
+{
+    void Extend(Popup popup);
+}
+
 public interface IPopupNavigator
 {
     ValueTask<TResult> PopupAsync<TResult>(object id);

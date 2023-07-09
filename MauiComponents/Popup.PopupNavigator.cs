@@ -6,12 +6,27 @@ public sealed class PopupNavigator : IPopupNavigator
 {
     private readonly IPopupFactory popupFactory;
 
+    private readonly IPopupPlugin[] plugins;
+
     private readonly Dictionary<object, Type> popupTypes;
 
-    public PopupNavigator(IPopupFactory popupFactory, PopupNavigatorConfig config)
+    public PopupNavigator(IPopupFactory popupFactory, IEnumerable<IPopupPlugin> plugins, PopupNavigatorConfig config)
     {
         this.popupFactory = popupFactory;
+        this.plugins = plugins.ToArray();
         popupTypes = new Dictionary<object, Type>(config.PopupTypes);
+    }
+
+    private Popup CreatePopup(Type type)
+    {
+        var popup = popupFactory.Create(type);
+
+        foreach (var plugin in plugins)
+        {
+            plugin.Extend(popup);
+        }
+
+        return popup;
     }
 
     public async ValueTask<TResult> PopupAsync<TResult>(object id)
@@ -21,7 +36,7 @@ public sealed class PopupNavigator : IPopupNavigator
             throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
         }
 
-        var popup = popupFactory.Create(type);
+        var popup = CreatePopup(type);
 
         var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(true);
 
@@ -46,7 +61,7 @@ public sealed class PopupNavigator : IPopupNavigator
             throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
         }
 
-        var popup = popupFactory.Create(type);
+        var popup = CreatePopup(type);
 
         if (popup.BindingContext is IPopupInitialize<TParameter> initialize)
         {
@@ -81,7 +96,7 @@ public sealed class PopupNavigator : IPopupNavigator
             throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
         }
 
-        var popup = popupFactory.Create(type);
+        var popup = CreatePopup(type);
 
         var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(true);
 
@@ -106,7 +121,7 @@ public sealed class PopupNavigator : IPopupNavigator
             throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
         }
 
-        var popup = popupFactory.Create(type);
+        var popup = CreatePopup(type);
 
         if (popup.BindingContext is IPopupInitialize<TParameter> initialize)
         {

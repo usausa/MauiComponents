@@ -75,6 +75,13 @@ public static class ServiceCollectionExtensions
         return service;
     }
 
+    public static IServiceCollection AddComponentsPopupPlugin<T>(this IServiceCollection service)
+        where T : IPopupPlugin
+    {
+        service.AddSingleton(typeof(IPopupPlugin), typeof(T));
+        return service;
+    }
+
     // Location
 
     public static IServiceCollection AddComponentsLocation(this IServiceCollection service)

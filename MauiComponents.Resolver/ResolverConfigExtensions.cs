@@ -70,6 +70,13 @@ public static class ResolverConfigExtensions
         return config;
     }
 
+    public static ResolverConfig AddComponentsPopupPlugin<T>(this ResolverConfig config)
+        where T : IPopupPlugin
+    {
+        config.BindSingleton(typeof(IPopupPlugin), typeof(T));
+        return config;
+    }
+
     // Location
 
     public static ResolverConfig AddComponentsLocation(this ResolverConfig config)
