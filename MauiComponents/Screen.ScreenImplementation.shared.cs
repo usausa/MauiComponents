@@ -34,5 +34,7 @@ public sealed partial class ScreenImplementation : IScreen, IDisposable
 
     public partial void EnableDetectScreenState(bool value);
 
+    // ReSharper disable UnusedMember.Local
     private void RaiseScreenStateChanged(ScreenStateEventArgs args) => ScreenStateChanged?.Invoke(this, args);
+    // ReSharper restore UnusedMember.Local
 }
