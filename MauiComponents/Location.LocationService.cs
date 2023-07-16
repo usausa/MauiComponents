@@ -14,12 +14,6 @@ public sealed class LocationService : ILocationService, IDisposable
 
     private CancellationTokenSource? cts;
 
-    public int Timeout { get; set; } = 10000;
-
-    public GeolocationAccuracy Accuracy { get; set; } = GeolocationAccuracy.Medium;
-
-    public int Interval { get; set; } = 5000;
-
     public LocationService(IGeolocation geolocation)
     {
         this.geolocation = geolocation;
@@ -30,7 +24,7 @@ public sealed class LocationService : ILocationService, IDisposable
         cts?.Dispose();
     }
 
-    public void Start()
+    public void Start(GeolocationAccuracy accuracy, int timeout = 10000, int interval = 0)
     {
         if (running)
         {
@@ -41,7 +35,7 @@ public sealed class LocationService : ILocationService, IDisposable
 
         cts = new CancellationTokenSource();
 #pragma warning disable CA2012
-        _ = LocationLoop(cts.Token);
+        _ = LocationLoop(accuracy, timeout, interval, cts.Token);
 #pragma warning restore CA2012
     }
 
@@ -82,12 +76,12 @@ public sealed class LocationService : ILocationService, IDisposable
         return null;
     }
 
-    public async ValueTask<Location?> GetLocationAsync(CancellationToken cancel = default)
+    public async ValueTask<Location?> GetLocationAsync(GeolocationAccuracy accuracy, int timeout = 10000, CancellationToken cancel = default)
     {
 #pragma warning disable CA1031
         try
         {
-            var request = new GeolocationRequest(Accuracy, TimeSpan.FromSeconds(Timeout));
+            var request = new GeolocationRequest(accuracy, TimeSpan.FromSeconds(timeout));
             var location = await geolocation.GetLocationAsync(request, cancel).ConfigureAwait(false);
             if (location != null)
             {
@@ -103,21 +97,21 @@ public sealed class LocationService : ILocationService, IDisposable
         return null;
     }
 
-    private async ValueTask LocationLoop(CancellationToken cancel)
+    private async ValueTask LocationLoop(GeolocationAccuracy accuracy, int timeout, int interval, CancellationToken cancel)
     {
 #pragma warning disable CA1031
         try
         {
             while (!cancel.IsCancellationRequested)
             {
-                var request = new GeolocationRequest(Accuracy, TimeSpan.FromSeconds(Timeout));
+                var request = new GeolocationRequest(accuracy, TimeSpan.FromSeconds(timeout));
                 var location = await geolocation.GetLocationAsync(request).ConfigureAwait(false);
                 if (location is not null)
                 {
                     LocationChanged?.Invoke(this, new LocationEventArgs(location));
                 }
 
-                await Task.Delay(Interval, cancel).ConfigureAwait(false);
+                await Task.Delay(interval, cancel).ConfigureAwait(false);
             }
         }
         catch (TaskCanceledException)

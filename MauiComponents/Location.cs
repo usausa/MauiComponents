@@ -14,15 +14,13 @@ public sealed class LocationEventArgs : EventArgs
 
 public interface ILocationService
 {
-    event EventHandler<LocationEventArgs> LocationChanged;
+    event EventHandler<LocationEventArgs>? LocationChanged;
 
-    int Interval { get; set; }
-
-    void Start();
+    void Start(GeolocationAccuracy accuracy, int timeout = 10000, int interval = 0);
 
     void Stop();
 
     ValueTask<Location?> GetLastLocationAsync();
 
-    ValueTask<Location?> GetLocationAsync(CancellationToken cancel = default);
+    ValueTask<Location?> GetLocationAsync(GeolocationAccuracy accuracy, int timeout = 10000, CancellationToken cancel = default);
 }
