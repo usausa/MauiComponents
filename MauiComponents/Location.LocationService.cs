@@ -24,7 +24,7 @@ public sealed class LocationService : ILocationService, IDisposable
         cts?.Dispose();
     }
 
-    public void Start(GeolocationAccuracy accuracy, int timeout = 10000, int interval = 0)
+    public void Start(GeolocationAccuracy accuracy = GeolocationAccuracy.Medium, int interval = 0, int timeout = 10000)
     {
         if (running)
         {
@@ -35,7 +35,7 @@ public sealed class LocationService : ILocationService, IDisposable
 
         cts = new CancellationTokenSource();
 #pragma warning disable CA2012
-        _ = LocationLoop(accuracy, timeout, interval, cts.Token);
+        _ = LocationLoop(accuracy, interval, timeout, cts.Token);
 #pragma warning restore CA2012
     }
 
@@ -76,7 +76,7 @@ public sealed class LocationService : ILocationService, IDisposable
         return null;
     }
 
-    public async ValueTask<Location?> GetLocationAsync(GeolocationAccuracy accuracy, int timeout = 10000, CancellationToken cancel = default)
+    public async ValueTask<Location?> GetLocationAsync(GeolocationAccuracy accuracy = GeolocationAccuracy.Medium, int timeout = 10000, CancellationToken cancel = default)
     {
 #pragma warning disable CA1031
         try
@@ -97,7 +97,7 @@ public sealed class LocationService : ILocationService, IDisposable
         return null;
     }
 
-    private async ValueTask LocationLoop(GeolocationAccuracy accuracy, int timeout, int interval, CancellationToken cancel)
+    private async ValueTask LocationLoop(GeolocationAccuracy accuracy, int interval, int timeout, CancellationToken cancel)
     {
 #pragma warning disable CA1031
         try
