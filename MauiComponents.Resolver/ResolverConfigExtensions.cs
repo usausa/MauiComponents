@@ -8,7 +8,7 @@ public static class ResolverConfigExtensions
 
     public static ResolverConfig AddComponentsSerializer(this ResolverConfig config)
     {
-        return config.AddComponentsSerializer(_ => { });
+        return config.AddComponentsSerializer(static _ => { });
     }
 
     public static ResolverConfig AddComponentsSerializer(this ResolverConfig config, Action<DefaultSerializerConfig> configure)
@@ -27,7 +27,7 @@ public static class ResolverConfigExtensions
 
     public static ResolverConfig AddComponentsDialog(this ResolverConfig config)
     {
-        return config.AddComponentsDialog(_ => { });
+        return config.AddComponentsDialog(static _ => { });
     }
 
     public static ResolverConfig AddComponentsDialog(this ResolverConfig config, Action<DialogConfig> configure)
@@ -54,7 +54,7 @@ public static class ResolverConfigExtensions
 
     public static ResolverConfig AddComponentsPopup(this ResolverConfig config)
     {
-        return config.AddComponentsPopup(_ => { });
+        return config.AddComponentsPopup(static _ => { });
     }
 
     public static ResolverConfig AddComponentsPopup(this ResolverConfig config, Action<PopupNavigatorConfig> configure)

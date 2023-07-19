@@ -7,7 +7,7 @@ public static class LoggingBuilderExtensions
 #if ANDROID
     public static ILoggingBuilder AddAndroidLogger(this ILoggingBuilder builder)
     {
-        return builder.AddAndroidLogger(_ => { });
+        return builder.AddAndroidLogger(static _ => { });
     }
 
     public static ILoggingBuilder AddAndroidLogger(this ILoggingBuilder builder, Action<AndroidLoggerOptions> configure)
@@ -20,7 +20,7 @@ public static class LoggingBuilderExtensions
 
     public static ILoggingBuilder AddFileLogger(this ILoggingBuilder builder)
     {
-        return builder.AddFileLogger(_ => { });
+        return builder.AddFileLogger(static _ => { });
     }
 
     public static ILoggingBuilder AddFileLogger(this ILoggingBuilder builder, Action<FileLoggerOptions> configure)

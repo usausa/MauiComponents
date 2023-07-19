@@ -46,14 +46,14 @@ public sealed class Generator : IIncrementalGenerator
             .CreateSyntaxProvider(
                 static (node, _) => IsPopupTargetSyntax(node),
                 static (context, _) => GetPopupModel(context))
-            .Where(x => x is not null)
+            .Where(static x => x is not null)
             .Collect();
 
         var sourceProvider = context.SyntaxProvider
             .CreateSyntaxProvider(
                 static (node, _) => IsSourceTargetSyntax(node),
                 static (context, _) => GetSourceModel(context))
-            .Where(x => x is not null)
+            .Where(static x => x is not null)
             .Collect();
 
         context.RegisterImplementationSourceOutput(
@@ -76,9 +76,9 @@ public sealed class Generator : IIncrementalGenerator
         }
 
         var attributes = typeSymbol.GetAttributes()
-            .Where(x => x.AttributeClass!.ToDisplayString() == "MauiComponents.PopupAttribute" &&
-                        x.ConstructorArguments.Length == 1)
-            .Select(x => x.ConstructorArguments[0])
+            .Where(static x => x.AttributeClass!.ToDisplayString() == "MauiComponents.PopupAttribute" &&
+                          x.ConstructorArguments.Length == 1)
+            .Select(static x => x.ConstructorArguments[0])
             .ToList();
         if (attributes.Count == 0)
         {
@@ -88,7 +88,7 @@ public sealed class Generator : IIncrementalGenerator
         return new PopupModel(
             typeSymbol.ToDisplayString(),
             attributes[0].Type!.ToDisplayString(),
-            attributes.Select(x => new PopupIdEntry(x.ToCSharpString(), x.Value)).ToArray());
+            attributes.Select(static x => new PopupIdEntry(x.ToCSharpString(), x.Value)).ToArray());
     }
 
     private static SourceModel? GetSourceModel(GeneratorSyntaxContext context)
@@ -106,7 +106,7 @@ public sealed class Generator : IIncrementalGenerator
         }
 
         var attribute = methodSymbol.GetAttributes()
-            .FirstOrDefault(x => x.AttributeClass!.ToDisplayString() == "MauiComponents.PopupSource");
+            .FirstOrDefault(static x => x.AttributeClass!.ToDisplayString() == "MauiComponents.PopupSource");
         if (attribute is null)
         {
             return null;
@@ -153,8 +153,8 @@ public sealed class Generator : IIncrementalGenerator
     private static void Execute(SourceProductionContext context, ImmutableArray<PopupModel> popupModels, ImmutableArray<SourceModel> sourceModels)
     {
         var popupModelMap = popupModels
-            .GroupBy(x => x.PopupIdClassFullName)
-            .ToDictionary(x => x.Key, x => x.ToList());
+            .GroupBy(static x => x.PopupIdClassFullName)
+            .ToDictionary(static x => x.Key, x => x.ToList());
 
         var buffer = new StringBuilder();
 
@@ -191,7 +191,7 @@ public sealed class Generator : IIncrementalGenerator
 
             if (popupModelMap.TryGetValue(sourceModel.PopupIdClassFullName, out var views))
             {
-                foreach (var entry in views.SelectMany(x => x.Entries.Select(y => new { Model = x, Entry = y })).OrderBy(x => x.Entry.Value))
+                foreach (var entry in views.SelectMany(static x => x.Entries.Select(y => new { Model = x, Entry = y })).OrderBy(x => x.Entry.Value))
                 {
                     buffer.Append("            yield return new ");
                     buffer.Append(sourceModel.EntryTypeName);

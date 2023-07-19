@@ -11,7 +11,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddComponentsSerializer(this IServiceCollection service)
     {
-        return service.AddComponentsSerializer(_ => { });
+        return service.AddComponentsSerializer(static _ => { });
     }
 
     public static IServiceCollection AddComponentsSerializer(this IServiceCollection service, Action<DefaultSerializerConfig> configure)
@@ -30,7 +30,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddComponentsDialog(this IServiceCollection service)
     {
-        return service.AddComponentsDialog(_ => { });
+        return service.AddComponentsDialog(static _ => { });
     }
 
     public static IServiceCollection AddComponentsDialog(this IServiceCollection service, Action<DialogConfig> configure)
@@ -59,7 +59,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddComponentsPopup(this IServiceCollection service)
     {
-        return service.AddComponentsPopup(_ => { });
+        return service.AddComponentsPopup(static _ => { });
     }
 
     public static IServiceCollection AddComponentsPopup(this IServiceCollection service, Action<PopupNavigatorConfig> configure)
@@ -105,10 +105,10 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddCommunityToolkitInterfaces(this IServiceCollection services)
     {
-        services.AddSingleton(_ => FileSaver.Default);
-        services.AddSingleton(_ => FolderPicker.Default);
+        services.AddSingleton(FileSaver.Default);
+        services.AddSingleton(FolderPicker.Default);
 
-        services.AddSingleton(_ => SpeechToText.Default);
+        services.AddSingleton(SpeechToText.Default);
 
         return services;
     }
