@@ -217,7 +217,15 @@ public sealed partial class DialogImplementation : IDialog
                 canvas.DrawArc(arcRect, 0, 360, false, false);
 
                 canvas.StrokeColor = options.ProgressCircleColor1;
-                canvas.DrawArc(arcRect, 90, 90 - (int)(360 * Value / 100), true, false);
+                var endAngle = 90 - (int)(360 * Value / 100);
+                if (endAngle <= -270)
+                {
+                    canvas.DrawArc(arcRect, 0, 360, false, false);
+                }
+                else
+                {
+                    canvas.DrawArc(arcRect, 90, endAngle, true, false);
+                }
 
                 canvas.FontColor = options.ProgressValueColor;
                 canvas.FontSize = options.ProgressValueFontSize;
