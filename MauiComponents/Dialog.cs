@@ -76,3 +76,12 @@ public interface IDialog
 
     ValueTask Toast(string text, bool longDuration = false, double textSize = 14);
 }
+
+public static class DialogExtensions
+{
+    public static async ValueTask<T?> SelectAsync<T>(this IDialog dialog, IList<T> items, Func<T, string> formatter, int selected = -1, string? title = null, string? cancel = null)
+    {
+        var index = await dialog.SelectAsync(items.Select(formatter).ToArray(), selected, title, cancel).ConfigureAwait(false);
+        return index >= 0 ? items[index] : default;
+    }
+}
