@@ -12,5 +12,5 @@ public interface ISpeechService
 
     // Speech to text
 
-    ValueTask<string?> RecognizeAsync(Action<string> progress, CultureInfo? culture = null, CancellationToken cancel = default);
+    ValueTask<string?> RecognizeAsync(Progress<string> progress, CultureInfo? culture = null, CancellationToken cancel = default);
 }

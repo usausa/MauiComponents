@@ -33,7 +33,7 @@ public sealed partial class DialogImplementation : IDialog
     public async ValueTask Toast(string text, bool longDuration, double textSize)
     {
         var toast = CommunityToolkit.Maui.Alerts.Toast.Make(text, longDuration ? ToastDuration.Long : ToastDuration.Short, textSize);
-        await toast.Show().ConfigureAwait(false);
+        await toast.Show().ConfigureAwait(true);
     }
 
     public IDisposable Lock()

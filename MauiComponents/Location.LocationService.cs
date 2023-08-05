@@ -61,7 +61,7 @@ public sealed class LocationService : ILocationService, IDisposable
     {
         try
         {
-            var location = await geolocation.GetLastKnownLocationAsync().ConfigureAwait(false);
+            var location = await geolocation.GetLastKnownLocationAsync().ConfigureAwait(true);
             if (location != null)
             {
                 return location;
@@ -82,7 +82,7 @@ public sealed class LocationService : ILocationService, IDisposable
         try
         {
             var request = new GeolocationRequest(accuracy, TimeSpan.FromSeconds(timeout));
-            var location = await geolocation.GetLocationAsync(request, cancel).ConfigureAwait(false);
+            var location = await geolocation.GetLocationAsync(request, cancel).ConfigureAwait(true);
             if (location != null)
             {
                 return location;
@@ -105,13 +105,13 @@ public sealed class LocationService : ILocationService, IDisposable
             while (!cancel.IsCancellationRequested)
             {
                 var request = new GeolocationRequest(accuracy, TimeSpan.FromSeconds(timeout));
-                var location = await geolocation.GetLocationAsync(request).ConfigureAwait(false);
+                var location = await geolocation.GetLocationAsync(request).ConfigureAwait(true);
                 if (location is not null)
                 {
                     LocationChanged?.Invoke(this, new LocationEventArgs(location));
                 }
 
-                await Task.Delay(interval, cancel).ConfigureAwait(false);
+                await Task.Delay(interval, cancel).ConfigureAwait(true);
             }
         }
         catch (TaskCanceledException)

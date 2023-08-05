@@ -26,8 +26,8 @@ public sealed partial class ScreenImplementation : IScreen, IDisposable
 
     public async ValueTask<Stream> TakeScreenshotAsync()
     {
-        var result = await screenshot.CaptureAsync().ConfigureAwait(false);
-        return await result.OpenReadAsync().ConfigureAwait(false);
+        var result = await screenshot.CaptureAsync().ConfigureAwait(true);
+        return await result.OpenReadAsync().ConfigureAwait(true);
     }
 
     public void KeepScreenOn(bool value) => deviceDisplay.KeepScreenOn = value;

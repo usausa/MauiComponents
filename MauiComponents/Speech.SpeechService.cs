@@ -37,7 +37,7 @@ public sealed class SpeechService : ISpeechService, IDisposable
             Pitch = pitch,
             Volume = volume
         };
-        await textToSpeech.SpeakAsync(text, options, cts.Token).ConfigureAwait(false);
+        await textToSpeech.SpeakAsync(text, options, cts.Token).ConfigureAwait(true);
     }
 
     public void SpeakCancel()
@@ -54,24 +54,33 @@ public sealed class SpeechService : ISpeechService, IDisposable
     // Speech to text
     // ------------------------------------------------------------
 
-    public async ValueTask<string?> RecognizeAsync(Action<string> progress, CultureInfo? culture, CancellationToken cancel)
+    public async ValueTask<string?> RecognizeAsync(Progress<string> progress, CultureInfo? culture, CancellationToken cancel)
     {
-        var granted = await speechToText.RequestPermissions(default).ConfigureAwait(false);
+        var granted = await speechToText.RequestPermissions(default).ConfigureAwait(true);
         if (!granted)
         {
             return null;
         }
 
-        var result = await speechToText.ListenAsync(
-            culture ?? CultureInfo.CurrentCulture,
-            new Progress<string>(progress),
-            cancel).ConfigureAwait(false);
-        result.EnsureSuccess();
-
-        if (result.IsSuccessful)
+#pragma warning disable CA1031
+        try
         {
-            return result.Text;
+            var result = await speechToText.ListenAsync(
+                culture ?? CultureInfo.CurrentCulture,
+                progress,
+                cancel).ConfigureAwait(true);
+            result.EnsureSuccess();
+
+            if (result.IsSuccessful)
+            {
+                return result.Text;
+            }
         }
+        catch
+        {
+            // Ignore
+        }
+#pragma warning restore CA1031
 
         return null;
     }
