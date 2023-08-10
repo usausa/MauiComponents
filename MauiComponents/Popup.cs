@@ -15,6 +15,8 @@ public interface IPopupInitializeAsync<in T>
 public interface IPopupControllerHandler
 {
     void Close(object? value);
+
+    Task CloseAsync(object? value);
 }
 
 public interface IPopupController

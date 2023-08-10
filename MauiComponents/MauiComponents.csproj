@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="5.3.0" />
     <PackageReference Include="Usa.Smart.Core" Version="2.2.1" />
   </ItemGroup>
 

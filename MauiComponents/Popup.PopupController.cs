@@ -12,6 +12,8 @@ internal sealed class PopupControllerHandler : IPopupControllerHandler
     }
 
     public void Close(object? value) => popup.Close(value);
+
+    public Task CloseAsync(object? value) => popup.CloseAsync(value);
 }
 
 public sealed class PopupController : IPopupController
@@ -24,9 +26,12 @@ public sealed class PopupController : IPopupController
         set => handler = value;
     }
 
-    public void Close()
+    public void Close() => handler?.Close(null);
+
+    public Task CloseAsync()
     {
-        handler?.Close(null);
+        var h = handler;
+        return h is not null ? h.CloseAsync(null) : Task.CompletedTask;
     }
 }
 
@@ -43,5 +48,11 @@ public sealed class PopupController<T> : IPopupController
     public void Close(T value = default!)
     {
         handler?.Close(value);
+    }
+
+    public Task CloseAsync(T value = default!)
+    {
+        var h = handler;
+        return h is not null ? h.CloseAsync(value) : Task.CompletedTask;
     }
 }
