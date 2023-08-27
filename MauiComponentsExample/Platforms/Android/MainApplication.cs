@@ -1,4 +1,3 @@
-// ReSharper disable BuiltInTypeReferenceStyle
 // ReSharper disable CheckNamespace
 namespace MauiComponentsExample;
 
