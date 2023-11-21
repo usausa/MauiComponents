@@ -56,7 +56,7 @@ public sealed class SpeechService : ISpeechService, IDisposable
 
     public async ValueTask<string?> RecognizeAsync(Progress<string> progress, CultureInfo? culture, CancellationToken cancel)
     {
-        var granted = await speechToText.RequestPermissions().ConfigureAwait(true);
+        var granted = await speechToText.RequestPermissions(cancel).ConfigureAwait(true);
         if (!granted)
         {
             return null;
