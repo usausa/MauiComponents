@@ -9,7 +9,7 @@ public static class ActivityResolver
 {
     public static Activity CurrentActivity { get; private set; } = default!;
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
     public static void Init(Activity activity)
     {
         CurrentActivity = activity;

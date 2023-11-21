@@ -17,43 +17,43 @@ using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 
 public sealed partial class DialogImplementation
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask InformationAsync(string message, string? title, string ok)
     {
         using var dialog = new InformationDialog(ActivityResolver.CurrentActivity, Config);
         await dialog.ShowAsync(message, title, ok).ConfigureAwait(true);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<bool> ConfirmAsync(string message, string? title, string ok, string cancel, bool defaultPositive)
     {
         using var dialog = new ConfirmDialog(ActivityResolver.CurrentActivity, Config);
         return await dialog.ShowAsync(message, title, ok, cancel, defaultPositive).ConfigureAwait(true);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<Confirm3Result> Confirm3Async(string message, string? title, string ok, string cancel, string neutral, bool defaultPositive)
     {
         using var dialog = new Confirm3Dialog(ActivityResolver.CurrentActivity, Config);
         return await dialog.ShowAsync(message, title, ok, cancel, neutral, defaultPositive).ConfigureAwait(true);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<int> SelectAsync(string[] items, int selected, string? title, string? cancel)
     {
         using var dialog = new SelectDialog(ActivityResolver.CurrentActivity, Config);
         return await dialog.ShowAsync(items, selected, title, cancel).ConfigureAwait(true);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<PromptResult> PromptAsync(string? defaultValue, string? message, string? title, string ok, string cancel, string? placeHolder, PromptParameter? parameter)
     {
         using var dialog = new PromptDialog(ActivityResolver.CurrentActivity, Config);
         return await dialog.ShowAsync(defaultValue, message, title, ok, cancel, placeHolder, parameter ?? PromptParameter.Default).ConfigureAwait(true);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
     public partial IDisposable Indicator()
     {
         var activity = ActivityResolver.CurrentActivity;
@@ -78,9 +78,9 @@ public sealed partial class DialogImplementation
             }
             else
             {
-#pragma warning disable CS0618
+#pragma warning disable CA1422
                 progress.IndeterminateDrawable!.SetColorFilter(Colors.Blue.ToAndroid(), PorterDuff.Mode.SrcAtop!);
-#pragma warning restore CS0618
+#pragma warning restore CA1422
             }
         }
 
@@ -102,7 +102,7 @@ public sealed partial class DialogImplementation
         return new DialogDismiss(dialog);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public partial void Snackbar(string message, int duration, Microsoft.Maui.Graphics.Color? color, Microsoft.Maui.Graphics.Color? textColor)
     {
         var activity = ActivityResolver.CurrentActivity;
@@ -138,7 +138,7 @@ public sealed partial class DialogImplementation
 
     private sealed class InformationDialog : Java.Lang.Object, IDialogInterfaceOnKeyListener
     {
-        private readonly TaskCompletionSource<bool> result = new();
+        private readonly TaskCompletionSource result = new();
 
         private readonly Activity activity;
 
@@ -162,7 +162,7 @@ public sealed partial class DialogImplementation
             base.Dispose(disposing);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
         public Task ShowAsync(string message, string? title, string ok)
         {
             alertDialog = new MaterialAlertDialogBuilder(activity)
@@ -170,7 +170,7 @@ public sealed partial class DialogImplementation
                 .SetMessage(message)!
                 .SetOnKeyListener(this)!
                 .SetCancelable(false)!
-                .SetPositiveButton(ok, (_, _) => result.TrySetResult(true))
+                .SetPositiveButton(ok, (_, _) => result.TrySetResult())
                 .Create();
 
             alertDialog.Show();
@@ -191,7 +191,7 @@ public sealed partial class DialogImplementation
             if ((e is not null) && (e.Action == KeyEventActions.Up) && config.DismissKeys.Contains(e.KeyCode))
             {
                 alertDialog.Dismiss();
-                result.TrySetResult(false);
+                result.TrySetResult();
                 return true;
             }
 
@@ -224,7 +224,7 @@ public sealed partial class DialogImplementation
             base.Dispose(disposing);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
         public Task<bool> ShowAsync(string message, string? title, string ok, string cancel, bool defaultPositive)
         {
             alertDialog = new MaterialAlertDialogBuilder(activity)
@@ -288,7 +288,7 @@ public sealed partial class DialogImplementation
             base.Dispose(disposing);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
         public Task<Confirm3Result> ShowAsync(string message, string? title, string ok, string cancel, string neutral, bool defaultPositive)
         {
             alertDialog = new MaterialAlertDialogBuilder(activity)
@@ -353,7 +353,7 @@ public sealed partial class DialogImplementation
             base.Dispose(disposing);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
         public Task<int> ShowAsync(string[] items, int selected, string? title, string? cancel)
         {
             alertDialog = new MaterialAlertDialogBuilder(activity)
@@ -416,7 +416,7 @@ public sealed partial class DialogImplementation
             base.Dispose(disposing);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
         public Task<PromptResult> ShowAsync(string? defaultValue, string? message, string? title, string ok, string cancel, string? placeHolder, PromptParameter parameter)
         {
             var input = new EditText(activity)

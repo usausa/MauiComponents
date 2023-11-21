@@ -10,7 +10,7 @@ public sealed partial class ScreenImplementation
     private ScreenStateBroadcastReceiver? screenStateBroadcastReceiver;
 #pragma warning restore CA2213
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     private partial void PlatformDispose()
     {
         EnableDetectScreenState(false);
@@ -33,7 +33,7 @@ public sealed partial class ScreenImplementation
         };
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public partial void EnableDetectScreenState(bool value)
     {
         if (value)

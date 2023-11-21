@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net7.0-android</TargetFrameworks>
+    <TargetFrameworks>net8.0-android</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <RootNamespace>MauiComponentsExample</RootNamespace>
     <UseMaui>true</UseMaui>
@@ -13,7 +13,6 @@
 
     <!-- App Identifier -->
     <ApplicationId>com.companyname.mauicomponentsexample</ApplicationId>
-    <ApplicationIdGuid>F9A17C69-9F0C-462D-9C33-95CFF30B217D</ApplicationIdGuid>
 
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -35,7 +34,7 @@
 
     <!-- Images -->
     <MauiImage Include="Resources\Images\*" />
-    <MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
+    <MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 
     <!-- Custom Fonts -->
     <MauiFont Include="Resources\Fonts\*" />
@@ -50,9 +49,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Usa.Smart.Core" Version="2.2.1" />
-    <PackageReference Include="Usa.Smart.Maui" Version="1.0.3" />
-    <PackageReference Include="Usa.Smart.Maui.Reactive" Version="1.0.3" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+    <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.3.0" />
+    <PackageReference Include="Usa.Smart.Maui" Version="1.0.7" />
+    <PackageReference Include="Usa.Smart.Maui.Reactive" Version="1.0.7" />
     <PackageReference Include="Usa.Smart.Resolver" Version="2.3.0" />
     <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.3.0" />
   </ItemGroup>
