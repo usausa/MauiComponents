@@ -17,42 +17,36 @@ using Microsoft.Maui.Controls.Compatibility.Platform.Android;
 
 public sealed partial class DialogImplementation
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask InformationAsync(string message, string? title, string ok)
     {
         using var dialog = new InformationDialog(ActivityResolver.CurrentActivity, Config);
         await dialog.ShowAsync(message, title, ok).ConfigureAwait(true);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<bool> ConfirmAsync(string message, string? title, string ok, string cancel, bool defaultPositive)
     {
         using var dialog = new ConfirmDialog(ActivityResolver.CurrentActivity, Config);
         return await dialog.ShowAsync(message, title, ok, cancel, defaultPositive).ConfigureAwait(true);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<Confirm3Result> Confirm3Async(string message, string? title, string ok, string cancel, string neutral, bool defaultPositive)
     {
         using var dialog = new Confirm3Dialog(ActivityResolver.CurrentActivity, Config);
         return await dialog.ShowAsync(message, title, ok, cancel, neutral, defaultPositive).ConfigureAwait(true);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<int> SelectAsync(string[] items, int selected, string? title, string? cancel)
     {
         using var dialog = new SelectDialog(ActivityResolver.CurrentActivity, Config);
         return await dialog.ShowAsync(items, selected, title, cancel).ConfigureAwait(true);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     public async partial ValueTask<PromptResult> PromptAsync(string? defaultValue, string? message, string? title, string ok, string cancel, string? placeHolder, PromptParameter? parameter)
     {
         using var dialog = new PromptDialog(ActivityResolver.CurrentActivity, Config);
         return await dialog.ShowAsync(defaultValue, message, title, ok, cancel, placeHolder, parameter ?? PromptParameter.Default).ConfigureAwait(true);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
     public partial IDisposable Indicator()
     {
@@ -95,7 +89,7 @@ public sealed partial class DialogImplementation
             .SetView(layout)!
             .SetCancelable(false);
 
-        builder.SetBackground(new ColorDrawable(Android.Graphics.Color.Transparent));
+        builder.SetBackground(new ColorDrawable(Color.Transparent));
 
         var dialog = builder.Show()!;
 
@@ -448,9 +442,9 @@ public sealed partial class DialogImplementation
 
             if (parameter.MaxLength > 0)
             {
-                var filters = input.GetFilters()?.ToList() ?? new List<IInputFilter>();
+                var filters = input.GetFilters()?.ToList() ?? [];
                 filters.Add(new InputFilterLengthFilter(parameter.MaxLength));
-                input.SetFilters(filters.ToArray());
+                input.SetFilters([.. filters]);
             }
 
             if (config.EnablePromptEnterAction)

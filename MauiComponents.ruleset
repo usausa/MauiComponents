@@ -2,6 +2,8 @@
 <RuleSet Name="XamarinFormsComponents Rules" Description="XamarinFormsComponents Rules" ToolsVersion="16.0">
   <IncludeAll Action="Warning" />
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <!-- https://github.com/DotNetAnalyzers/StyleCopAnalyzers/issues/3687 -->
+    <Rule Id="SA1010" Action="Hidden" />
     <Rule Id="SA1101" Action="Hidden" />
     <Rule Id="SA1121" Action="Hidden" />
     <Rule Id="SA1201" Action="Hidden" />

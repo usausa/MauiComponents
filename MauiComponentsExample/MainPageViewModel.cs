@@ -42,7 +42,7 @@ public class MainPageViewModel : ViewModelBase
         });
         SelectCommand = MakeAsyncCommand(async () =>
         {
-            var result = await dialog.SelectAsync(new[] { "Item-1", "Item-2", "Item-3" }, cancel: "Cancel");
+            var result = await dialog.SelectAsync(["Item-1", "Item-2", "Item-3"], cancel: "Cancel");
             await dialog.InformationAsync($"Result={result}");
         });
         InputCommand = MakeAsyncCommand(async () =>

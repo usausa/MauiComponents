@@ -12,7 +12,6 @@
     <PackageId>Components.Maui.Resolver</PackageId>
     <Title>Components.Maui.Resolver</Title>
     <Description>Components for MAUI application resolver integration</Description>
-    <Summary>Components for MAUI application resolver integration</Summary>
     <PackageTags>maui smart ioc di dependencyinjection</PackageTags>
   </PropertyGroup>
 

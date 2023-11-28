@@ -19,7 +19,6 @@
     <PackageId>Components.Maui.SourceGenerator</PackageId>
     <Title>MAUI component library source generator</Title>
     <Description>Components for MAUI application source generator</Description>
-    <Summary>Components for MAUI application source generator</Summary>
     <PackageTags>maui</PackageTags>
   </PropertyGroup>
 

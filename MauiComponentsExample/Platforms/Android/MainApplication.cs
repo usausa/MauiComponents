@@ -1,4 +1,5 @@
 // ReSharper disable CheckNamespace
+#pragma warning disable IDE0130
 namespace MauiComponentsExample;
 
 using Android.App;

@@ -39,8 +39,8 @@ public static class MauiProgram
                     c.ProgressCircleColor1 = new Color(27, 110, 194);
                     c.ProgressCircleColor2 = new Color(224, 224, 224);
 
-                    c.DismissKeys = new[] { Keycode.Escape, Keycode.Del };
-                    c.IgnorePromptDismissKeys = new[] { Keycode.Del };
+                    c.DismissKeys = [Keycode.Escape, Keycode.Del];
+                    c.IgnorePromptDismissKeys = [Keycode.Del];
                     c.EnableDialogButtonFocus = true;
                     c.EnablePromptEnterAction = true;
                     c.EnablePromptSelectAll = true;

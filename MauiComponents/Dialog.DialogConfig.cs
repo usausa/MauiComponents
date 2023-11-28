@@ -4,7 +4,6 @@ namespace MauiComponents;
 using Android.Views;
 #endif
 
-#pragma warning disable CA1819
 public class DialogConfig
 {
     public Color SelectColor { get; set; } = new(255, 0, 0, 64);
@@ -50,15 +49,16 @@ public class DialogConfig
     public float ProgressValueFontSize { get; set; } = 28;
 
 #if ANDROID
+#pragma warning disable CA1819
     public bool EnableDialogButtonFocus { get; set; }
 
     public bool EnablePromptEnterAction { get; set; }
 
     public bool EnablePromptSelectAll { get; set; }
 
-    public Keycode[] DismissKeys { get; set; } = Array.Empty<Keycode>();
+    public Keycode[] DismissKeys { get; set; } = [];
 
-    public Keycode[] IgnorePromptDismissKeys { get; set; } = Array.Empty<Keycode>();
+    public Keycode[] IgnorePromptDismissKeys { get; set; } = [];
+#pragma warning restore CA1819
 #endif
 }
-#pragma warning restore CA1819
