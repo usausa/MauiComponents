@@ -1,6 +1,6 @@
 namespace MauiComponentsExample;
 
-public partial class MainPage
+public sealed partial class MainPage
 {
     public MainPage()
     {

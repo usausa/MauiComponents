@@ -4,7 +4,7 @@ namespace MauiComponents;
 using Android.Views;
 #endif
 
-public class DialogConfig
+public sealed class DialogConfig
 {
     public Color SelectColor { get; set; } = new(255, 0, 0, 64);
 

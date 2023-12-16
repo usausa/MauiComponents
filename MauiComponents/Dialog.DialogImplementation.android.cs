@@ -47,12 +47,12 @@ public sealed partial class DialogImplementation
         return await dialog.ShowAsync(defaultValue, message, title, ok, cancel, placeHolder, parameter ?? PromptParameter.Default).ConfigureAwait(true);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
     public partial IDisposable Indicator()
     {
         var activity = ActivityResolver.CurrentActivity;
 
         var size = (int)(DeviceDisplay.MainDisplayInfo.Density * Config.IndicatorSize);
+#pragma warning disable CA2000
         var progress = new ProgressBar(activity)
         {
             Indeterminate = true,
@@ -61,13 +61,16 @@ public sealed partial class DialogImplementation
                 Gravity = GravityFlags.Center
             }
         };
+#pragma warning restore CA2000
 
         if (Config.IndicatorColor is not null)
         {
             if (Build.VERSION.SdkInt >= BuildVersionCodes.Q)
             {
 #pragma warning disable CA1416
+#pragma warning disable CA2000
                 progress.IndeterminateDrawable!.SetColorFilter(new BlendModeColorFilter(Config.IndicatorColor.ToAndroid(), BlendMode.SrcAtop!));
+#pragma warning restore CA2000
 #pragma warning restore CA1416
             }
             else
@@ -78,25 +81,31 @@ public sealed partial class DialogImplementation
             }
         }
 
+#pragma warning disable CA2000
         var layout = new FrameLayout(activity)
         {
             LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent)
         };
+#pragma warning restore CA2000
         layout.AddView(progress);
 
+#pragma warning disable CA2000
         var builder = new MaterialAlertDialogBuilder(activity);
+#pragma warning restore CA2000
         builder
             .SetView(layout)!
             .SetCancelable(false);
 
+#pragma warning disable CA2000
         builder.SetBackground(new ColorDrawable(Color.Transparent));
+#pragma warning restore CA2000
 
         var dialog = builder.Show()!;
 
         return new DialogDismiss(dialog);
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:MarkMembersAsStatic", Justification = "Ignore")]
+#pragma warning disable CA1822
     public partial void Snackbar(string message, int duration, Microsoft.Maui.Graphics.Color? color, Microsoft.Maui.Graphics.Color? textColor)
     {
         var activity = ActivityResolver.CurrentActivity;
@@ -117,6 +126,7 @@ public sealed partial class DialogImplementation
 
         snackBar.Show();
     }
+#pragma warning restore CA1822
 
     private sealed class DialogDismiss : IDisposable
     {
@@ -156,9 +166,9 @@ public sealed partial class DialogImplementation
             base.Dispose(disposing);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
         public Task ShowAsync(string message, string? title, string ok)
         {
+#pragma warning disable CA2000
             alertDialog = new MaterialAlertDialogBuilder(activity)
                 .SetTitle(title)!
                 .SetMessage(message)!
@@ -166,6 +176,7 @@ public sealed partial class DialogImplementation
                 .SetCancelable(false)!
                 .SetPositiveButton(ok, (_, _) => result.TrySetResult())
                 .Create();
+#pragma warning restore CA2000
 
             alertDialog.Show();
 
@@ -202,6 +213,7 @@ public sealed partial class DialogImplementation
         private readonly DialogConfig config;
 
         private AndroidX.AppCompat.App.AlertDialog alertDialog = default!;
+
         public ConfirmDialog(Activity activity, DialogConfig config)
         {
             this.activity = activity;
@@ -218,9 +230,9 @@ public sealed partial class DialogImplementation
             base.Dispose(disposing);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
         public Task<bool> ShowAsync(string message, string? title, string ok, string cancel, bool defaultPositive)
         {
+#pragma warning disable CA2000
             alertDialog = new MaterialAlertDialogBuilder(activity)
                 .SetTitle(title)!
                 .SetMessage(message)!
@@ -229,6 +241,7 @@ public sealed partial class DialogImplementation
                 .SetPositiveButton(ok, (_, _) => result.TrySetResult(true))
                 .SetNegativeButton(cancel, (_, _) => result.TrySetResult(false))
                 .Create();
+#pragma warning restore CA2000
 
             alertDialog.Show();
 
@@ -282,9 +295,9 @@ public sealed partial class DialogImplementation
             base.Dispose(disposing);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
         public Task<Confirm3Result> ShowAsync(string message, string? title, string ok, string cancel, string neutral, bool defaultPositive)
         {
+#pragma warning disable CA2000
             alertDialog = new MaterialAlertDialogBuilder(activity)
                 .SetTitle(title)!
                 .SetMessage(message)!
@@ -294,6 +307,7 @@ public sealed partial class DialogImplementation
                 .SetNegativeButton(cancel, (_, _) => result.TrySetResult(Confirm3Result.Negative))
                 .SetNeutralButton(neutral, (_, _) => result.TrySetResult(Confirm3Result.Neutral))
                 .Create();
+#pragma warning restore CA2000
 
             alertDialog.Show();
 
@@ -347,9 +361,9 @@ public sealed partial class DialogImplementation
             base.Dispose(disposing);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
         public Task<int> ShowAsync(string[] items, int selected, string? title, string? cancel)
         {
+#pragma warning disable CA2000
             alertDialog = new MaterialAlertDialogBuilder(activity)
                 .SetTitle(title)!
                 .SetItems(items, (_, args) => result.TrySetResult(args.Which))
@@ -357,6 +371,7 @@ public sealed partial class DialogImplementation
                 .SetCancelable(false)!
                 .SetNegativeButton(cancel!, (_, _) => result.TrySetResult(-1))
                 .Create();
+#pragma warning restore CA2000
             alertDialog.ListView!.Selector = new ColorDrawable(config.SelectColor.ToAndroid());
 
             alertDialog.Show();
@@ -410,14 +425,15 @@ public sealed partial class DialogImplementation
             base.Dispose(disposing);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ignore")]
         public Task<PromptResult> ShowAsync(string? defaultValue, string? message, string? title, string ok, string cancel, string? placeHolder, PromptParameter parameter)
         {
+#pragma warning disable CA2000
             var input = new EditText(activity)
             {
                 Hint = placeHolder,
                 Text = defaultValue
             };
+#pragma warning restore CA2000
 
             switch (parameter.PromptType)
             {
@@ -457,6 +473,7 @@ public sealed partial class DialogImplementation
                 input.SetSelectAllOnFocus(true);
             }
 
+#pragma warning disable CA2000
             alertDialog = new MaterialAlertDialogBuilder(activity)
                 .SetTitle(title)!
                 .SetMessage(message)!
@@ -466,6 +483,7 @@ public sealed partial class DialogImplementation
                 .SetPositiveButton(ok, (_, _) => result.TrySetResult(new PromptResult(true, input.Text!)))
                 .SetNegativeButton(cancel, (_, _) => result.TrySetResult(PromptResult.Cancel))
                 .Create();
+#pragma warning restore CA2000
 
             alertDialog.Window!.SetSoftInputMode(SoftInput.StateVisible);
 

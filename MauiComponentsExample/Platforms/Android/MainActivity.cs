@@ -1,5 +1,5 @@
-// ReSharper disable once CheckNamespace
 #pragma warning disable IDE0130
+// ReSharper disable once CheckNamespace
 namespace MauiComponentsExample;
 
 using Android.App;
@@ -9,7 +9,7 @@ using Android.OS;
 using MauiComponents;
 
 [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
-public class MainActivity : MauiAppCompatActivity
+public sealed class MainActivity : MauiAppCompatActivity
 {
     protected override void OnCreate(Bundle? savedInstanceState)
     {

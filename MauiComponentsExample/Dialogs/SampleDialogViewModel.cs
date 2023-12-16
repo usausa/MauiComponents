@@ -7,7 +7,7 @@ using MauiComponents;
 using Smart.ComponentModel;
 using Smart.Maui.ViewModels;
 
-public class SampleDialogViewModel : ViewModelBase, IPopupInitialize<string>
+public sealed class SampleDialogViewModel : ViewModelBase, IPopupInitialize<string>
 {
     public PopupController<bool> Popup { get; } = new();
 

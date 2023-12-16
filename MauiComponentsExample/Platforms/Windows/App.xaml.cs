@@ -1,7 +1,7 @@
 // ReSharper disable once CheckNamespace
 namespace MauiComponentsExample.WinUI
 {
-    public partial class App
+    public sealed partial class App
     {
         public App()
         {
