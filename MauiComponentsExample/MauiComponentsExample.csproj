@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net8.0-android</TargetFrameworks>
@@ -53,10 +53,10 @@
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
     <PackageReference Include="Usa.Smart.Core" Version="2.3.0" />
-    <PackageReference Include="Usa.Smart.Maui" Version="1.0.7" />
-    <PackageReference Include="Usa.Smart.Maui.Reactive" Version="1.0.7" />
-    <PackageReference Include="Usa.Smart.Resolver" Version="2.3.0" />
-    <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.3.0" />
+    <PackageReference Include="Usa.Smart.Maui" Version="2.0.0" />
+    <PackageReference Include="Usa.Smart.Maui.Reactive" Version="2.0.0" />
+    <PackageReference Include="Usa.Smart.Resolver" Version="2.4.0" />
+    <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.4.0" />
   </ItemGroup>
 
   <Target Name="DisableAnalyzers" BeforeTargets="CoreCompile">
