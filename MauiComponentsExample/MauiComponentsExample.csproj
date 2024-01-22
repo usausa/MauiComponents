@@ -5,6 +5,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>MauiComponentsExample</RootNamespace>
     <UseMaui>true</UseMaui>
+    <MauiVersion>8.0.6</MauiVersion>
     <SingleProject>true</SingleProject>
     <CodeAnalysisRuleSet>..\MauiComponents.ruleset</CodeAnalysisRuleSet>
 
