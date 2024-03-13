@@ -111,11 +111,8 @@ public sealed class LocationService : ILocationService, IDisposable
                     LocationChanged?.Invoke(this, new LocationEventArgs(location));
                 }
 
-                await Task.Delay(interval, cancel).ConfigureAwait(true);
+                await Task.Delay(interval, cancel).ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
             }
-        }
-        catch (TaskCanceledException)
-        {
         }
         catch (Exception e)
         {
