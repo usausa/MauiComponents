@@ -34,15 +34,9 @@ public sealed partial class ScreenImplementation : IScreen, IDisposable
 
     public partial void EnableDetectScreenState(bool value);
 
-#if !ANDROID
-    // ReSharper disable UnusedMember.Local
-#pragma warning disable IDE0079
-#endif
 #pragma warning disable IDE0051
+    // ReSharper disable UnusedMember.Local
     private void RaiseScreenStateChanged(ScreenStateEventArgs args) => ScreenStateChanged?.Invoke(this, args);
-#pragma warning restore IDE0051
-#if !ANDROID
     // ReSharper restore UnusedMember.Local
-#pragma warning restore IDE0079
-#endif
+#pragma warning restore IDE0051
 }
