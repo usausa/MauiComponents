@@ -13,7 +13,7 @@ using Android.Widget;
 using Google.Android.Material.Dialog;
 using Google.Android.Material.Snackbar;
 
-using Microsoft.Maui.Controls.Compatibility.Platform.Android;
+using Microsoft.Maui.Platform;
 
 public sealed partial class DialogImplementation
 {
@@ -69,14 +69,14 @@ public sealed partial class DialogImplementation
             {
 #pragma warning disable CA1416
 #pragma warning disable CA2000
-                progress.IndeterminateDrawable!.SetColorFilter(new BlendModeColorFilter(Config.IndicatorColor.ToAndroid(), BlendMode.SrcAtop!));
+                progress.IndeterminateDrawable!.SetColorFilter(new BlendModeColorFilter(Config.IndicatorColor.ToPlatform(), BlendMode.SrcAtop!));
 #pragma warning restore CA2000
 #pragma warning restore CA1416
             }
             else
             {
 #pragma warning disable CA1422
-                progress.IndeterminateDrawable!.SetColorFilter(Colors.Blue.ToAndroid(), PorterDuff.Mode.SrcAtop!);
+                progress.IndeterminateDrawable!.SetColorFilter(Colors.Blue.ToPlatform(), PorterDuff.Mode.SrcAtop!);
 #pragma warning restore CA1422
             }
         }
@@ -116,12 +116,12 @@ public sealed partial class DialogImplementation
 
         if (color is not null)
         {
-            snackBar.SetBackgroundTint(color.ToAndroid());
+            snackBar.SetBackgroundTint(color.ToPlatform());
         }
 
         if (textColor is not null)
         {
-            snackBar.SetTextColor(textColor.ToAndroid());
+            snackBar.SetTextColor(textColor.ToPlatform());
         }
 
         snackBar.Show();
@@ -372,7 +372,7 @@ public sealed partial class DialogImplementation
                 .SetNegativeButton(cancel!, (_, _) => result.TrySetResult(-1))
                 .Create();
 #pragma warning restore CA2000
-            alertDialog.ListView!.Selector = new ColorDrawable(config.SelectColor.ToAndroid());
+            alertDialog.ListView!.Selector = new ColorDrawable(config.SelectColor.ToPlatform());
 
             alertDialog.Show();
 

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net8.0-android;net8.0-ios</TargetFrameworks>
@@ -16,8 +16,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Usa.Smart.Core" Version="2.3.6" />
-    <PackageReference Include="Usa.Smart.Resolver" Version="2.4.0" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.3.8" />
+    <PackageReference Include="Usa.Smart.Resolver" Version="2.5.0" />
   </ItemGroup>
 
   <ItemGroup>
