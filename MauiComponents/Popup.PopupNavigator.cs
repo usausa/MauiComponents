@@ -44,11 +44,9 @@ public sealed class PopupNavigator : IPopupNavigator
         {
             Cleanup(popup.Content);
         }
+
         (popup as IDisposable)?.Dispose();
-        if (popup.BindingContext != popup.Parent.BindingContext)
-        {
-            (popup.BindingContext as IDisposable)?.Dispose();
-        }
+        (popup.BindingContext as IDisposable)?.Dispose();
         popup.BindingContext = null;
 
         return result is null ? default! : (TResult)result;
@@ -79,11 +77,9 @@ public sealed class PopupNavigator : IPopupNavigator
         {
             Cleanup(popup.Content);
         }
+
         (popup as IDisposable)?.Dispose();
-        if (popup.BindingContext != popup.Parent.BindingContext)
-        {
-            (popup.BindingContext as IDisposable)?.Dispose();
-        }
+        (popup.BindingContext as IDisposable)?.Dispose();
         popup.BindingContext = null;
 
         return result is null ? default! : (TResult)result;
@@ -105,10 +101,7 @@ public sealed class PopupNavigator : IPopupNavigator
             Cleanup(popup.Content);
         }
         (popup as IDisposable)?.Dispose();
-        if (popup.BindingContext != popup.Parent.BindingContext)
-        {
-            (popup.BindingContext as IDisposable)?.Dispose();
-        }
+        (popup.BindingContext as IDisposable)?.Dispose();
         popup.BindingContext = null;
 
         return result;
@@ -139,11 +132,9 @@ public sealed class PopupNavigator : IPopupNavigator
         {
             Cleanup(popup.Content);
         }
+
         (popup as IDisposable)?.Dispose();
-        if (popup.BindingContext != popup.Parent.BindingContext)
-        {
-            (popup.BindingContext as IDisposable)?.Dispose();
-        }
+        (popup.BindingContext as IDisposable)?.Dispose();
         popup.BindingContext = null;
 
         return result;
