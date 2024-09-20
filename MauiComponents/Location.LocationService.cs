@@ -14,10 +14,6 @@ public sealed class LocationService : ILocationService, IDisposable
 
     private CancellationTokenSource? cts;
 
-    public GeolocationAccuracy GeolocationAccuracy { get; set; } = GeolocationAccuracy.Medium;
-
-    public int Interval { get; set; } = 10000;
-
     public bool IsRunning => timer is not null;
 
     public LocationService(IGeolocation geolocation)
@@ -31,14 +27,14 @@ public sealed class LocationService : ILocationService, IDisposable
         cts?.Dispose();
     }
 
-    public async void Start()
+    public async void Start(GeolocationAccuracy accuracy = GeolocationAccuracy.Medium, int interval = 15000)
     {
         if (IsRunning)
         {
             return;
         }
 
-        var timeout = TimeSpan.FromMilliseconds(Interval);
+        var timeout = TimeSpan.FromMilliseconds(interval);
         cts = new CancellationTokenSource();
         timer = new PeriodicTimer(timeout);
 
@@ -46,7 +42,7 @@ public sealed class LocationService : ILocationService, IDisposable
         {
             do
             {
-                var request = new GeolocationRequest(GeolocationAccuracy, timeout);
+                var request = new GeolocationRequest(accuracy, timeout);
                 var location = await geolocation.GetLocationAsync(request, cts.Token).ConfigureAwait(true);
                 if (location is not null)
                 {
@@ -95,7 +91,7 @@ public sealed class LocationService : ILocationService, IDisposable
         return null;
     }
 
-    public async ValueTask<Location?> GetLocationAsync(GeolocationAccuracy accuracy = GeolocationAccuracy.Medium, int timeout = 10000, CancellationToken cancel = default)
+    public async ValueTask<Location?> GetLocationAsync(GeolocationAccuracy accuracy = GeolocationAccuracy.Medium, int timeout = 15000, CancellationToken cancel = default)
     {
 #pragma warning disable CA1031
         try
