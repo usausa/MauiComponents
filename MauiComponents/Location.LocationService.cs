@@ -10,9 +10,15 @@ public sealed class LocationService : ILocationService, IDisposable
 
     private readonly IGeolocation geolocation;
 
-    private bool running;
+    private PeriodicTimer? timer;
 
     private CancellationTokenSource? cts;
+
+    public GeolocationAccuracy GeolocationAccuracy { get; set; } = GeolocationAccuracy.Medium;
+
+    public int Interval { get; set; } = 10000;
+
+    public bool IsRunning => timer is not null;
 
     public LocationService(IGeolocation geolocation)
     {
@@ -21,39 +27,52 @@ public sealed class LocationService : ILocationService, IDisposable
 
     public void Dispose()
     {
+        timer?.Dispose();
         cts?.Dispose();
     }
 
-    public void Start(GeolocationAccuracy accuracy = GeolocationAccuracy.Medium, int interval = 0, int timeout = 10000)
+    public async void Start()
     {
-        if (running)
+        if (IsRunning)
         {
             return;
         }
 
-        running = true;
-
+        var timeout = TimeSpan.FromMilliseconds(Interval);
         cts = new CancellationTokenSource();
-#pragma warning disable CA2012
-        _ = LocationLoop(accuracy, interval, timeout, cts.Token);
-#pragma warning restore CA2012
+        timer = new PeriodicTimer(timeout);
+
+        try
+        {
+            do
+            {
+                var request = new GeolocationRequest(GeolocationAccuracy, timeout);
+                var location = await geolocation.GetLocationAsync(request, cts.Token).ConfigureAwait(true);
+                if (location is not null)
+                {
+                    LocationChanged?.Invoke(this, new LocationEventArgs(location));
+                }
+            }
+            while (await timer.WaitForNextTickAsync(cts.Token).ConfigureAwait(true));
+        }
+        catch (OperationCanceledException)
+        {
+            // Ignore
+        }
     }
 
     public void Stop()
     {
-        if (!running)
+        if (!IsRunning)
         {
             return;
         }
 
-        if (cts != null)
-        {
-            cts.Cancel();
-            cts.Dispose();
-            cts = null;
-        }
-
-        running = false;
+        // ReSharper disable once MethodHasAsyncOverload
+        cts!.Cancel();
+        cts.Dispose();
+        timer = null;
+        cts = null;
     }
 
 #pragma warning disable CA1031
@@ -95,29 +114,5 @@ public sealed class LocationService : ILocationService, IDisposable
 #pragma warning restore CA1031
 
         return null;
-    }
-
-    private async ValueTask LocationLoop(GeolocationAccuracy accuracy, int interval, int timeout, CancellationToken cancel)
-    {
-#pragma warning disable CA1031
-        try
-        {
-            while (!cancel.IsCancellationRequested)
-            {
-                var request = new GeolocationRequest(accuracy, TimeSpan.FromSeconds(timeout));
-                var location = await geolocation.GetLocationAsync(request).ConfigureAwait(true);
-                if (location is not null)
-                {
-                    LocationChanged?.Invoke(this, new LocationEventArgs(location));
-                }
-
-                await Task.Delay(interval, cancel).ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
-            }
-        }
-        catch (Exception e)
-        {
-            Trace.WriteLine(e);
-        }
-#pragma warning restore CA1031
     }
 }

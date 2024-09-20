@@ -16,11 +16,17 @@ public interface ILocationService
 {
     event EventHandler<LocationEventArgs>? LocationChanged;
 
-    void Start(GeolocationAccuracy accuracy = GeolocationAccuracy.Medium, int interval = 0, int timeout = 10000);
+    GeolocationAccuracy GeolocationAccuracy { get; set; }
+
+    int Interval { get; set; }
+
+    public bool IsRunning { get; }
+
+    void Start();
 
     void Stop();
 
     ValueTask<Location?> GetLastLocationAsync();
 
-    ValueTask<Location?> GetLocationAsync(GeolocationAccuracy accuracy = GeolocationAccuracy.Medium, int timeout = 10000, CancellationToken cancel = default);
+    ValueTask<Location?> GetLocationAsync(GeolocationAccuracy accuracy = GeolocationAccuracy.Medium, int timeout = 15000, CancellationToken cancel = default);
 }
