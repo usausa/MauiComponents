@@ -460,7 +460,7 @@ public sealed partial class DialogImplementation
             {
                 var filters = input.GetFilters()?.ToList() ?? [];
                 filters.Add(new InputFilterLengthFilter(parameter.MaxLength));
-                input.SetFilters(filters.ToArray());
+                input.SetFilters([.. filters]);
             }
 
             if (config.EnablePromptEnterAction)
