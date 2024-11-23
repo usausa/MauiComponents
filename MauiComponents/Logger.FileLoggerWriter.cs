@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 internal sealed class FileLoggerWriter : IDisposable
 {
-    private readonly object sync = new();
+    private readonly Lock sync = new();
 
     private readonly string directory;
 

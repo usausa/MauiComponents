@@ -38,7 +38,7 @@ public sealed class PopupNavigator : IPopupNavigator
 
         var popup = CreatePopup(type);
 
-        var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(true);
+        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync(popup).ConfigureAwait(true);
 
         if (popup.Content is not null)
         {
@@ -71,7 +71,7 @@ public sealed class PopupNavigator : IPopupNavigator
             await initializeAsync.Initialize(parameter).ConfigureAwait(true);
         }
 
-        var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(true);
+        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync(popup).ConfigureAwait(true);
 
         if (popup.Content is not null)
         {
@@ -94,7 +94,7 @@ public sealed class PopupNavigator : IPopupNavigator
 
         var popup = CreatePopup(type);
 
-        var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(true);
+        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync(popup).ConfigureAwait(true);
 
         if (popup.Content is not null)
         {
@@ -126,7 +126,7 @@ public sealed class PopupNavigator : IPopupNavigator
             await initializeAsync.Initialize(parameter).ConfigureAwait(true);
         }
 
-        var result = await Application.Current!.MainPage!.ShowPopupAsync(popup).ConfigureAwait(true);
+        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync(popup).ConfigureAwait(true);
 
         if (popup.Content is not null)
         {

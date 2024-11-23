@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0-android;net8.0-ios</TargetFrameworks>
-    <CodeAnalysisRuleSet>..\MauiComponents.ruleset</CodeAnalysisRuleSet>
+    <TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
+    <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">27.0</SupportedOSPlatformVersion>
@@ -15,19 +15,19 @@
     <PackageTags>maui</PackageTags>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-android')) != true">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-android')) != true">
     <Compile Remove="**\**\*.android.cs" />
     <None Include="**\**\*.android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
   </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net8.0-ios')) != true">
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-ios')) != true">
     <Compile Remove="**\**\*.ios.cs" />
     <None Include="**\**\*.ios.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.91" />
-    <PackageReference Include="Usa.Smart.Core" Version="2.3.8" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="9.1.1" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.10" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.4.0" />
   </ItemGroup>
 
 </Project>

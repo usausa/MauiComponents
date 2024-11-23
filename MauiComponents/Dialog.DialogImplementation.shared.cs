@@ -38,19 +38,19 @@ public sealed partial class DialogImplementation : IDialog
 
     public IDisposable Lock()
     {
-        var window = Application.Current!.MainPage!.GetParentWindow();
+        var window = Application.Current!.Windows[0];
         return new LockOverlay(window, Config);
     }
 
     public ILoading Loading(string text = "")
     {
-        var window = Application.Current!.MainPage!.GetParentWindow();
+        var window = Application.Current!.Windows[0];
         return new LoadingOverlay(window, Config, text);
     }
 
     public IProgress Progress()
     {
-        var window = Application.Current!.MainPage!.GetParentWindow();
+        var window = Application.Current!.Windows[0];
         return new ProgressOverlay(window, Config);
     }
 
