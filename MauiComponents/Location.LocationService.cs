@@ -27,6 +27,7 @@ public sealed class LocationService : ILocationService, IDisposable
         cts?.Dispose();
     }
 
+    // ReSharper disable once AsyncVoidMethod
     public async void Start(GeolocationAccuracy accuracy = GeolocationAccuracy.Medium, int interval = 15000)
     {
         if (IsRunning)
