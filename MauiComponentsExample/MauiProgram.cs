@@ -10,6 +10,8 @@ using MauiComponents;
 
 using MauiComponentsExample.Dialogs;
 
+using Microsoft.Extensions.Logging;
+
 using Smart.Maui;
 using Smart.Resolver;
 
@@ -53,6 +55,10 @@ public static class MauiProgram
                 services.AddComponentsSerializer();
             })
             .ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
+
+#if DEBUG
+        builder.Logging.AddDebug();
+#endif
 
         return builder.Build();
     }

@@ -37,7 +37,6 @@
             <Button Command="{Binding PopupCommand}"
                     Text="Popup" />
 
-
         </VerticalStackLayout>
     </ScrollView>
 
