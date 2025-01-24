@@ -3,10 +3,23 @@
   <PropertyGroup>
     <TargetFrameworks>net9.0-android;net9.0-ios</TargetFrameworks>
     <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>$(NoWarn);NU5118;NU5129</NoWarn>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">27.0</SupportedOSPlatformVersion>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);PackBuildOutputs</TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
+
+  <Target Name="PackBuildOutputs" DependsOnTargets="SatelliteDllsProjectOutputGroup;DebugSymbolsProjectOutputGroup">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="..\MauiComponents.Generator\build\**" PackagePath="build" />
+      <TfmSpecificPackageFile Include="$(OutputPath)\MauiComponents.Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    </ItemGroup>
+  </Target>
 
   <PropertyGroup>
     <PackageId>Components.Maui</PackageId>
@@ -28,6 +41,10 @@
     <PackageReference Include="CommunityToolkit.Maui" Version="10.0.0" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.21" />
     <PackageReference Include="Usa.Smart.Core" Version="2.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MauiComponents.Generator\MauiComponents.Generator.csproj" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

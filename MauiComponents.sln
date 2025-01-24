@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Settings.XamlStyler = Settings.XamlStyler
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiComponents.SourceGenerator", "MauiComponents.SourceGenerator\MauiComponents.SourceGenerator.csproj", "{1AE512D4-43B8-4BDC-9F25-8BEC737AFA8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiComponents.Generator", "MauiComponents.Generator\MauiComponents.Generator.csproj", "{1AE512D4-43B8-4BDC-9F25-8BEC737AFA8A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
