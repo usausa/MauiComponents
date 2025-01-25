@@ -16,7 +16,7 @@
 
   <Target Name="PackBuildOutputs" DependsOnTargets="SatelliteDllsProjectOutputGroup;DebugSymbolsProjectOutputGroup">
     <ItemGroup>
-      <TfmSpecificPackageFile Include="..\MauiComponents.Generator\build\**" PackagePath="build" />
+      <TfmSpecificPackageFile Include="..\MauiComponents.props" PackagePath="build" />
       <TfmSpecificPackageFile Include="$(OutputPath)\MauiComponents.Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     </ItemGroup>
   </Target>

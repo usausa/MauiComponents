@@ -7,20 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiComponents", "MauiCompo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiComponents.Resolver", "MauiComponents.Resolver\MauiComponents.Resolver.csproj", "{E677BA83-EFE9-4DC5-90B3-E67C8B1F2F56}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D0FEF75-D37D-4968-A430-EC0E050DFA73}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		.gitattributes = .gitattributes
-		.gitignore = .gitignore
-		Analyzers.ruleset = Analyzers.ruleset
-		Directory.Build.props = Directory.Build.props
-		Directory.Build.targets = Directory.Build.targets
-		LICENSE = LICENSE
-		MauiComponents.sln.DotSettings = MauiComponents.sln.DotSettings
-		README.md = README.md
-		Settings.XamlStyler = Settings.XamlStyler
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MauiComponents.Generator", "MauiComponents.Generator\MauiComponents.Generator.csproj", "{1AE512D4-43B8-4BDC-9F25-8BEC737AFA8A}"
 EndProject
 Global

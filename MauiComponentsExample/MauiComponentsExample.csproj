@@ -43,7 +43,7 @@
     <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
-  <Import Project="..\MauiComponents.Generator\build\MauiComponents.props" />
+  <Import Project="..\MauiComponents.props" />
 
   <ItemGroup>
     <ProjectReference Include="..\MauiComponents.Generator\MauiComponents.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
