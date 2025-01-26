@@ -229,7 +229,7 @@ public sealed class PopupGenerator : IIncrementalGenerator
             buffer.Append('_');
         }
 
-        buffer.Append(className);
+        buffer.Append(className.Replace('<', '[').Replace('>', ']'));
         buffer.Append('_');
         buffer.Append(methodName);
         buffer.Append(".g.cs");
