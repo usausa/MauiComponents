@@ -17,7 +17,7 @@ public sealed class PopupGenerator : IIncrementalGenerator
     private const string PopupSourceAttributeName = "MauiComponents.PopupSourceAttribute";
     private const string PopupAttributeName = "MauiComponents.PopupAttribute";
 
-    private const string EnumerableName = "System.Collections.Generic.IEnumerable<T>";
+    private const string GenericEnumerableName = "System.Collections.Generic.IEnumerable<T>";
     private const string KeyValuePairName = "System.Collections.Generic.KeyValuePair<TKey, TValue>";
     private const string TypeName = "System.Type";
 
@@ -77,7 +77,7 @@ public sealed class PopupGenerator : IIncrementalGenerator
 
         // Validate return type
         if ((methodSymbol.ReturnType is not INamedTypeSymbol returnTypeSymbol) ||
-            (returnTypeSymbol.ConstructedFrom.ToDisplayString() != EnumerableName) ||
+            (returnTypeSymbol.ConstructedFrom.ToDisplayString() != GenericEnumerableName) ||
             (returnTypeSymbol.TypeArguments[0] is not INamedTypeSymbol keyValueTypeSymbol) ||
             (keyValueTypeSymbol.ConstructedFrom.ToDisplayString() != KeyValuePairName) ||
             (keyValueTypeSymbol.TypeArguments[1].ToDisplayString() != TypeName))
@@ -92,7 +92,7 @@ public sealed class PopupGenerator : IIncrementalGenerator
 
         return Results.Success(new SourceModel(
             ns,
-            containingType.Name,
+            containingType.GetClassName(),
             containingType.IsValueType,
             methodSymbol.DeclaredAccessibility,
             methodSymbol.Name,
