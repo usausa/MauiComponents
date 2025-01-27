@@ -22,5 +22,4 @@ internal static class RoslynExtensions
         Accessibility.ProtectedAndInternal => "private protected",
         _ => throw new NotSupportedException()
     };
-
 }
