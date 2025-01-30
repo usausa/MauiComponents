@@ -18,6 +18,7 @@
     <ItemGroup>
       <TfmSpecificPackageFile Include="..\MauiComponents.props" PackagePath="build" />
       <TfmSpecificPackageFile Include="$(OutputPath)\MauiComponents.Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+      <TfmSpecificPackageFile Include="$(PKGSourceGenerateHelper)\lib\netstandard2.0\SourceGenerateHelper.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     </ItemGroup>
   </Target>
 
@@ -40,6 +41,7 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Maui" Version="10.0.0" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.21" />
+    <PackageReference Include="SourceGenerateHelper" Version="0.4.0" GeneratePathProperty="true" PrivateAssets="all" />
     <PackageReference Include="Usa.Smart.Core" Version="2.4.0" />
   </ItemGroup>
 

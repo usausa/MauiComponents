@@ -3,13 +3,14 @@ namespace MauiComponents.Generator;
 using System.Collections.Immutable;
 using System.Text;
 
-using MauiComponents.Generator.Helpers;
 using MauiComponents.Generator.Models;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
+
+using SourceGenerateHelper;
 
 [Generator]
 public sealed class PopupGenerator : IIncrementalGenerator
@@ -122,23 +123,23 @@ public sealed class PopupGenerator : IIncrementalGenerator
 
     private static void Execute(SourceProductionContext context, ImmutableArray<Result<SourceModel>> popupSources, ImmutableArray<Result<EquatableArray<PopupIdModel>>> popupIds)
     {
-        foreach (var info in popupSources.SelectPart(static x => x.Error))
+        foreach (var info in popupSources.SelectError())
         {
             context.ReportDiagnostic(info);
         }
-        foreach (var info in popupIds.SelectPart(static x => x.Error))
+        foreach (var info in popupIds.SelectError())
         {
             context.ReportDiagnostic(info);
         }
 
         var popupMap = popupIds
-            .SelectPart(static x => x.Value)
+            .SelectValue()
             .SelectMany(static x => x.ToArray())
             .GroupBy(static x => x.PopupIdClassFullName)
             .ToDictionary(static x => x.Key, static x => x.ToList());
 
         var builder = new SourceBuilder();
-        foreach (var popupSource in popupSources.SelectPart(static x => x.Value))
+        foreach (var popupSource in popupSources.SelectValue())
         {
             context.CancellationToken.ThrowIfCancellationRequested();
 
