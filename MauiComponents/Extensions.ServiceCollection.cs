@@ -91,25 +91,16 @@ public static class ServiceCollectionExtensions
         return service;
     }
 
-    // Speech
-
-    public static IServiceCollection AddComponentsSpeech(this IServiceCollection service)
-    {
-        service.TryAddSingleton(TextToSpeech.Default);
-        service.TryAddSingleton(SpeechToText.Default);
-        service.AddSingleton<ISpeechService, SpeechService>();
-        return service;
-    }
-
     // Community Toolkit
 
-    public static IServiceCollection AddCommunityToolkitInterfaces(this IServiceCollection services)
+    public static IServiceCollection AddCommunityToolkitInterfaces(this IServiceCollection service)
     {
-        services.AddSingleton(FileSaver.Default);
-        services.AddSingleton(FolderPicker.Default);
+        service.AddSingleton(FileSaver.Default);
+        service.AddSingleton(FolderPicker.Default);
 
-        services.AddSingleton(SpeechToText.Default);
+        service.TryAddSingleton(TextToSpeech.Default);
+        service.AddSingleton(SpeechToText.Default);
 
-        return services;
+        return service;
     }
 }

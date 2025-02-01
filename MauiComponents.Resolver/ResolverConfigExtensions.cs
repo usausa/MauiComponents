@@ -1,5 +1,8 @@
 namespace MauiComponents.Resolver;
 
+using CommunityToolkit.Maui.Media;
+using CommunityToolkit.Maui.Storage;
+
 using Smart.Resolver;
 
 public static class ResolverConfigExtensions
@@ -46,6 +49,8 @@ public static class ResolverConfigExtensions
 
     public static ResolverConfig AddComponentsScreen(this ResolverConfig config)
     {
+        config.BindSingleton(DeviceDisplay.Current);
+        config.BindSingleton(Screenshot.Default);
         config.BindSingleton<IScreen, ScreenImplementation>();
         return config;
     }
@@ -81,15 +86,23 @@ public static class ResolverConfigExtensions
 
     public static ResolverConfig AddComponentsLocation(this ResolverConfig config)
     {
+        config.BindSingleton(Geolocation.Default);
         config.BindSingleton<ILocationService, LocationService>();
         return config;
     }
 
-    // Speech
+    // Community Toolkit
 
-    public static ResolverConfig AddComponentsSpeech(this ResolverConfig config)
+    // Screen
+
+    public static ResolverConfig AddCommunityToolkitInterfaces(this ResolverConfig config)
     {
-        config.BindSingleton<ISpeechService, SpeechService>();
+        config.BindSingleton(FileSaver.Default);
+        config.BindSingleton(FolderPicker.Default);
+
+        config.BindSingleton(TextToSpeech.Default);
+        config.BindSingleton(SpeechToText.Default);
+
         return config;
     }
 }
