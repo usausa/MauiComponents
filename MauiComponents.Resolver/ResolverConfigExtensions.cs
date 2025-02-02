@@ -1,8 +1,5 @@
 namespace MauiComponents.Resolver;
 
-using CommunityToolkit.Maui.Media;
-using CommunityToolkit.Maui.Storage;
-
 using Smart.Resolver;
 
 public static class ResolverConfigExtensions
@@ -88,21 +85,6 @@ public static class ResolverConfigExtensions
     {
         config.BindSingleton(Geolocation.Default);
         config.BindSingleton<ILocationService, LocationService>();
-        return config;
-    }
-
-    // Community Toolkit
-
-    // Screen
-
-    public static ResolverConfig AddCommunityToolkitInterfaces(this ResolverConfig config)
-    {
-        config.BindSingleton(FileSaver.Default);
-        config.BindSingleton(FolderPicker.Default);
-
-        config.BindSingleton(TextToSpeech.Default);
-        config.BindSingleton(SpeechToText.Default);
-
         return config;
     }
 }
