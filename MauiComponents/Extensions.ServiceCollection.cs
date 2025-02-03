@@ -3,8 +3,6 @@ namespace MauiComponents;
 using CommunityToolkit.Maui.Media;
 using CommunityToolkit.Maui.Storage;
 
-using Microsoft.Extensions.DependencyInjection.Extensions;
-
 public static class ServiceCollectionExtensions
 {
     // Serializer
@@ -49,8 +47,6 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddComponentsScreen(this IServiceCollection service)
     {
-        service.TryAddSingleton(DeviceDisplay.Current);
-        service.TryAddSingleton(Screenshot.Default);
         service.AddSingleton<IScreen, ScreenImplementation>();
         return service;
     }
@@ -86,8 +82,15 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddComponentsLocation(this IServiceCollection service)
     {
-        service.TryAddSingleton(Geolocation.Default);
         service.AddSingleton<ILocationService, LocationService>();
+        return service;
+    }
+
+    // Speech
+
+    public static IServiceCollection AddComponentsSpeech(this IServiceCollection service)
+    {
+        service.AddSingleton<ISpeechService, SpeechService>();
         return service;
     }
 
@@ -98,7 +101,12 @@ public static class ServiceCollectionExtensions
         service.AddSingleton(FileSaver.Default);
         service.AddSingleton(FolderPicker.Default);
 
-        service.TryAddSingleton(TextToSpeech.Default);
+        service.AddSingleton(DeviceDisplay.Current);
+        service.AddSingleton(Screenshot.Default);
+
+        service.AddSingleton(Geolocation.Default);
+
+        service.AddSingleton(TextToSpeech.Default);
         service.AddSingleton(SpeechToText.Default);
 
         return service;
