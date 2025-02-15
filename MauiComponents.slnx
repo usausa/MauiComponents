@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="Analyzers.ruleset" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="LICENSE" />
+    <File Path="MauiComponents.props" />
+    <File Path="MauiComponents.sln.DotSettings" />
+    <File Path="README.md" />
+    <File Path="Settings.XamlStyler" />
+  </Folder>
+  <Project Path="MauiComponents/MauiComponents.csproj" />
+  <Project Path="MauiComponents.Generator/MauiComponents.Generator.csproj" />
+  <Project Path="MauiComponents.Resolver/MauiComponents.Resolver.csproj" />
+  <Project Path="MauiComponentsExample/MauiComponentsExample.csproj">
+    <Deploy />
+  </Project>
+</Solution>
