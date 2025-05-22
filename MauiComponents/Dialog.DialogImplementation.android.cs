@@ -51,7 +51,7 @@ public sealed partial class DialogImplementation
     {
         var activity = ActivityResolver.CurrentActivity;
 
-        var size = (int)(DeviceDisplay.MainDisplayInfo.Density * Config.IndicatorSize);
+        var size = (int)(deviceDisplay.MainDisplayInfo.Density * Config.IndicatorSize);
 #pragma warning disable CA2000
         var progress = new ProgressBar(activity)
         {

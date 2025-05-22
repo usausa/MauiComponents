@@ -3,6 +3,8 @@ namespace MauiComponents;
 using CommunityToolkit.Maui.Media;
 using CommunityToolkit.Maui.Storage;
 
+using Microsoft.Extensions.DependencyInjection.Extensions;
+
 public static class ServiceCollectionExtensions
 {
     // Serializer
@@ -40,6 +42,7 @@ public static class ServiceCollectionExtensions
             return config;
         });
         service.AddSingleton<IDialog, DialogImplementation>();
+        service.TryAddSingleton(DeviceDisplay.Current);
         return service;
     }
 
@@ -48,6 +51,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddComponentsScreen(this IServiceCollection service)
     {
         service.AddSingleton<IScreen, ScreenImplementation>();
+        service.TryAddSingleton(DeviceDisplay.Current);
+        service.TryAddSingleton(Screenshot.Default);
         return service;
     }
 
@@ -83,6 +88,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddComponentsLocation(this IServiceCollection service)
     {
         service.AddSingleton<ILocationService, LocationService>();
+        service.TryAddSingleton(Geolocation.Default);
         return service;
     }
 
@@ -91,22 +97,17 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddComponentsSpeech(this IServiceCollection service)
     {
         service.AddSingleton<ISpeechService, SpeechService>();
+        service.TryAddSingleton(TextToSpeech.Default);
         return service;
     }
 
     // Community Toolkit
 
-    public static IServiceCollection AddCommunityToolkitInterfaces(this IServiceCollection service)
+    public static IServiceCollection AddCommunityToolkitServices(this IServiceCollection service)
     {
         service.AddSingleton(FileSaver.Default);
         service.AddSingleton(FolderPicker.Default);
 
-        service.AddSingleton(DeviceDisplay.Current);
-        service.AddSingleton(Screenshot.Default);
-
-        service.AddSingleton(Geolocation.Default);
-
-        service.AddSingleton(TextToSpeech.Default);
         service.AddSingleton(SpeechToText.Default);
 
         return service;

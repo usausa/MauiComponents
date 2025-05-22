@@ -4,16 +4,21 @@ using CommunityToolkit.Maui.Core;
 
 public sealed partial class DialogImplementation : IDialog
 {
+    private readonly IDeviceDisplay deviceDisplay;
+
     public DialogConfig Config { get; }
 
-    public DialogImplementation()
-        : this(new DialogConfig())
+    public DialogImplementation(IDeviceDisplay deviceDisplay)
+        : this(new DialogConfig(), deviceDisplay)
     {
     }
 
-    public DialogImplementation(DialogConfig config)
+    public DialogImplementation(
+        DialogConfig config,
+        IDeviceDisplay deviceDisplay)
     {
         Config = config;
+        this.deviceDisplay = deviceDisplay;
     }
 
     public partial ValueTask InformationAsync(string message, string? title, string ok);
