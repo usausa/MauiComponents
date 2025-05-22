@@ -39,6 +39,7 @@ public static class ResolverConfigExtensions
             return options;
         });
         config.BindSingleton<IDialog, DialogImplementation>();
+        config.BindSingleton(DeviceDisplay.Current);
         return config;
     }
 
@@ -47,6 +48,8 @@ public static class ResolverConfigExtensions
     public static ResolverConfig AddComponentsScreen(this ResolverConfig config)
     {
         config.BindSingleton<IScreen, ScreenImplementation>();
+        config.BindSingleton(DeviceDisplay.Current);
+        config.BindSingleton(Screenshot.Default);
         return config;
     }
 
@@ -82,6 +85,7 @@ public static class ResolverConfigExtensions
     public static ResolverConfig AddComponentsLocation(this ResolverConfig config)
     {
         config.BindSingleton<ILocationService, LocationService>();
+        config.BindSingleton(Geolocation.Default);
         return config;
     }
 
@@ -90,6 +94,7 @@ public static class ResolverConfigExtensions
     public static ResolverConfig AddComponentsSpeech(this ResolverConfig config)
     {
         config.BindSingleton<ISpeechService, SpeechService>();
+        config.BindSingleton(TextToSpeech.Default);
         return config;
     }
 }
