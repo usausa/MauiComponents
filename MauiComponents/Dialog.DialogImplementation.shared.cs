@@ -4,6 +4,9 @@ using CommunityToolkit.Maui.Core;
 
 public sealed partial class DialogImplementation : IDialog
 {
+#if !ANDROID
+    // ReSharper disable once NotAccessedField.Local
+#endif
     private readonly IDeviceDisplay deviceDisplay;
 
     public DialogConfig Config { get; }
