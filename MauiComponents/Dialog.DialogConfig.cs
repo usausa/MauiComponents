@@ -10,15 +10,15 @@ public sealed class DialogConfig
 
     public float IndicatorSize { get; set; } = 96;
 
-    public Color? IndicatorColor { get; set; }
+    public Color IndicatorColor { get; set; } = Colors.DeepSkyBlue;
 
-    public Color LockBackgroundColor { get; set; } = new(0, 0, 0, 128);
+    public Color LockBackgroundColor { get; set; } = new(0, 0, 0, 64);
 
     public Color LoadingBackgroundColor { get; set; } = new(0, 0, 0, 64);
 
-    public Color LoadingMessageBackgroundColor { get; set; } = new(0, 0, 0, 64);
+    public Color LoadingMessageBackgroundColor { get; set; } = Colors.White;
 
-    public Color LoadingMessageColor { get; set; } = Colors.White;
+    public Color LoadingMessageColor { get; set; } = Colors.Black;
 
     public float LoadingMessageHeight { get; set; } = 48;
 
@@ -30,13 +30,13 @@ public sealed class DialogConfig
 
     public Color ProgressBackgroundColor { get; set; } = new(0, 0, 0, 64);
 
-    public Color ProgressAreaBackgroundColor { get; set; } = new(0, 0, 0, 64);
+    public Color ProgressAreaBackgroundColor { get; set; } = Colors.White;
 
-    public Color ProgressCircleColor1 { get; set; } = Colors.White;
+    public Color ProgressCircleColor1 { get; set; } = Colors.DeepSkyBlue;
 
     public Color ProgressCircleColor2 { get; set; } = Colors.Gray;
 
-    public Color ProgressValueColor { get; set; } = Colors.White;
+    public Color ProgressValueColor { get; set; } = Colors.Black;
 
     public float ProgressAreaSize { get; set; } = 80;
 

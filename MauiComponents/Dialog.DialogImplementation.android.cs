@@ -4,7 +4,6 @@ using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.Graphics.Drawables;
-using Android.OS;
 using Android.Text;
 using Android.Views;
 using Android.Views.InputMethods;
@@ -63,23 +62,11 @@ public sealed partial class DialogImplementation
         };
 #pragma warning restore CA2000
 
-        if (Config.IndicatorColor is not null)
-        {
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.Q)
-            {
 #pragma warning disable CA1416
 #pragma warning disable CA2000
-                progress.IndeterminateDrawable!.SetColorFilter(new BlendModeColorFilter(Config.IndicatorColor.ToPlatform(), BlendMode.SrcAtop!));
+        progress.IndeterminateDrawable!.SetColorFilter(new BlendModeColorFilter(Config.IndicatorColor.ToPlatform(), BlendMode.SrcAtop!));
 #pragma warning restore CA2000
 #pragma warning restore CA1416
-            }
-            else
-            {
-#pragma warning disable CA1422
-                progress.IndeterminateDrawable!.SetColorFilter(Colors.Blue.ToPlatform(), PorterDuff.Mode.SrcAtop!);
-#pragma warning restore CA1422
-            }
-        }
 
 #pragma warning disable CA2000
         var layout = new FrameLayout(activity)
