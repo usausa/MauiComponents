@@ -29,13 +29,27 @@
     <PackageTags>maui</PackageTags>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-android')) != true">
-    <Compile Remove="**\**\*.android.cs" />
-    <None Include="**\**\*.android.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-android')) == true">
+    <Compile Update="**\*.android.cs" >
+      <DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.android',''))</DependentUpon>
+    </Compile>
   </ItemGroup>
-  <ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-ios')) != true">
-    <Compile Remove="**\**\*.ios.cs" />
-    <None Include="**\**\*.ios.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-android')) == false">
+    <Compile Remove="**\*.android.cs" />
+    <None Include="**\*.android.cs" >
+      <DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.android',''))</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-ios')) == true">
+    <Compile Update="**\*.ios.cs" >
+      <DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.ios',''))</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-ios')) == false">
+    <Compile Remove="**\*.ios.cs" />
+    <None Include="**\*.ios.cs" >
+      <DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.ios',''))</DependentUpon>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
