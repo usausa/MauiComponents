@@ -55,8 +55,8 @@
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.70" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.5" />
     <PackageReference Include="Usa.Smart.Core" Version="2.4.2" />
-    <PackageReference Include="Usa.Smart.Maui" Version="2.2.0" />
-    <PackageReference Include="Usa.Smart.Maui.Reactive" Version="2.2.0" />
+    <PackageReference Include="Usa.Smart.Maui" Version="2.3.0" />
+    <PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.3.0" />
     <PackageReference Include="Usa.Smart.Resolver" Version="2.6.1" />
     <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="2.6.1" />
   </ItemGroup>

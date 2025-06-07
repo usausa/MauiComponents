@@ -2,7 +2,7 @@ namespace MauiComponentsExample;
 
 using System;
 
-using Smart.Maui.Resolver;
+using Smart.Mvvm.Resolver;
 
 public sealed class ApplicationInitializer : IMauiInitializeService
 {

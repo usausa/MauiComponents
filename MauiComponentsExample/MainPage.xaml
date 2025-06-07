@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sr="clr-namespace:Smart.Maui.Resolver;assembly=Smart.Maui"
+             xmlns:s="http://smart/maui"
              xmlns:local="clr-namespace:MauiComponentsExample"
              x:Class="MauiComponentsExample.MainPage"
              x:DataType="{x:Type local:MainPageViewModel}"
-             sr:BindingContextResolver.Type="{x:Type local:MainPageViewModel}">
+             s:BindingContextResolver.Type="{x:Type local:MainPageViewModel}">
 
     <ScrollView>
         <VerticalStackLayout Padding="30,0"

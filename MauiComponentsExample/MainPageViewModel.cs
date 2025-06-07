@@ -9,7 +9,7 @@ using MauiComponentsExample.Dialogs;
 
 using Smart.Maui.ViewModels;
 
-public sealed class MainPageViewModel : ViewModelBase
+public sealed class MainPageViewModel : ExtendViewModelBase
 {
     private int count;
 
