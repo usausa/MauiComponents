@@ -1,5 +1,7 @@
 namespace MauiComponents.Resolver;
 
+using CommunityToolkit.Maui.Media;
+
 using Smart.Resolver;
 
 public static class ResolverConfigExtensions
@@ -95,6 +97,7 @@ public static class ResolverConfigExtensions
     {
         config.BindSingleton<ISpeechService, SpeechService>();
         config.BindSingleton(TextToSpeech.Default);
+        config.BindSingleton(SpeechToText.Default);
         return config;
     }
 }

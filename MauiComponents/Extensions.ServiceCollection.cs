@@ -98,6 +98,7 @@ public static class ServiceCollectionExtensions
     {
         service.AddSingleton<ISpeechService, SpeechService>();
         service.TryAddSingleton(TextToSpeech.Default);
+        service.TryAddSingleton(SpeechToText.Default);
         return service;
     }
 

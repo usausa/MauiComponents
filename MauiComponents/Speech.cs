@@ -1,9 +1,25 @@
 namespace MauiComponents;
 
+using System.Globalization;
 using System.Threading.Tasks;
+
+public sealed class SpeechRecognizeEventArgs : EventArgs
+{
+    public bool Complete { get; }
+
+    public string Text { get; }
+
+    public SpeechRecognizeEventArgs(bool complete, string text)
+    {
+        Complete = complete;
+        Text = text;
+    }
+}
 
 public interface ISpeechService
 {
+    public event EventHandler<SpeechRecognizeEventArgs>? Recognized;
+
     // Text to speech
 
     ValueTask SpeakAsync(string text, float? pitch = null, float? volume = null);
@@ -12,5 +28,9 @@ public interface ISpeechService
 
     // Speech to text
 
-    // TODO
- }
+    ValueTask<bool> RecognizeAsync(CultureInfo cultureInfo);
+
+    ValueTask RecognizeStopAsync();
+
+    void RecognizeCancel();
+}
