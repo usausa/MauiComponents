@@ -1,6 +1,8 @@
 namespace MauiComponents;
 
+#if ANDROID
 using Microsoft.Maui.LifecycleEvents;
+#endif
 
 public static class MauiAppBuilderExtensions
 {
