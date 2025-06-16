@@ -18,7 +18,7 @@ public sealed class SpeechRecognizeEventArgs : EventArgs
 
 public interface ISpeechService
 {
-    public event EventHandler<SpeechRecognizeEventArgs>? Recognized;
+    event EventHandler<SpeechRecognizeEventArgs>? Recognized;
 
     // Text to speech
 
