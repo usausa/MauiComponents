@@ -30,31 +30,31 @@
   </PropertyGroup>
 
   <ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-android')) == true">
-    <Compile Update="**\*.android.cs" >
+    <Compile Update="**\*.android.cs">
       <DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.android',''))</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-android')) == false">
     <Compile Remove="**\*.android.cs" />
-    <None Include="**\*.android.cs" >
+    <None Include="**\*.android.cs">
       <DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.android',''))</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-ios')) == true">
-    <Compile Update="**\*.ios.cs" >
+    <Compile Update="**\*.ios.cs">
       <DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.ios',''))</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup Condition="$(TargetFramework.StartsWith('net9.0-ios')) == false">
     <Compile Remove="**\*.ios.cs" />
-    <None Include="**\*.ios.cs" >
+    <None Include="**\*.ios.cs">
       <DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.ios',''))</DependentUpon>
     </None>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" />
-    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.70" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.80" />
     <PackageReference Include="SourceGenerateHelper" Version="1.2.1" GeneratePathProperty="true" PrivateAssets="all" />
     <PackageReference Include="Usa.Smart.Core" Version="2.4.2" />
   </ItemGroup>
