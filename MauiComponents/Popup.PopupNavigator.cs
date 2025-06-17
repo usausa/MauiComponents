@@ -1,5 +1,6 @@
 namespace MauiComponents;
 
+using CommunityToolkit.Maui.Extensions;
 using CommunityToolkit.Maui.Views;
 
 public sealed class PopupNavigator : IPopupNavigator
@@ -29,6 +30,58 @@ public sealed class PopupNavigator : IPopupNavigator
         return popup;
     }
 
+    public async ValueTask PopupAsync(object id)
+    {
+        if (!popupTypes.TryGetValue(id, out var type))
+        {
+            throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
+        }
+
+        var popup = CreatePopup(type);
+
+        await Application.Current!.Windows[0].Page!.ShowPopupAsync(popup).ConfigureAwait(true);
+
+        if (popup.Content is not null)
+        {
+            Cleanup(popup.Content);
+        }
+
+        (popup as IDisposable)?.Dispose();
+        (popup.BindingContext as IDisposable)?.Dispose();
+        popup.BindingContext = null;
+    }
+
+    public async ValueTask PopupAsync<TParameter>(object id, TParameter parameter)
+    {
+        if (!popupTypes.TryGetValue(id, out var type))
+        {
+            throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
+        }
+
+        var popup = CreatePopup(type);
+
+        if (popup.BindingContext is IPopupInitialize<TParameter> initialize)
+        {
+            initialize.Initialize(parameter);
+        }
+
+        if (popup.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
+        {
+            await initializeAsync.Initialize(parameter).ConfigureAwait(true);
+        }
+
+        await Application.Current!.Windows[0].Page!.ShowPopupAsync(popup).ConfigureAwait(true);
+
+        if (popup.Content is not null)
+        {
+            Cleanup(popup.Content);
+        }
+
+        (popup as IDisposable)?.Dispose();
+        (popup.BindingContext as IDisposable)?.Dispose();
+        popup.BindingContext = null;
+    }
+
     public async ValueTask<TResult> PopupAsync<TResult>(object id)
     {
         if (!popupTypes.TryGetValue(id, out var type))
@@ -38,7 +91,7 @@ public sealed class PopupNavigator : IPopupNavigator
 
         var popup = CreatePopup(type);
 
-        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync(popup).ConfigureAwait(true);
+        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(popup).ConfigureAwait(true);
 
         if (popup.Content is not null)
         {
@@ -49,7 +102,7 @@ public sealed class PopupNavigator : IPopupNavigator
         (popup.BindingContext as IDisposable)?.Dispose();
         popup.BindingContext = null;
 
-        return result is null ? default! : (TResult)result;
+        return result.Result ?? default!;
     }
 
     public async ValueTask<TResult> PopupAsync<TParameter, TResult>(object id, TParameter parameter)
@@ -71,7 +124,7 @@ public sealed class PopupNavigator : IPopupNavigator
             await initializeAsync.Initialize(parameter).ConfigureAwait(true);
         }
 
-        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync(popup).ConfigureAwait(true);
+        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(popup).ConfigureAwait(true);
 
         if (popup.Content is not null)
         {
@@ -82,62 +135,17 @@ public sealed class PopupNavigator : IPopupNavigator
         (popup.BindingContext as IDisposable)?.Dispose();
         popup.BindingContext = null;
 
-        return result is null ? default! : (TResult)result;
+        return result.Result ?? default!;
     }
 
-    public async ValueTask<object?> PopupAsync(object id)
+    public async ValueTask CloseAsync()
     {
-        if (!popupTypes.TryGetValue(id, out var type))
-        {
-            throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
-        }
-
-        var popup = CreatePopup(type);
-
-        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync(popup).ConfigureAwait(true);
-
-        if (popup.Content is not null)
-        {
-            Cleanup(popup.Content);
-        }
-        (popup as IDisposable)?.Dispose();
-        (popup.BindingContext as IDisposable)?.Dispose();
-        popup.BindingContext = null;
-
-        return result;
+        await Application.Current!.Windows[0].Page!.ClosePopupAsync().ConfigureAwait(true);
     }
 
-    public async ValueTask<object?> PopupAsync<TParameter>(object id, TParameter parameter)
+    public async ValueTask CloseAsync<TResult>(TResult result)
     {
-        if (!popupTypes.TryGetValue(id, out var type))
-        {
-            throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
-        }
-
-        var popup = CreatePopup(type);
-
-        if (popup.BindingContext is IPopupInitialize<TParameter> initialize)
-        {
-            initialize.Initialize(parameter);
-        }
-
-        if (popup.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
-        {
-            await initializeAsync.Initialize(parameter).ConfigureAwait(true);
-        }
-
-        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync(popup).ConfigureAwait(true);
-
-        if (popup.Content is not null)
-        {
-            Cleanup(popup.Content);
-        }
-
-        (popup as IDisposable)?.Dispose();
-        (popup.BindingContext as IDisposable)?.Dispose();
-        popup.BindingContext = null;
-
-        return result;
+        await Application.Current!.Windows[0].Page!.ClosePopupAsync(result).ConfigureAwait(true);
     }
 
     private static void Cleanup(IVisualTreeElement parent)

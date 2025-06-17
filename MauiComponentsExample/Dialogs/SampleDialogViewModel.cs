@@ -9,17 +9,16 @@ using Smart.Maui.ViewModels;
 
 public sealed class SampleDialogViewModel : ExtendViewModelBase, IPopupInitialize<string>
 {
-    public PopupController<bool> Popup { get; } = new();
-
     public NotificationValue<string> Text { get; } = new();
 
     public ICommand ExecuteCommand { get; }
     public ICommand CancelCommand { get; }
 
-    public SampleDialogViewModel()
+    public SampleDialogViewModel(
+        IPopupNavigator popupNavigator)
     {
-        ExecuteCommand = MakeDelegateCommand(() => Popup.Close(true));
-        CancelCommand = MakeDelegateCommand(() => Popup.Close());
+        ExecuteCommand = MakeAsyncCommand(async () => await popupNavigator.CloseAsync(true));
+        CancelCommand = MakeAsyncCommand(async () => await popupNavigator.CloseAsync(false));
     }
 
     public void Initialize(string parameter)

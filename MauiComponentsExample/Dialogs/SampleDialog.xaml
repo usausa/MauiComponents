@@ -2,15 +2,12 @@
 <mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
            xmlns:s="http://smart/maui"
-           xmlns:mcs="clr-namespace:MauiComponents;assembly=MauiComponents"
            xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
            xmlns:dialogs="clr-namespace:MauiComponentsExample.Dialogs"
            x:Class="MauiComponentsExample.Dialogs.SampleDialog"
            x:DataType="{x:Type dialogs:SampleDialogViewModel}"
            s:BindingContextResolver.Type="{x:Type dialogs:SampleDialogViewModel}"
-           mcs:PopupBind.Controller="{Binding Popup}"
-           CanBeDismissedByTappingOutsideOfPopup="False"
-           Size="{x:Static dialogs:DialogSize.Large}">
+           WidthRequest="{x:Static dialogs:ScreenSize.LargeDialogWidth}">
 
     <Grid>
         <Grid.RowDefinitions>
