@@ -13,5 +13,5 @@ public sealed class DefaultPopupFactory : IPopupFactory
         this.provider = provider;
     }
 
-    public Popup Create(Type type) => (Popup)provider.GetRequiredService(type);
+    public ContentView Create(Type type) => (ContentView)provider.GetRequiredService(type);
 }

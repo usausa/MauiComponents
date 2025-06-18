@@ -14,12 +14,12 @@ public interface IPopupInitializeAsync<in T>
 
 public interface IPopupFactory
 {
-    Popup Create(Type type);
+    ContentView Create(Type type);
 }
 
 public interface IPopupPlugin
 {
-    void Extend(Popup popup);
+    void Extend(ContentView view);
 }
 
 public interface IPopupNavigator

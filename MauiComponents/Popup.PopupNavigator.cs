@@ -1,7 +1,7 @@
 namespace MauiComponents;
 
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Maui.Views;
 
 public sealed class PopupNavigator : IPopupNavigator
 {
@@ -9,25 +9,16 @@ public sealed class PopupNavigator : IPopupNavigator
 
     private readonly IPopupPlugin[] plugins;
 
+    private readonly Func<Type, object, PopupOptions> optionFactory;
+
     private readonly Dictionary<object, Type> popupTypes;
 
     public PopupNavigator(IPopupFactory popupFactory, IEnumerable<IPopupPlugin> plugins, PopupNavigatorConfig config)
     {
         this.popupFactory = popupFactory;
         this.plugins = plugins.ToArray();
+        optionFactory = config.OptionFactory;
         popupTypes = new Dictionary<object, Type>(config.PopupTypes);
-    }
-
-    private Popup CreatePopup(Type type)
-    {
-        var popup = popupFactory.Create(type);
-
-        foreach (var plugin in plugins)
-        {
-            plugin.Extend(popup);
-        }
-
-        return popup;
     }
 
     public async ValueTask PopupAsync(object id)
@@ -37,18 +28,12 @@ public sealed class PopupNavigator : IPopupNavigator
             throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
         }
 
-        var popup = CreatePopup(type);
+        var view = CreateView(type);
 
-        await Application.Current!.Windows[0].Page!.ShowPopupAsync(popup).ConfigureAwait(true);
+        var option = optionFactory(type, id);
+        await Application.Current!.Windows[0].Page!.ShowPopupAsync(view, option).ConfigureAwait(true);
 
-        if (popup.Content is not null)
-        {
-            Cleanup(popup.Content);
-        }
-
-        (popup as IDisposable)?.Dispose();
-        (popup.BindingContext as IDisposable)?.Dispose();
-        popup.BindingContext = null;
+        CloseView(view);
     }
 
     public async ValueTask PopupAsync<TParameter>(object id, TParameter parameter)
@@ -58,28 +43,22 @@ public sealed class PopupNavigator : IPopupNavigator
             throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
         }
 
-        var popup = CreatePopup(type);
+        var view = CreateView(type);
 
-        if (popup.BindingContext is IPopupInitialize<TParameter> initialize)
+        if (view.BindingContext is IPopupInitialize<TParameter> initialize)
         {
             initialize.Initialize(parameter);
         }
 
-        if (popup.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
+        if (view.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
         {
             await initializeAsync.Initialize(parameter).ConfigureAwait(true);
         }
 
-        await Application.Current!.Windows[0].Page!.ShowPopupAsync(popup).ConfigureAwait(true);
+        var option = optionFactory(type, id);
+        await Application.Current!.Windows[0].Page!.ShowPopupAsync(view, option).ConfigureAwait(true);
 
-        if (popup.Content is not null)
-        {
-            Cleanup(popup.Content);
-        }
-
-        (popup as IDisposable)?.Dispose();
-        (popup.BindingContext as IDisposable)?.Dispose();
-        popup.BindingContext = null;
+        CloseView(view);
     }
 
     public async ValueTask<TResult> PopupAsync<TResult>(object id)
@@ -89,18 +68,12 @@ public sealed class PopupNavigator : IPopupNavigator
             throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
         }
 
-        var popup = CreatePopup(type);
+        var view = CreateView(type);
 
-        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(popup).ConfigureAwait(true);
+        var option = optionFactory(type, id);
+        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(view, option).ConfigureAwait(true);
 
-        if (popup.Content is not null)
-        {
-            Cleanup(popup.Content);
-        }
-
-        (popup as IDisposable)?.Dispose();
-        (popup.BindingContext as IDisposable)?.Dispose();
-        popup.BindingContext = null;
+        CloseView(view);
 
         return result.Result ?? default!;
     }
@@ -112,28 +85,22 @@ public sealed class PopupNavigator : IPopupNavigator
             throw new ArgumentException($"Invalid id=[{id}]", nameof(id));
         }
 
-        var popup = CreatePopup(type);
+        var view = CreateView(type);
 
-        if (popup.BindingContext is IPopupInitialize<TParameter> initialize)
+        if (view.BindingContext is IPopupInitialize<TParameter> initialize)
         {
             initialize.Initialize(parameter);
         }
 
-        if (popup.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
+        if (view.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
         {
             await initializeAsync.Initialize(parameter).ConfigureAwait(true);
         }
 
-        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(popup).ConfigureAwait(true);
+        var option = optionFactory(type, id);
+        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(view, option).ConfigureAwait(true);
 
-        if (popup.Content is not null)
-        {
-            Cleanup(popup.Content);
-        }
-
-        (popup as IDisposable)?.Dispose();
-        (popup.BindingContext as IDisposable)?.Dispose();
-        popup.BindingContext = null;
+        CloseView(view);
 
         return result.Result ?? default!;
     }
@@ -146,6 +113,38 @@ public sealed class PopupNavigator : IPopupNavigator
     public async ValueTask CloseAsync<TResult>(TResult result)
     {
         await Application.Current!.Windows[0].Page!.ClosePopupAsync(result).ConfigureAwait(true);
+    }
+
+    private ContentView CreateView(Type type)
+    {
+        var view = popupFactory.Create(type);
+
+        foreach (var plugin in plugins)
+        {
+            plugin.Extend(view);
+        }
+
+        return view;
+    }
+
+    private static void CloseView(ContentView view)
+    {
+        view.Behaviors.Clear();
+        view.Triggers.Clear();
+
+        if (view.Content is not null)
+        {
+            Cleanup(view.Content);
+        }
+
+        // ReSharper disable once SuspiciousTypeConversion.Global
+        if (view is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+
+        (view.BindingContext as IDisposable)?.Dispose();
+        view.BindingContext = null;
     }
 
     private static void Cleanup(IVisualTreeElement parent)

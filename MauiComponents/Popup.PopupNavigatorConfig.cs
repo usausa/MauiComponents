@@ -13,7 +13,7 @@ public sealed class PopupNavigatorConfig
 
     internal Dictionary<object, Type> PopupTypes { get; } = [];
 
-    public Func<object, PopupOptions> OptionFactory { get; set; } = _ => DefaultOptions;
+    public Func<Type, object, PopupOptions> OptionFactory { get; set; } = (_, _) => DefaultOptions;
 
     public void Register(object id, Type type)
     {
