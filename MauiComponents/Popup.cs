@@ -1,7 +1,5 @@
 namespace MauiComponents;
 
-using CommunityToolkit.Maui.Views;
-
 public interface IPopupInitialize<in T>
 {
     void Initialize(T parameter);

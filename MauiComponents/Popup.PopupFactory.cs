@@ -1,7 +1,5 @@
 namespace MauiComponents;
 
-using CommunityToolkit.Maui.Views;
-
 using Microsoft.Extensions.DependencyInjection;
 
 public sealed class DefaultPopupFactory : IPopupFactory
