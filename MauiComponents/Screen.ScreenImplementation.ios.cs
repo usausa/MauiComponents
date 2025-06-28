@@ -36,7 +36,7 @@ public sealed partial class ScreenImplementation
 #pragma warning disable CA1822
     public partial void SetScreenBrightness(float brightness)
     {
-        UIScreen.MainScreen.Brightness = (NFloat)brightness;
+        UIScreen.MainScreen.Brightness = brightness;
     }
 #pragma warning restore CA1822
 #pragma warning restore CA1024
