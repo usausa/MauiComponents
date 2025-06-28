@@ -22,6 +22,10 @@ public interface IScreen
 
     void SetOrientation(DisplayOrientation orientation);
 
+    float GetScreenBrightness();
+
+    void SetScreenBrightness(float brightness);
+
     ValueTask<Stream> TakeScreenshotAsync();
 
     void KeepScreenOn(bool value);

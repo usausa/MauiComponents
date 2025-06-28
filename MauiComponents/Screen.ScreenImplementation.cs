@@ -20,15 +20,35 @@ public sealed partial class ScreenImplementation : IScreen, IDisposable
 
     private partial void PlatformDispose();
 
+    // ------------------------------------------------------------
+    // Orientation
+    // ------------------------------------------------------------
+
     public DisplayOrientation GetOrientation() => deviceDisplay.MainDisplayInfo.Orientation;
 
     public partial void SetOrientation(DisplayOrientation orientation);
+
+    // ------------------------------------------------------------
+    // Brightness
+    // ------------------------------------------------------------
+
+    public partial float GetScreenBrightness();
+
+    public partial void SetScreenBrightness(float brightness);
+
+    // ------------------------------------------------------------
+    // Screenshot
+    // ------------------------------------------------------------
 
     public async ValueTask<Stream> TakeScreenshotAsync()
     {
         var result = await screenshot.CaptureAsync().ConfigureAwait(true);
         return await result.OpenReadAsync().ConfigureAwait(true);
     }
+
+    // ------------------------------------------------------------
+    // State
+    // ------------------------------------------------------------
 
     public void KeepScreenOn(bool value) => deviceDisplay.KeepScreenOn = value;
 

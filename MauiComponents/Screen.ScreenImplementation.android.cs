@@ -3,6 +3,7 @@ namespace MauiComponents;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
+using Android.Provider;
 
 public sealed partial class ScreenImplementation
 {
@@ -14,6 +15,10 @@ public sealed partial class ScreenImplementation
     {
         EnableDetectScreenState(false);
     }
+
+    // ------------------------------------------------------------
+    // Orientation
+    // ------------------------------------------------------------
 
     public partial void SetOrientation(DisplayOrientation orientation)
     {
@@ -31,6 +36,47 @@ public sealed partial class ScreenImplementation
             _ => activity.RequestedOrientation
         };
     }
+
+    // ------------------------------------------------------------
+    // Brightness
+    // ------------------------------------------------------------
+
+#pragma warning disable CA1024
+#pragma warning disable CA1822
+    public partial float GetScreenBrightness()
+    {
+        var activity = ActivityResolver.CurrentActivity;
+
+        var brightness = activity.Window?.Attributes?.ScreenBrightness ?? 0;
+        if (brightness < 0)
+        {
+            return Settings.System.GetInt(activity.ContentResolver, Settings.System.ScreenBrightness) / 255f;
+        }
+
+        return brightness;
+    }
+#pragma warning restore CA1822
+
+#pragma warning disable CA1822
+    public partial void SetScreenBrightness(float brightness)
+    {
+        var activity = ActivityResolver.CurrentActivity;
+
+        if (activity.Window?.Attributes is null)
+        {
+            return;
+        }
+
+        var layoutParams = activity.Window.Attributes;
+        layoutParams.ScreenBrightness = brightness;
+        activity.Window.Attributes = layoutParams;
+    }
+#pragma warning restore CA1822
+#pragma warning restore CA1024
+
+    // ------------------------------------------------------------
+    // State
+    // ------------------------------------------------------------
 
     public partial void EnableDetectScreenState(bool value)
     {
