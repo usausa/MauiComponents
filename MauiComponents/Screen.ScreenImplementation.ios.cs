@@ -1,7 +1,5 @@
 namespace MauiComponents;
 
-using System.Runtime.InteropServices;
-
 using UIKit;
 
 // TODO
