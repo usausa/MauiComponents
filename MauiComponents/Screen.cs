@@ -22,6 +22,8 @@ public interface IScreen
 
     void SetOrientation(DisplayOrientation orientation);
 
+    void SetFullscreen(bool value);
+
     float GetScreenBrightness();
 
     void SetScreenBrightness(float brightness);

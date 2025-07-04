@@ -5,6 +5,8 @@ using Android.Content;
 using Android.Content.PM;
 using Android.Provider;
 
+using AndroidX.Core.View;
+
 public sealed partial class ScreenImplementation
 {
 #pragma warning disable CA2213
@@ -36,6 +38,37 @@ public sealed partial class ScreenImplementation
             _ => activity.RequestedOrientation
         };
     }
+
+    // ------------------------------------------------------------
+    // Brightness
+    // ------------------------------------------------------------
+
+#pragma warning disable CA1822
+    public partial void SetFullscreen(bool value)
+    {
+        var activity = ActivityResolver.CurrentActivity;
+        var window = activity.Window;
+        if (window is null)
+        {
+            return;
+        }
+
+        if (value)
+        {
+            WindowCompat.SetDecorFitsSystemWindows(window, false);
+            using var windowInsetsController = new WindowInsetsControllerCompat(window, window.DecorView);
+            windowInsetsController.Hide(WindowInsetsCompat.Type.SystemBars());
+            windowInsetsController.SystemBarsBehavior = WindowInsetsControllerCompat.BehaviorShowTransientBarsBySwipe;
+        }
+        else
+        {
+            WindowCompat.SetDecorFitsSystemWindows(window, true);
+            using var windowInsetsController = new WindowInsetsControllerCompat(window, window.DecorView);
+            windowInsetsController.Show(WindowInsetsCompat.Type.SystemBars());
+            windowInsetsController.SystemBarsBehavior = WindowInsetsControllerCompat.BehaviorDefault;
+        }
+    }
+#pragma warning restore CA1822
 
     // ------------------------------------------------------------
     // Brightness

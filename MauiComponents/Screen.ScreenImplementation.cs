@@ -29,6 +29,12 @@ public sealed partial class ScreenImplementation : IScreen, IDisposable
     public partial void SetOrientation(DisplayOrientation orientation);
 
     // ------------------------------------------------------------
+    // Fullscreen
+    // ------------------------------------------------------------
+
+    public partial void SetFullscreen(bool value);
+
+    // ------------------------------------------------------------
     // Brightness
     // ------------------------------------------------------------
 

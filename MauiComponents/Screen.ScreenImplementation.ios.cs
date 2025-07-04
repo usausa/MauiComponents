@@ -12,6 +12,12 @@ public sealed partial class ScreenImplementation
 #pragma warning restore CA1822
 
     // ------------------------------------------------------------
+    // Fullscreen
+    // ------------------------------------------------------------
+
+    public partial void SetFullscreen(bool value) => throw new NotSupportedException();
+
+    // ------------------------------------------------------------
     // Orientation
     // ------------------------------------------------------------
 
