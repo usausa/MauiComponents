@@ -9,7 +9,7 @@ public sealed class PopupNavigator : IPopupNavigator
 
     private readonly IPopupPlugin[] plugins;
 
-    private readonly Func<Type, object, PopupOptions> optionFactory;
+    private readonly Func<Type, object, PopupOptions>? optionFactory;
 
     private readonly Dictionary<object, Type> popupTypes;
 
@@ -30,7 +30,7 @@ public sealed class PopupNavigator : IPopupNavigator
 
         var view = CreateView(type);
 
-        var option = optionFactory(type, id);
+        var option = optionFactory?.Invoke(type, id);
         await Application.Current!.Windows[0].Page!.ShowPopupAsync(view, option).ConfigureAwait(true);
 
         CloseView(view);
@@ -55,7 +55,7 @@ public sealed class PopupNavigator : IPopupNavigator
             await initializeAsync.Initialize(parameter).ConfigureAwait(true);
         }
 
-        var option = optionFactory(type, id);
+        var option = optionFactory?.Invoke(type, id);
         await Application.Current!.Windows[0].Page!.ShowPopupAsync(view, option).ConfigureAwait(true);
 
         CloseView(view);
@@ -70,7 +70,7 @@ public sealed class PopupNavigator : IPopupNavigator
 
         var view = CreateView(type);
 
-        var option = optionFactory(type, id);
+        var option = optionFactory?.Invoke(type, id);
         var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(view, option).ConfigureAwait(true);
 
         CloseView(view);
@@ -97,7 +97,7 @@ public sealed class PopupNavigator : IPopupNavigator
             await initializeAsync.Initialize(parameter).ConfigureAwait(true);
         }
 
-        var option = optionFactory(type, id);
+        var option = optionFactory?.Invoke(type, id);
         var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(view, option).ConfigureAwait(true);
 
         CloseView(view);
