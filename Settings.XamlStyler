@@ -57,10 +57,10 @@
     "s:Behavior.Key",
     "s:ValidationProperty.*",
 
-    "BasedOn, TargetType",
-
     "Class",
     "ClassId",
+
+    "BasedOn, TargetType",
 
     "Grid.Row, Grid.RowSpan, Grid.Column, Grid.ColumnSpan, Canvas.Left, Canvas.Top, Canvas.Right, Canvas.Bottom",
     "Style",
