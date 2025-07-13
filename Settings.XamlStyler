@@ -62,13 +62,16 @@
     "Class",
     "ClassId",
 
-    "Grid.Row, Grid.RowSpan, Grid.Column, Grid.ColumnSpan, Canvas.Left, Canvas.Top, Canvas.Right, Canvas.Bottom",
-    "Style",
-    "StyleClass",
-
     "x:DataType",
     "s:BindingContextResolver.*",
     "BindingContext",
+
+    "Grid.Row, Grid.RowSpan, Grid.Column, Grid.ColumnSpan",
+    "Canvas.Left, Canvas.Top, Canvas.Right, Canvas.Bottom",
+    "AbsoluteLayout.LayoutBounds, AbsoluteLayout.LayoutFlags",
+
+    "Style",
+    "StyleClass",
 
     "shell:ShellProperty.Title",
     "shell:ShellProperty.Function1Text",
