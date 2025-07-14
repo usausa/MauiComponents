@@ -38,6 +38,7 @@
     "xmlns:codes",
     "xmlns:effects",
     "xmlns:fonts",
+    "xmlns:graphics",
     "xmlns:helpers",
     "xmlns:markup",
     "xmlns:models",
@@ -57,7 +58,7 @@
     "s:Behavior.Key",
     "s:ValidationProperty.*",
 
-    "BasedOn, TargetType",
+    "TargetType, BasedOn",
 
     "Class",
     "ClassId",
@@ -74,6 +75,8 @@
     "StyleClass",
 
     "shell:ShellProperty.Title",
+    "shell:ShellProperty.HeaderVisible",
+    "shell:ShellProperty.FunctionVisible",
     "shell:ShellProperty.Function1Text",
     "shell:ShellProperty.Function2Text",
     "shell:ShellProperty.Function3Text",
@@ -106,13 +109,12 @@
     "ios:*",
     "mcs:*",
     "behaviors:*",
-    "si:*",
-    "six:*",
-    "input:*",
+    "s:*",
     "effects:*",
 
-    "TextColor, BackgroundColor",
+    "FontFamily, FontSize, FontAttributes",
     "Text",
+    "TextColor, BackgroundColor",
 
     "Keyboard",
 
