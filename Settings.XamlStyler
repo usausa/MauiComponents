@@ -63,13 +63,13 @@
     "Class",
     "ClassId",
 
-    "x:DataType",
-    "s:BindingContextResolver.*",
-    "BindingContext",
-
     "Grid.Row, Grid.RowSpan, Grid.Column, Grid.ColumnSpan",
     "Canvas.Left, Canvas.Top, Canvas.Right, Canvas.Bottom",
     "AbsoluteLayout.LayoutBounds, AbsoluteLayout.LayoutFlags",
+
+    "x:DataType",
+    "s:BindingContextResolver.*",
+    "BindingContext",
 
     "Style",
     "StyleClass",
