@@ -102,6 +102,16 @@ public static class ServiceCollectionExtensions
         return service;
     }
 
+    // Communication
+
+    public static IServiceCollection AddCommunication(this IServiceCollection service)
+    {
+        service.TryAddSingleton(PhoneDialer.Default);
+        service.TryAddSingleton(Sms.Default);
+        service.TryAddSingleton(Email.Default);
+        return service;
+    }
+
     // Community Toolkit
 
     public static IServiceCollection AddCommunityToolkitServices(this IServiceCollection service)

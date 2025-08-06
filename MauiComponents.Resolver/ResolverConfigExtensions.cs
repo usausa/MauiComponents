@@ -100,4 +100,14 @@ public static class ResolverConfigExtensions
         config.BindSingleton(SpeechToText.Default);
         return config;
     }
+
+    // Communication
+
+    public static ResolverConfig AddCommunication(this ResolverConfig config)
+    {
+        config.BindSingleton(PhoneDialer.Default);
+        config.BindSingleton(Sms.Default);
+        config.BindSingleton(Email.Default);
+        return config;
+    }
 }
