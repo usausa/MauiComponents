@@ -55,7 +55,7 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Maui" Version="12.2.0" />
     <PackageReference Include="SourceGenerateHelper" Version="1.2.1" GeneratePathProperty="true" PrivateAssets="all" />
-    <PackageReference Include="Usa.Smart.Core" Version="2.4.5" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.4.6" />
   </ItemGroup>
 
 </Project>
