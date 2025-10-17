@@ -50,6 +50,7 @@ public static class ResolverConfigExtensions
     public static ResolverConfig AddComponentsScreen(this ResolverConfig config)
     {
         config.BindSingleton<IScreen, ScreenImplementation>();
+        config.BindSingleton<IDisplay, DisplayImplementation>();
         config.BindSingleton(DeviceDisplay.Current);
         config.BindSingleton(Screenshot.Default);
         return config;

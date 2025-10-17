@@ -51,6 +51,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddComponentsScreen(this IServiceCollection service)
     {
         service.AddSingleton<IScreen, ScreenImplementation>();
+        service.AddSingleton<IDisplay, DisplayImplementation>();
         service.TryAddSingleton(DeviceDisplay.Current);
         service.TryAddSingleton(Screenshot.Default);
         return service;
