@@ -1,9 +1,6 @@
 namespace MauiComponents;
 
-using Android.Hardware.Display;
 using Android.Views;
-
-using Microsoft.Maui.Platform;
 
 public sealed partial class DisplayImplementation : Java.Lang.Object, Choreographer.IFrameCallback
 {
