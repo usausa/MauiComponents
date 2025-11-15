@@ -52,7 +52,6 @@ public static class MauiProgram
                 {
                     c.AutoRegister(ViewRegistry.DialogSource());
                 });
-                services.AddComponentsSerializer();
             })
             .ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
 

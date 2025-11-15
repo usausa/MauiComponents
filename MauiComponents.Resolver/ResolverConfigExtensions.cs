@@ -6,25 +6,6 @@ using Smart.Resolver;
 
 public static class ResolverConfigExtensions
 {
-    // Serializer
-
-    public static ResolverConfig AddComponentsSerializer(this ResolverConfig config)
-    {
-        return config.AddComponentsSerializer(static _ => { });
-    }
-
-    public static ResolverConfig AddComponentsSerializer(this ResolverConfig config, Action<DefaultSerializerConfig> configure)
-    {
-        config.BindSingleton(_ =>
-        {
-            var options = new DefaultSerializerConfig();
-            configure(options);
-            return options;
-        });
-        config.BindSingleton<ISerializer, DefaultSerializer>();
-        return config;
-    }
-
     // Dialog
 
     public static ResolverConfig AddComponentsDialog(this ResolverConfig config)

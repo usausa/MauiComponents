@@ -1,5 +1,7 @@
 namespace MauiComponents;
 
+using System.Diagnostics.CodeAnalysis;
+
 using CommunityToolkit.Maui.Media;
 using CommunityToolkit.Maui.Storage;
 
@@ -7,25 +9,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    // Serializer
-
-    public static IServiceCollection AddComponentsSerializer(this IServiceCollection service)
-    {
-        return service.AddComponentsSerializer(static _ => { });
-    }
-
-    public static IServiceCollection AddComponentsSerializer(this IServiceCollection service, Action<DefaultSerializerConfig> configure)
-    {
-        service.AddSingleton(_ =>
-        {
-            var config = new DefaultSerializerConfig();
-            configure(config);
-            return config;
-        });
-        service.AddSingleton<ISerializer, DefaultSerializer>();
-        return service;
-    }
-
     // Dialog
 
     public static IServiceCollection AddComponentsDialog(this IServiceCollection service)
@@ -77,7 +60,7 @@ public static class ServiceCollectionExtensions
         return service;
     }
 
-    public static IServiceCollection AddComponentsPopupPlugin<T>(this IServiceCollection service)
+    public static IServiceCollection AddComponentsPopupPlugin<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IServiceCollection service)
         where T : IPopupPlugin
     {
         service.AddSingleton(typeof(IPopupPlugin), typeof(T));
