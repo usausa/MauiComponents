@@ -16,7 +16,7 @@ public interface ILocationService
 {
     event EventHandler<LocationEventArgs>? LocationChanged;
 
-    public bool IsRunning { get; }
+    bool IsRunning { get; }
 
     void Start(GeolocationAccuracy accuracy = GeolocationAccuracy.Medium, int interval = 15000);
 

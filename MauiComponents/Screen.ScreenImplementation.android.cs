@@ -123,11 +123,8 @@ public sealed partial class ScreenImplementation
         }
         else
         {
-            if (screenStateBroadcastReceiver is not null)
-            {
-                screenStateBroadcastReceiver.Unregister();
-                screenStateBroadcastReceiver = null;
-            }
+            screenStateBroadcastReceiver?.Unregister();
+            screenStateBroadcastReceiver = null;
         }
     }
 
