@@ -18,7 +18,9 @@ public sealed class PopupNavigator : IPopupNavigator
         this.popupFactory = popupFactory;
         this.plugins = plugins.ToArray();
         optionFactory = config.OptionFactory;
+#pragma warning disable IDE0028
         popupTypes = new Dictionary<object, Type>(config.PopupTypes);
+#pragma warning restore IDE0028
     }
 
     public async ValueTask PopupAsync(object id)
