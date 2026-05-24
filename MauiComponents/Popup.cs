@@ -1,5 +1,7 @@
 namespace MauiComponents;
 
+using System.Diagnostics.CodeAnalysis;
+
 public interface IPopupInitialize<in T>
 {
     void Initialize(T parameter);
@@ -12,7 +14,7 @@ public interface IPopupInitializeAsync<in T>
 
 public interface IPopupFactory
 {
-    ContentView Create(Type type);
+    ContentView Create([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type type);
 }
 
 public interface IPopupPlugin

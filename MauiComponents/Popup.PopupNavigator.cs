@@ -1,5 +1,7 @@
 namespace MauiComponents;
 
+using System.Diagnostics.CodeAnalysis;
+
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Extensions;
 
@@ -117,7 +119,8 @@ public sealed class PopupNavigator : IPopupNavigator
         await Application.Current!.Windows[0].Page!.ClosePopupAsync(result).ConfigureAwait(true);
     }
 
-    private ContentView CreateView(Type type)
+    [UnconditionalSuppressMessage("Trimming", "IL2072", Justification = "Types stored in PopupNavigatorConfig.Register are annotated with DynamicallyAccessedMembers.")]
+    private ContentView CreateView([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type type)
     {
         var view = popupFactory.Create(type);
 

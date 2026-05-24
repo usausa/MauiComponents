@@ -1,5 +1,7 @@
 namespace MauiComponents;
 
+using System.Diagnostics.CodeAnalysis;
+
 using Microsoft.Extensions.DependencyInjection;
 
 public sealed class DefaultPopupFactory : IPopupFactory
@@ -11,5 +13,6 @@ public sealed class DefaultPopupFactory : IPopupFactory
         this.provider = provider;
     }
 
-    public ContentView Create(Type type) => (ContentView)provider.GetRequiredService(type);
+    public ContentView Create([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type type) =>
+        (ContentView)provider.GetRequiredService(type);
 }

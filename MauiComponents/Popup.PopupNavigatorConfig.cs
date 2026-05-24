@@ -1,5 +1,7 @@
 namespace MauiComponents;
 
+using System.Diagnostics.CodeAnalysis;
+
 using CommunityToolkit.Maui;
 
 public sealed class PopupNavigatorConfig
@@ -8,7 +10,9 @@ public sealed class PopupNavigatorConfig
 
     public Func<Type, object, PopupOptions>? OptionFactory { get; set; }
 
-    public void Register(object id, Type type)
+    public void Register(
+        object id,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type type)
     {
         PopupTypes[id] = type;
     }

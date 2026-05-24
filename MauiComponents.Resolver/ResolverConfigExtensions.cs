@@ -58,9 +58,9 @@ public static class ResolverConfigExtensions
     }
 
     public static ResolverConfig AddComponentsPopupPlugin<T>(this ResolverConfig config)
-        where T : IPopupPlugin
+        where T : class, IPopupPlugin
     {
-        config.BindSingleton(typeof(IPopupPlugin), typeof(T));
+        config.BindSingleton<IPopupPlugin, T>();
         return config;
     }
 

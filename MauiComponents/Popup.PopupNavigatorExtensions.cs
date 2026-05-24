@@ -1,9 +1,11 @@
 namespace MauiComponents;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 public static class PopupNavigatorExtensions
 {
+    [RequiresUnreferencedCode("Use source generator based AutoRegister<T> instead. Apply [PopupSource] attribute with the generator.")]
     public static void AutoRegister(this PopupNavigatorConfig config, IEnumerable<Type> types)
     {
         foreach (var type in types)
