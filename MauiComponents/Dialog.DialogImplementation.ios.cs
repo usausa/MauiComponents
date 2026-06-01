@@ -80,7 +80,7 @@ public sealed partial class DialogImplementation
                     (f.Text?.Length ?? 0) - range.Length + replacement.Length <= maxLength;
             }
 
-            if (!string.IsNullOrEmpty(defaultValue))
+            if (!String.IsNullOrEmpty(defaultValue))
             {
                 field.SelectAll(field);
             }
