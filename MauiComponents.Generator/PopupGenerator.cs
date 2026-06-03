@@ -134,7 +134,7 @@ public sealed class PopupGenerator : IIncrementalGenerator
 
         var popupMap = popupIds
             .SelectValue()
-            .SelectMany(static x => x.AsArray())
+            .SelectMany(static x => x)
             .GroupBy(static x => x.PopupIdClassFullName)
             .ToDictionary(static x => x.Key, static x => x.ToList());
 
