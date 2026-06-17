@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Maui.Media;
 using CommunityToolkit.Maui.Storage;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 public static class ServiceCollectionExtensions
@@ -18,13 +19,13 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddComponentsDialog(this IServiceCollection service, Action<DialogConfig> configure)
     {
-        service.AddSingleton(_ =>
+        service.TryAddSingleton(_ =>
         {
             var config = new DialogConfig();
             configure(config);
             return config;
         });
-        service.AddSingleton<IDialog, DialogImplementation>();
+        service.TryAddSingleton<IDialog, DialogImplementation>();
         service.TryAddSingleton(DeviceDisplay.Current);
         return service;
     }
@@ -33,8 +34,8 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddComponentsScreen(this IServiceCollection service)
     {
-        service.AddSingleton<IScreen, ScreenImplementation>();
-        service.AddSingleton<IDisplay, DisplayImplementation>();
+        service.TryAddSingleton<IScreen, ScreenImplementation>();
+        service.TryAddSingleton<IDisplay, DisplayImplementation>();
         service.TryAddSingleton(DeviceDisplay.Current);
         service.TryAddSingleton(Screenshot.Default);
         return service;
@@ -49,21 +50,21 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddComponentsPopup(this IServiceCollection service, Action<PopupNavigatorConfig> configure)
     {
-        service.AddSingleton(_ =>
+        service.TryAddSingleton(_ =>
         {
             var config = new PopupNavigatorConfig();
             configure(config);
             return config;
         });
-        service.AddSingleton<IPopupFactory, DefaultPopupFactory>();
-        service.AddSingleton<IPopupNavigator, PopupNavigator>();
+        service.TryAddSingleton<IPopupFactory, DefaultPopupFactory>();
+        service.TryAddSingleton<IPopupNavigator, PopupNavigator>();
         return service;
     }
 
     public static IServiceCollection AddComponentsPopupPlugin<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IServiceCollection service)
         where T : IPopupPlugin
     {
-        service.AddSingleton(typeof(IPopupPlugin), typeof(T));
+        service.TryAddEnumerable(ServiceDescriptor.Singleton(typeof(IPopupPlugin), typeof(T)));
         return service;
     }
 
@@ -71,7 +72,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddComponentsLocation(this IServiceCollection service)
     {
-        service.AddSingleton<ILocationService, LocationService>();
+        service.TryAddSingleton<ILocationService, LocationService>();
         service.TryAddSingleton(Geolocation.Default);
         return service;
     }
@@ -80,7 +81,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddComponentsSpeech(this IServiceCollection service)
     {
-        service.AddSingleton<ISpeechService, SpeechService>();
+        service.TryAddSingleton<ISpeechService, SpeechService>();
         service.TryAddSingleton(TextToSpeech.Default);
         service.TryAddSingleton(SpeechToText.Default);
         return service;
@@ -100,10 +101,10 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddCommunityToolkitServices(this IServiceCollection service)
     {
-        service.AddSingleton(FileSaver.Default);
-        service.AddSingleton(FolderPicker.Default);
+        service.TryAddSingleton(FileSaver.Default);
+        service.TryAddSingleton(FolderPicker.Default);
 
-        service.AddSingleton(SpeechToText.Default);
+        service.TryAddSingleton(SpeechToText.Default);
 
         return service;
     }

@@ -37,7 +37,11 @@ internal sealed class FileLoggerWriter : IDisposable
 
     public void Dispose()
     {
-        writer?.Dispose();
+        lock (sync)
+        {
+            writer?.Dispose();
+            writer = null;
+        }
     }
 
     public void Write<TState>(LogLevel logLevel, string categoryName, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
@@ -63,33 +67,40 @@ internal sealed class FileLoggerWriter : IDisposable
         }
     }
 
+#pragma warning disable CA1031
     private void DeleteOldFiles(DateTime date)
     {
-        var noPrefix = String.IsNullOrEmpty(prefix);
-        var baseFilename = MakeFilename(date);
-
-        foreach (var file in Directory.GetFiles(directory))
+        try
         {
-            var fi = new FileInfo(file);
+            var noPrefix = String.IsNullOrEmpty(prefix);
+            var baseFilename = MakeFilename(date);
 
-            if (fi.Name.EndsWith(".log", StringComparison.Ordinal) &&
-                (noPrefix || fi.Name.StartsWith(prefix!, StringComparison.Ordinal)) &&
-                (fi.Name.Length == (12 + prefix?.Length)) &&
-                String.CompareOrdinal(fi.Name, baseFilename) <= 0)
+            foreach (var file in Directory.GetFiles(directory))
             {
-#pragma warning disable CA1031
-                try
+                var fi = new FileInfo(file);
+
+                if (fi.Name.EndsWith(".log", StringComparison.Ordinal) &&
+                    (noPrefix || fi.Name.StartsWith(prefix, StringComparison.Ordinal)) &&
+                    (fi.Name.Length == (12 + prefix.Length)) &&
+                    String.CompareOrdinal(fi.Name, baseFilename) <= 0)
                 {
-                    File.Delete(Path.Combine(directory, file));
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine(e);
+                    }
                 }
-                catch (Exception e)
-                {
-                    Debug.WriteLine(e);
-                }
-#pragma warning restore CA1031
             }
         }
+        catch (Exception e)
+        {
+            Debug.WriteLine(e);
+        }
     }
+#pragma warning restore CA1031
 
     private StreamWriter CreateWriter(DateTime date)
     {
