@@ -6,18 +6,32 @@ public sealed partial class DisplayImplementation : Java.Lang.Object, Choreograp
 {
     private long lastFrameTimeNanosecond;
 
+    private bool isMonitoring;
+
     public partial void StartMonitor()
     {
+        if (isMonitoring)
+        {
+            return;
+        }
+
+        isMonitoring = true;
         lastFrameTimeNanosecond = 0;
         Choreographer.Instance?.PostFrameCallback(this);
     }
 
     public partial void StopMonitor()
     {
+        if (!isMonitoring)
+        {
+            return;
+        }
+
+        isMonitoring = false;
         Choreographer.Instance?.RemoveFrameCallback(this);
     }
 
-    public void DoFrame(long frameTimeNanos)
+    void Choreographer.IFrameCallback.DoFrame(long frameTimeNanos)
     {
         if (lastFrameTimeNanosecond > 0)
         {

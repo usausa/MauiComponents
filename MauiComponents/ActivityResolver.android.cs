@@ -7,14 +7,21 @@ using Application = Android.App.Application;
 
 public static class ActivityResolver
 {
+    private static ActivityLifecycleCallbacks? callbacks;
+
     public static Activity CurrentActivity { get; private set; } = default!;
 
     public static void Init(Activity activity)
     {
         CurrentActivity = activity;
-#pragma warning disable CA2000
-        activity.Application!.RegisterActivityLifecycleCallbacks(new ActivityLifecycleCallbacks());
-#pragma warning restore CA2000
+
+        if (callbacks is not null)
+        {
+            return;
+        }
+
+        callbacks = new ActivityLifecycleCallbacks();
+        activity.Application!.RegisterActivityLifecycleCallbacks(callbacks);
     }
 
     private sealed class ActivityLifecycleCallbacks : Java.Lang.Object, Application.IActivityLifecycleCallbacks

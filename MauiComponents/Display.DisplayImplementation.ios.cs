@@ -12,6 +12,12 @@ public sealed partial class DisplayImplementation
 
     public partial void StartMonitor()
     {
+        if (displayLink is not null)
+        {
+            return;
+        }
+
+        lastTimestamp = 0;
         displayLink = CADisplayLink.Create(() =>
         {
             var timestamp = displayLink!.Timestamp;
@@ -30,5 +36,6 @@ public sealed partial class DisplayImplementation
     {
         displayLink?.Invalidate();
         displayLink = null;
+        lastTimestamp = 0;
     }
 }
