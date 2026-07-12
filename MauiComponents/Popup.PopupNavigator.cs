@@ -33,11 +33,15 @@ public sealed class PopupNavigator : IPopupNavigator
         }
 
         var view = CreateView(type);
-
-        var option = optionFactory?.Invoke(type, id);
-        await Application.Current!.Windows[0].Page!.ShowPopupAsync(view, option).ConfigureAwait(true);
-
-        CloseView(view);
+        try
+        {
+            var option = optionFactory?.Invoke(type, id);
+            await Application.Current!.Windows[0].Page!.ShowPopupAsync(view, option).ConfigureAwait(true);
+        }
+        finally
+        {
+            CloseView(view);
+        }
     }
 
     public async ValueTask PopupAsync<TParameter>(object id, TParameter parameter)
@@ -48,21 +52,25 @@ public sealed class PopupNavigator : IPopupNavigator
         }
 
         var view = CreateView(type);
-
-        if (view.BindingContext is IPopupInitialize<TParameter> initialize)
+        try
         {
-            initialize.Initialize(parameter);
-        }
+            if (view.BindingContext is IPopupInitialize<TParameter> initialize)
+            {
+                initialize.Initialize(parameter);
+            }
 
-        if (view.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
+            if (view.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
+            {
+                await initializeAsync.Initialize(parameter).ConfigureAwait(true);
+            }
+
+            var option = optionFactory?.Invoke(type, id);
+            await Application.Current!.Windows[0].Page!.ShowPopupAsync(view, option).ConfigureAwait(true);
+        }
+        finally
         {
-            await initializeAsync.Initialize(parameter).ConfigureAwait(true);
+            CloseView(view);
         }
-
-        var option = optionFactory?.Invoke(type, id);
-        await Application.Current!.Windows[0].Page!.ShowPopupAsync(view, option).ConfigureAwait(true);
-
-        CloseView(view);
     }
 
     public async ValueTask<TResult> PopupAsync<TResult>(object id)
@@ -73,13 +81,17 @@ public sealed class PopupNavigator : IPopupNavigator
         }
 
         var view = CreateView(type);
+        try
+        {
+            var option = optionFactory?.Invoke(type, id);
+            var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(view, option).ConfigureAwait(true);
 
-        var option = optionFactory?.Invoke(type, id);
-        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(view, option).ConfigureAwait(true);
-
-        CloseView(view);
-
-        return result.Result ?? default!;
+            return result.Result ?? default!;
+        }
+        finally
+        {
+            CloseView(view);
+        }
     }
 
     public async ValueTask<TResult> PopupAsync<TParameter, TResult>(object id, TParameter parameter)
@@ -90,23 +102,27 @@ public sealed class PopupNavigator : IPopupNavigator
         }
 
         var view = CreateView(type);
-
-        if (view.BindingContext is IPopupInitialize<TParameter> initialize)
+        try
         {
-            initialize.Initialize(parameter);
-        }
+            if (view.BindingContext is IPopupInitialize<TParameter> initialize)
+            {
+                initialize.Initialize(parameter);
+            }
 
-        if (view.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
+            if (view.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
+            {
+                await initializeAsync.Initialize(parameter).ConfigureAwait(true);
+            }
+
+            var option = optionFactory?.Invoke(type, id);
+            var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(view, option).ConfigureAwait(true);
+
+            return result.Result ?? default!;
+        }
+        finally
         {
-            await initializeAsync.Initialize(parameter).ConfigureAwait(true);
+            CloseView(view);
         }
-
-        var option = optionFactory?.Invoke(type, id);
-        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(view, option).ConfigureAwait(true);
-
-        CloseView(view);
-
-        return result.Result ?? default!;
     }
 
     public async ValueTask CloseAsync()

@@ -41,13 +41,22 @@ public sealed class SpeechService : ISpeechService, IDisposable
 
     public async ValueTask SpeakAsync(string text, float? pitch, float? volume)
     {
-        ctsSpeak = new CancellationTokenSource();
+        var previous = ctsSpeak;
+        if (previous is not null)
+        {
+            await previous.CancelAsync().ConfigureAwait(true);
+            previous.Dispose();
+        }
+
+        var source = new CancellationTokenSource();
+        ctsSpeak = source;
+
         var options = new SpeechOptions
         {
             Pitch = pitch,
             Volume = volume
         };
-        await textToSpeech.SpeakAsync(text, options, ctsSpeak.Token).ConfigureAwait(true);
+        await textToSpeech.SpeakAsync(text, options, source.Token).ConfigureAwait(true);
     }
 
     public void SpeakCancel()
@@ -71,13 +80,22 @@ public sealed class SpeechService : ISpeechService, IDisposable
             return false;
         }
 
-        ctsRecognize = new CancellationTokenSource();
+        var previous = ctsRecognize;
+        if (previous is not null)
+        {
+            await previous.CancelAsync().ConfigureAwait(true);
+            previous.Dispose();
+        }
+
+        var source = new CancellationTokenSource();
+        ctsRecognize = source;
+
         var option = new SpeechToTextOptions
         {
             Culture = cultureInfo,
             ShouldReportPartialResults = true
         };
-        await speechToText.StartListenAsync(option, ctsRecognize.Token).ConfigureAwait(true);
+        await speechToText.StartListenAsync(option, source.Token).ConfigureAwait(true);
 
         return true;
     }
@@ -89,14 +107,23 @@ public sealed class SpeechService : ISpeechService, IDisposable
 
     public void RecognizeCancel()
     {
-        speechToText.StopListenAsync(CancellationToken.None);
-
         if (ctsRecognize?.IsCancellationRequested ?? true)
         {
             return;
         }
 
         ctsRecognize.Cancel();
+    }
+
+    public async ValueTask RecognizeCancelAsync()
+    {
+        var source = ctsRecognize;
+        if ((source is not null) && !source.IsCancellationRequested)
+        {
+            await source.CancelAsync().ConfigureAwait(true);
+        }
+
+        await speechToText.StopListenAsync(CancellationToken.None).ConfigureAwait(true);
     }
 
     private void SpeechToTextOnRecognitionResultUpdated(object? sender, SpeechToTextRecognitionResultUpdatedEventArgs e)

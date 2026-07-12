@@ -3,12 +3,13 @@ namespace MauiComponents;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
+using System.Threading.Channels;
 
 using Microsoft.Extensions.Logging;
 
 internal sealed class FileLoggerWriter : IDisposable
 {
-    private readonly Lock sync = new();
+    private readonly record struct LogEntry(DateTime Timestamp, string Message);
 
     private readonly string directory;
 
@@ -17,6 +18,10 @@ internal sealed class FileLoggerWriter : IDisposable
     private readonly int retainDays;
 
     private readonly LogFormat format;
+
+    private readonly Channel<LogEntry> channel;
+
+    private readonly Task worker;
 
     private StreamWriter? writer;
 
@@ -33,38 +38,79 @@ internal sealed class FileLoggerWriter : IDisposable
         {
             Directory.CreateDirectory(directory);
         }
+
+        channel = Channel.CreateUnbounded<LogEntry>(new UnboundedChannelOptions
+        {
+            SingleReader = true,
+            SingleWriter = false
+        });
+        worker = Task.Run(ProcessAsync);
     }
 
     public void Dispose()
     {
-        lock (sync)
+        channel.Writer.Complete();
+        try
         {
-            writer?.Dispose();
-            writer = null;
+            worker.Wait();
         }
+        catch (AggregateException)
+        {
+            // Ignore
+        }
+
+        writer?.Dispose();
+        writer = null;
     }
 
     public void Write<TState>(LogLevel logLevel, string categoryName, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
-        lock (sync)
+        var timestamp = DateTime.Now;
+        var message = format.Format(logLevel, timestamp, categoryName, state, exception, formatter);
+        channel.Writer.TryWrite(new LogEntry(timestamp, message));
+    }
+
+    private async Task ProcessAsync()
+    {
+        var reader = channel.Reader;
+        while (await reader.WaitToReadAsync().ConfigureAwait(false))
         {
-            var timestamp = DateTime.Now;
-            var message = format.Format(logLevel, timestamp, categoryName, state, exception, formatter);
-
-            var date = timestamp.Date;
-            if ((lastDate < date) || (writer is null))
+#pragma warning disable CA1031
+            try
             {
-                writer?.Dispose();
-                writer = CreateWriter(date);
+                while (reader.TryRead(out var entry))
+                {
+                    WriteEntry(entry);
+                }
 
-                lastDate = date;
-
-                Task.Run(() => DeleteOldFiles(date.AddDays(-retainDays)));
+                if (writer is not null)
+                {
+                    await writer.FlushAsync().ConfigureAwait(false);
+                }
             }
-
-            writer!.WriteLine(message);
-            writer.Flush();
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
+#pragma warning restore CA1031
         }
+    }
+
+    private void WriteEntry(LogEntry entry)
+    {
+        var date = entry.Timestamp.Date;
+        if ((writer is null) || (lastDate < date))
+        {
+            writer?.Dispose();
+            writer = null;
+
+            writer = CreateWriter(date);
+            lastDate = date;
+
+            DeleteOldFiles(date.AddDays(-retainDays));
+        }
+
+        writer!.WriteLine(entry.Message);
     }
 
 #pragma warning disable CA1031
@@ -75,7 +121,7 @@ internal sealed class FileLoggerWriter : IDisposable
             var noPrefix = String.IsNullOrEmpty(prefix);
             var baseFilename = MakeFilename(date);
 
-            foreach (var file in Directory.GetFiles(directory))
+            foreach (var file in Directory.EnumerateFiles(directory, $"{prefix}*.log"))
             {
                 var fi = new FileInfo(file);
 
@@ -105,7 +151,7 @@ internal sealed class FileLoggerWriter : IDisposable
     private StreamWriter CreateWriter(DateTime date)
     {
         var filename = Path.Combine(directory, MakeFilename(date));
-        var fileStream = File.Open(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+        var fileStream = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read, 4096, FileOptions.Asynchronous);
         fileStream.Seek(0, SeekOrigin.End);
         return new StreamWriter(fileStream);
     }

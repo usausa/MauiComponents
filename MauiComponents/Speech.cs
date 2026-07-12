@@ -33,4 +33,6 @@ public interface ISpeechService
     ValueTask RecognizeStopAsync();
 
     void RecognizeCancel();
+
+    ValueTask RecognizeCancelAsync();
 }
