@@ -60,10 +60,6 @@ public sealed class LocationService : ILocationService, IDisposable
                         LocationChanged?.Invoke(this, new LocationEventArgs(location));
                     }
                 }
-                catch (OperationCanceledException)
-                {
-                    throw;
-                }
                 catch (Exception ex)
                 {
                     Trace.WriteLine(ex);
