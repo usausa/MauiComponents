@@ -44,9 +44,14 @@ public sealed class PopupGenerator : IIncrementalGenerator
             .Where(static x => x is not null)
             .Collect();
 
-        context.RegisterImplementationSourceOutput(
-            sourceProvider.Combine(popupProvider),
-            static (context, provider) => Execute(context, provider.Left, provider.Right));
+        context.RegisterSourceOutput(sourceProvider, static (context, sources) => ReportDiagnostics(context, sources));
+        context.RegisterSourceOutput(popupProvider, static (context, popups) => ReportDiagnostics(context, popups));
+
+        var models = sourceProvider
+            .Combine(popupProvider)
+            .SelectMany(static (pair, token) => JoinSourcesWithPopups(pair.Left, pair.Right, token));
+
+        context.RegisterImplementationSourceOutput(models, static (context, model) => Execute(context, model));
     }
 
     // ------------------------------------------------------------
@@ -117,43 +122,55 @@ public sealed class PopupGenerator : IIncrementalGenerator
                 .ToArray()));
     }
 
+    private static ImmutableArray<PopupSourceModel> JoinSourcesWithPopups(
+        ImmutableArray<Result<SourceModel>> sourceResults,
+        ImmutableArray<Result<EquatableArray<PopupIdModel>>> popupResults,
+        CancellationToken token)
+    {
+        token.ThrowIfCancellationRequested();
+
+        var popupMap = popupResults
+            .SelectValue()
+            .SelectMany(static x => x)
+            .GroupBy(static x => x.PopupIdClassFullName)
+            .ToDictionary(static x => x.Key, static x => x.ToArray());
+
+        token.ThrowIfCancellationRequested();
+
+        var builder = ImmutableArray.CreateBuilder<PopupSourceModel>();
+        foreach (var source in sourceResults.SelectValue())
+        {
+            if (popupMap.TryGetValue(source.PopupIdClassFullName, out var popups))
+            {
+                builder.Add(new PopupSourceModel(source, new EquatableArray<PopupIdModel>(popups)));
+            }
+        }
+
+        return builder.ToImmutable();
+    }
+
     // ------------------------------------------------------------
     // Generator
     // ------------------------------------------------------------
 
-    private static void Execute(SourceProductionContext context, ImmutableArray<Result<SourceModel>> popupSources, ImmutableArray<Result<EquatableArray<PopupIdModel>>> popupIds)
+    private static void ReportDiagnostics<T>(SourceProductionContext context, ImmutableArray<Result<T>> results)
+        where T : IEquatable<T>
     {
-        foreach (var info in popupSources.SelectError())
+        foreach (var info in results.SelectError())
         {
             context.ReportDiagnostic(info);
         }
-        foreach (var info in popupIds.SelectError())
-        {
-            context.ReportDiagnostic(info);
-        }
+    }
 
-        var popupMap = popupIds
-            .SelectValue()
-            .SelectMany(static x => x)
-            .GroupBy(static x => x.PopupIdClassFullName)
-            .ToDictionary(static x => x.Key, static x => x.ToList());
+    private static void Execute(SourceProductionContext context, PopupSourceModel model)
+    {
+        context.CancellationToken.ThrowIfCancellationRequested();
 
         var builder = new SourceBuilder();
-        foreach (var popupSource in popupSources.SelectValue())
-        {
-            context.CancellationToken.ThrowIfCancellationRequested();
+        BuildSource(builder, model.Source, model.Popups);
 
-            if (popupMap.TryGetValue(popupSource.PopupIdClassFullName, out var popupList))
-            {
-                builder.Clear();
-
-                BuildSource(builder, popupSource, popupList);
-
-                var filename = MakeFilename(popupSource.Namespace, popupSource.ClassName, popupSource.MethodName);
-                var source = builder.ToString();
-                context.AddSource(filename, SourceText.From(source, Encoding.UTF8));
-            }
-        }
+        var filename = MakeFilename(model.Source.Namespace, model.Source.ClassName, model.Source.MethodName);
+        context.AddSource(filename, SourceText.From(builder.ToString(), Encoding.UTF8));
     }
 
     private static void BuildSource(SourceBuilder builder, SourceModel source, IEnumerable<PopupIdModel> popupIds)
