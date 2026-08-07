@@ -19,7 +19,7 @@
   </Project>
   <Project Path="MauiComponents.Generator/MauiComponents.Generator.csproj" />
   <Project Path="MauiComponents.Resolver/MauiComponents.Resolver.csproj" />
-  <Project Path="MauiComponentsExample/MauiComponentsExample.csproj">
+  <Project Path="MauiComponentsExample/MauiComponentsExample.csproj" DefaultStartup="true">
     <Deploy />
   </Project>
 </Solution>
