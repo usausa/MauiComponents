@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 internal sealed class FileLoggerWriter : IDisposable
 {
-    private readonly record struct LogEntry(DateTime Timestamp, string Message);
+    private readonly record struct LogEntry(DateTime Timestamp, string? Message, TaskCompletionSource? Completion);
 
     private readonly string directory;
 
@@ -67,12 +67,24 @@ internal sealed class FileLoggerWriter : IDisposable
     {
         var timestamp = DateTime.Now;
         var message = format.Format(logLevel, timestamp, categoryName, state, exception, formatter);
-        channel.Writer.TryWrite(new LogEntry(timestamp, message));
+        channel.Writer.TryWrite(new LogEntry(timestamp, message, null));
+    }
+
+    public void Flush(TimeSpan timeout)
+    {
+        var completion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        if (!channel.Writer.TryWrite(new LogEntry(DateTime.Now, null, completion)))
+        {
+            return;
+        }
+
+        completion.Task.Wait(timeout);
     }
 
     private async Task ProcessAsync()
     {
         var reader = channel.Reader;
+        var completions = new List<TaskCompletionSource>();
         while (await reader.WaitToReadAsync().ConfigureAwait(false))
         {
 #pragma warning disable CA1031
@@ -80,7 +92,15 @@ internal sealed class FileLoggerWriter : IDisposable
             {
                 while (reader.TryRead(out var entry))
                 {
-                    WriteEntry(entry);
+                    if (entry.Message is not null)
+                    {
+                        WriteEntry(entry);
+                    }
+
+                    if (entry.Completion is not null)
+                    {
+                        completions.Add(entry.Completion);
+                    }
                 }
 
                 if (writer is not null)
@@ -93,6 +113,13 @@ internal sealed class FileLoggerWriter : IDisposable
                 Debug.WriteLine(e);
             }
 #pragma warning restore CA1031
+
+            foreach (var completion in completions)
+            {
+                completion.TrySetResult();
+            }
+
+            completions.Clear();
         }
     }
 

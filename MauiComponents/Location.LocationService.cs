@@ -55,7 +55,7 @@ public sealed class LocationService : ILocationService, IDisposable
                 {
                     var request = new GeolocationRequest(accuracy, period);
                     var location = await geolocation.GetLocationAsync(request, cancel).ConfigureAwait(true);
-                    if (location is not null)
+                    if ((location is not null) && !cancel.IsCancellationRequested)
                     {
                         LocationChanged?.Invoke(this, new LocationEventArgs(location));
                     }

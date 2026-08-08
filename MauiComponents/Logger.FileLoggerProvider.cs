@@ -24,6 +24,10 @@ public sealed class FileLoggerProvider : ILoggerProvider
         writer.Dispose();
     }
 
+    public void Flush() => Flush(TimeSpan.FromSeconds(2));
+
+    public void Flush(TimeSpan timeout) => writer.Flush(timeout);
+
     public ILogger CreateLogger(string categoryName)
     {
         if (options.ShortCategory)

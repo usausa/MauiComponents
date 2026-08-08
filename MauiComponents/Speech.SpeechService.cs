@@ -13,6 +13,8 @@ public sealed class SpeechService : ISpeechService, IDisposable
 
     private readonly ISpeechToText speechToText;
 
+    private readonly Lock sync = new();
+
     private CancellationTokenSource? ctsSpeak;
 
     private CancellationTokenSource? ctsRecognize;
@@ -41,32 +43,44 @@ public sealed class SpeechService : ISpeechService, IDisposable
 
     public async ValueTask SpeakAsync(string text, float? pitch, float? volume)
     {
-        var previous = ctsSpeak;
+        var source = new CancellationTokenSource();
+        CancellationTokenSource? previous;
+        lock (sync)
+        {
+            previous = ctsSpeak;
+            ctsSpeak = source;
+        }
+
         if (previous is not null)
         {
             await previous.CancelAsync().ConfigureAwait(true);
             previous.Dispose();
         }
 
-        var source = new CancellationTokenSource();
-        ctsSpeak = source;
-
         var options = new SpeechOptions
         {
             Pitch = pitch,
             Volume = volume
         };
-        await textToSpeech.SpeakAsync(text, options, source.Token).ConfigureAwait(true);
+        try
+        {
+            await textToSpeech.SpeakAsync(text, options, source.Token).ConfigureAwait(true);
+        }
+        finally
+        {
+            ReleaseSpeak(source);
+        }
     }
 
     public void SpeakCancel()
     {
-        if (ctsSpeak?.IsCancellationRequested ?? true)
+        CancellationTokenSource? source;
+        lock (sync)
         {
-            return;
+            source = ctsSpeak;
         }
 
-        ctsSpeak.Cancel();
+        CancelSource(source);
     }
 
     // ------------------------------------------------------------
@@ -80,15 +94,19 @@ public sealed class SpeechService : ISpeechService, IDisposable
             return false;
         }
 
-        var previous = ctsRecognize;
+        var source = new CancellationTokenSource();
+        CancellationTokenSource? previous;
+        lock (sync)
+        {
+            previous = ctsRecognize;
+            ctsRecognize = source;
+        }
+
         if (previous is not null)
         {
             await previous.CancelAsync().ConfigureAwait(true);
             previous.Dispose();
         }
-
-        var source = new CancellationTokenSource();
-        ctsRecognize = source;
 
         var option = new SpeechToTextOptions
         {
@@ -107,23 +125,68 @@ public sealed class SpeechService : ISpeechService, IDisposable
 
     public void RecognizeCancel()
     {
-        if (ctsRecognize?.IsCancellationRequested ?? true)
+        CancellationTokenSource? source;
+        lock (sync)
         {
-            return;
+            source = ctsRecognize;
         }
 
-        ctsRecognize.Cancel();
+        CancelSource(source);
     }
 
     public async ValueTask RecognizeCancelAsync()
     {
-        var source = ctsRecognize;
+        CancellationTokenSource? source;
+        lock (sync)
+        {
+            source = ctsRecognize;
+        }
+
         if ((source is not null) && !source.IsCancellationRequested)
         {
-            await source.CancelAsync().ConfigureAwait(true);
+            try
+            {
+                await source.CancelAsync().ConfigureAwait(true);
+            }
+            catch (ObjectDisposedException)
+            {
+                // Ignore
+            }
         }
 
         await speechToText.StopListenAsync(CancellationToken.None).ConfigureAwait(true);
+    }
+
+    private static void CancelSource(CancellationTokenSource? source)
+    {
+        if ((source is null) || source.IsCancellationRequested)
+        {
+            return;
+        }
+
+        try
+        {
+            source.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+            // Ignore
+        }
+    }
+
+    private void ReleaseSpeak(CancellationTokenSource source)
+    {
+        lock (sync)
+        {
+            if (!ReferenceEquals(ctsSpeak, source))
+            {
+                return;
+            }
+
+            ctsSpeak = null;
+        }
+
+        source.Dispose();
     }
 
     private void SpeechToTextOnRecognitionResultUpdated(object? sender, SpeechToTextRecognitionResultUpdatedEventArgs e)
