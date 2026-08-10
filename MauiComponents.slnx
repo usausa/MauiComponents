@@ -1,4 +1,4 @@
-<Solution>
+﻿<Solution>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitattributes" />
@@ -6,6 +6,7 @@
     <File Path="AGENTS.md" />
     <File Path="Analyzers.ruleset" />
     <File Path="CLAUDE.md" />
+    <File Path="CodeCoverage.runsettings" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
     <File Path="LICENSE" />
@@ -18,6 +19,7 @@
     <BuildDependency Project="MauiComponents.Generator/MauiComponents.Generator.csproj" />
   </Project>
   <Project Path="MauiComponents.Generator/MauiComponents.Generator.csproj" />
+  <Project Path="MauiComponents.Generator.Tests/MauiComponents.Generator.Tests.csproj" />
   <Project Path="MauiComponents.Resolver/MauiComponents.Resolver.csproj" />
   <Project Path="MauiComponentsExample/MauiComponentsExample.csproj" DefaultStartup="true">
     <Deploy />
