@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="XamarinFormsComponents Rules" Description="XamarinFormsComponents Rules" ToolsVersion="17.0">
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="MauiComponents Rules" Description="XamarinFormsComponents Rules" ToolsVersion="17.0">
   <IncludeAll Action="Warning" />
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1101" Action="Hidden" />
