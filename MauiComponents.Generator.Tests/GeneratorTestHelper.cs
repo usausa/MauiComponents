@@ -8,9 +8,6 @@ using SourceGenerateHelper.Testing;
 
 internal static class GeneratorTestHelper
 {
-    // The runtime library targets net10.0-android/-ios, so it cannot be referenced from this
-    // net10.0 test project. The generator matches attributes by metadata name, so each test
-    // source declares MauiComponents.PopupAttribute / PopupSourceAttribute itself.
     private static GeneratorTestRunner Runner => GeneratorTestRunner
         .For<PopupGenerator>()
         .WithDiagnosticPrefix("MC");

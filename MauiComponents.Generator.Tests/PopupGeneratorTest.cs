@@ -4,9 +4,6 @@ using Microsoft.CodeAnalysis;
 
 public class PopupGeneratorTest
 {
-    // The marker attributes live in the runtime library (net10.0-android/-ios), which this
-    // net10.0 test project cannot reference. The generator resolves them by metadata name,
-    // so every source below declares them locally.
     private const string Attributes =
         """
         using System;
@@ -145,7 +142,7 @@ public class PopupGeneratorTest
     }
 
     //-----------------------------------------------------------------------
-    // MC0001 : method must be static partial
+    // MC0001
     //-----------------------------------------------------------------------
 
     [Fact]
@@ -208,10 +205,6 @@ public class PopupGeneratorTest
         Assert.Contains(diagnostics, static x => x.Id == "MC0001");
     }
 
-    //-----------------------------------------------------------------------
-    // MC0002 : method must have no parameter
-    //-----------------------------------------------------------------------
-
     [Fact]
     public void Mc0002MethodWithParameterEmitsDiagnostic()
     {
@@ -241,10 +234,6 @@ public class PopupGeneratorTest
 
         Assert.Contains(diagnostics, static x => x.Id == "MC0002");
     }
-
-    //-----------------------------------------------------------------------
-    // MC0003 : return type must be IEnumerable<KeyValuePair<TId, Type>>
-    //-----------------------------------------------------------------------
 
     [Fact]
     public void Mc0003InvalidReturnTypeEmitsDiagnostic()
@@ -307,7 +296,7 @@ public class PopupGeneratorTest
     }
 
     //-----------------------------------------------------------------------
-    // Valid cases must stay clean
+    // Valid
     //-----------------------------------------------------------------------
 
     [Fact]
