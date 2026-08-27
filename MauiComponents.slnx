@@ -10,8 +10,8 @@
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
     <File Path="LICENSE" />
-    <File Path="MauiComponents.props" />
     <File Path="MauiComponents.sln.DotSettings" />
+    <File Path="MauiComponents.targets" />
     <File Path="README.md" />
     <File Path="Settings.XamlStyler" />
   </Folder>
