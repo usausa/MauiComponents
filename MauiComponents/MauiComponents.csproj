@@ -18,6 +18,7 @@
     <ItemGroup>
       <TfmSpecificPackageFile Include="..\MauiComponents.Generator\bin\$(Configuration)\netstandard2.0\MauiComponents.Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
       <TfmSpecificPackageFile Include="$(PKGSourceGenerateHelper)\lib\netstandard2.0\SourceGenerateHelper.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+      <TfmSpecificPackageFile Include="..\MauiComponents.props" Pack="true" PackagePath="buildTransitive\Components.Maui.props" Visible="false" />
       <TfmSpecificPackageFile Include="..\MauiComponents.targets" Pack="true" PackagePath="buildTransitive\Components.Maui.targets" Visible="false" />
     </ItemGroup>
   </Target>

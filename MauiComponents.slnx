@@ -7,10 +7,12 @@
     <File Path="Analyzers.ruleset" />
     <File Path="CLAUDE.md" />
     <File Path="CodeCoverage.runsettings" />
+    <File Path="Diagnostics.md" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Build.targets" />
     <File Path="LICENSE" />
     <File Path="MauiComponents.sln.DotSettings" />
+    <File Path="MauiComponents.props" />
     <File Path="MauiComponents.targets" />
     <File Path="README.md" />
     <File Path="Settings.XamlStyler" />
