@@ -8,6 +8,30 @@ using SourceGenerateHelper.Testing;
 
 internal static class GeneratorTestHelper
 {
+    public const string Attributes =
+        """
+        using System;
+
+        namespace MauiComponents
+        {
+            [AttributeUsage(AttributeTargets.Class)]
+            public sealed class PopupAttribute : Attribute
+            {
+                public PopupAttribute(object id)
+                {
+                    Id = id;
+                }
+
+                public object Id { get; }
+            }
+
+            [AttributeUsage(AttributeTargets.Method)]
+            public sealed class PopupSourceAttribute : Attribute
+            {
+            }
+        }
+        """;
+
     private static GeneratorTestRunner Runner => GeneratorTestRunner
         .For<PopupGenerator>()
         .WithDiagnosticPrefix("MC");
@@ -17,4 +41,7 @@ internal static class GeneratorTestHelper
     public static IReadOnlyList<Diagnostic> GetDiagnosticsAll(string source) => Runner.GetDiagnosticsAll(source);
 
     public static string GetGeneratedSource(string source) => Runner.GetGeneratedSource(source);
+
+    public static IncrementalRunResult RunIncremental(string source, string addedSource) =>
+        Runner.WithTracking().RunIncremental(source, addedSource);
 }
