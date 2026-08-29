@@ -5,7 +5,6 @@ using System.Collections.Immutable;
 using MauiComponents.Generator.Models;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using SourceGenerateHelper;
@@ -115,7 +114,7 @@ public sealed class PopupGenerator : IIncrementalGenerator
                 .Select(attribute => new PopupIdModel(
                     classSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                     attribute.ConstructorArguments[0].Type!.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
-                    attribute.ConstructorArguments[0].ToCSharpString()))));
+                    attribute.ConstructorArguments[0].ToCSharpExpression() ?? String.Empty))));
     }
 
     private static ImmutableArray<PopupSourceModel> JoinSourcesWithPopups(
