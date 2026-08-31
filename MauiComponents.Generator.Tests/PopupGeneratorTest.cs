@@ -114,7 +114,7 @@ public class PopupGeneratorTest
             }
             """);
 
-        Assert.Equal(String.Empty, generated);
+        Assert.Equal(string.Empty, generated);
     }
 
     //-----------------------------------------------------------------------

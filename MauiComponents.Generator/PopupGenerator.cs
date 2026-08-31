@@ -114,7 +114,7 @@ public sealed class PopupGenerator : IIncrementalGenerator
                 .Select(attribute => new PopupIdModel(
                     classSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                     attribute.ConstructorArguments[0].Type!.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
-                    attribute.ConstructorArguments[0].ToCSharpExpression() ?? String.Empty))));
+                    attribute.ConstructorArguments[0].ToCSharpExpression() ?? string.Empty))));
     }
 
     private static ImmutableArray<PopupSourceModel> JoinSourcesWithPopups(

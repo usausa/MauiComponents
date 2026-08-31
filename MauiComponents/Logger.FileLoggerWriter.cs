@@ -137,7 +137,7 @@ internal sealed class FileLoggerWriter : IDisposable
             DeleteOldFiles(date.AddDays(-retainDays));
         }
 
-        writer!.WriteLine(entry.Message);
+        writer.WriteLine(entry.Message);
     }
 
 #pragma warning disable CA1031
@@ -155,7 +155,7 @@ internal sealed class FileLoggerWriter : IDisposable
                 if (fi.Name.EndsWith(".log", StringComparison.Ordinal) &&
                     (noPrefix || fi.Name.StartsWith(prefix, StringComparison.Ordinal)) &&
                     (fi.Name.Length == (12 + prefix.Length)) &&
-                    String.CompareOrdinal(fi.Name, baseFilename) <= 0)
+                    (String.CompareOrdinal(fi.Name, baseFilename) <= 0))
                 {
                     try
                     {

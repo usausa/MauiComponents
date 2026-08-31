@@ -92,7 +92,6 @@ public static class DialogExtensions
 }
 
 // TODO
-#pragma warning disable SA1005
 //public sealed class DialogService : IDialogService
 //{
 //    public async Task<string?> DisplayActionSheet(string? title, string? cancelButton, string? destroyButton, params string[] otherButtons)

@@ -495,7 +495,7 @@ public sealed partial class DialogImplementation
 
         public bool OnEditorAction(TextView? v, ImeAction actionId, KeyEvent? e)
         {
-            if ((e is not null) && (e.Action == KeyEventActions.Down) && e.KeyCode == Keycode.Enter)
+            if ((e is not null) && (e.Action == KeyEventActions.Down) && (e.KeyCode == Keycode.Enter))
             {
                 alertDialog.Dismiss();
                 result.TrySetResult(new PromptResult(true, v?.Text!));
