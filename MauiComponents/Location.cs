@@ -20,7 +20,9 @@ public interface ILocationService
 
     void Start(GeolocationAccuracy accuracy = GeolocationAccuracy.Medium, int interval = 15000);
 
+#pragma warning disable CA1716
     void Stop();
+#pragma warning restore CA1716
 
     ValueTask<Location?> GetLastLocationAsync();
 
