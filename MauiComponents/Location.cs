@@ -12,7 +12,6 @@ public sealed class LocationEventArgs : EventArgs
     }
 }
 
-#pragma warning disable CA1716
 public interface ILocationService
 {
     event EventHandler<LocationEventArgs>? LocationChanged;
@@ -27,4 +26,3 @@ public interface ILocationService
 
     ValueTask<Location?> GetLocationAsync(GeolocationAccuracy accuracy = GeolocationAccuracy.Medium, int timeout = 15000, CancellationToken cancel = default);
 }
-#pragma warning restore CA1716
