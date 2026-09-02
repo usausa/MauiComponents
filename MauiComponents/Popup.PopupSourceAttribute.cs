@@ -1,6 +1,4 @@
 namespace MauiComponents;
 
 [AttributeUsage(AttributeTargets.Method)]
-public sealed class PopupSourceAttribute : Attribute
-{
-}
+public sealed class PopupSourceAttribute : Attribute;
