@@ -18,7 +18,9 @@ public sealed class PopupNavigator : IPopupNavigator
     public PopupNavigator(IPopupFactory popupFactory, IEnumerable<IPopupPlugin> plugins, PopupNavigatorConfig config)
     {
         this.popupFactory = popupFactory;
+#pragma warning disable IDE0028
         this.plugins = plugins.ToArray();
+#pragma warning restore IDE0028
         optionFactory = config.OptionFactory;
 #pragma warning disable IDE0028
         popupTypes = new Dictionary<object, Type>(config.PopupTypes);
