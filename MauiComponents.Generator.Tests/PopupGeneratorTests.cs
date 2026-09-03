@@ -2,7 +2,7 @@ namespace MauiComponents.Generator.Tests;
 
 using Microsoft.CodeAnalysis;
 
-public class PopupGeneratorTest
+public class PopupGeneratorTests
 {
     //-----------------------------------------------------------------------
     // Basic

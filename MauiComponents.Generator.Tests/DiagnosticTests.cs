@@ -2,7 +2,7 @@ namespace MauiComponents.Generator.Tests;
 
 using Microsoft.CodeAnalysis;
 
-public sealed class DiagnosticTest
+public sealed class DiagnosticTests
 {
     [Fact]
     public void Mc0001NonPartialMethodEmitsDiagnostic()
