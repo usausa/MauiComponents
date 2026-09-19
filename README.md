@@ -18,6 +18,7 @@ builder.Services.AddComponentsScreen();
 builder.Services.AddComponentsPopup();
 builder.Services.AddComponentsLocation();
 builder.Services.AddComponentsSpeech();
+builder.Services.AddComponentsWiFi();
 ```
 
 ## Features
@@ -51,6 +52,20 @@ screen.ScreenStateChanged += (_, e) => Console.WriteLine(e.ScreenOn);
 ```
 
 `IDisplay` monitors display frame rate updates.
+
+### WiFi
+
+`IWiFiManager` monitors the Wi-Fi connection and scan results (Android only. On iOS `IsSupported` is `false`).
+
+```csharp
+wifiManager.StateChanged += (_, _) => Console.WriteLine(wifiManager.Connection?.Ssid);
+wifiManager.Enabled = true;
+var accessPoints = wifiManager.AccessPoints;
+wifiManager.StartScan();
+wifiManager.OpenSettings();
+```
+
+Requires `ACCESS_FINE_LOCATION` (SSID / BSSID and scan results) and `NEARBY_WIFI_DEVICES` (Android 13+) permissions.
 
 ### Popup Navigation
 

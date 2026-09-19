@@ -87,6 +87,14 @@ public static class ServiceCollectionExtensions
         return service;
     }
 
+    // WiFi
+
+    public static IServiceCollection AddComponentsWiFi(this IServiceCollection service)
+    {
+        service.TryAddSingleton<IWiFiManager, WiFiManager>();
+        return service;
+    }
+
     // Communication
 
     public static IServiceCollection AddCommunication(this IServiceCollection service)
