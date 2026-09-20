@@ -19,6 +19,10 @@ public sealed class SpeechService : ISpeechService, IDisposable
 
     private CancellationTokenSource? ctsRecognize;
 
+    private string recognizingText = string.Empty;
+
+    private bool recognizeCompleted;
+
     public SpeechService(
         ITextToSpeech textToSpeech,
         ISpeechToText speechToText)
@@ -108,11 +112,18 @@ public sealed class SpeechService : ISpeechService, IDisposable
             previous.Dispose();
         }
 
+        if (speechToText.CurrentState != SpeechToTextState.Stopped)
+        {
+            await speechToText.StopListenAsync(CancellationToken.None).ConfigureAwait(true);
+        }
+
         var option = new SpeechToTextOptions
         {
             Culture = cultureInfo,
             ShouldReportPartialResults = true
         };
+        recognizingText = string.Empty;
+        recognizeCompleted = false;
         await speechToText.StartListenAsync(option, source.Token).ConfigureAwait(true);
 
         return true;
@@ -121,6 +132,7 @@ public sealed class SpeechService : ISpeechService, IDisposable
     public async ValueTask RecognizeStopAsync()
     {
         await speechToText.StopListenAsync(CancellationToken.None).ConfigureAwait(true);
+        NotifyCompleted(recognizingText);
     }
 
     public void RecognizeCancel()
@@ -155,6 +167,18 @@ public sealed class SpeechService : ISpeechService, IDisposable
         }
 
         await speechToText.StopListenAsync(CancellationToken.None).ConfigureAwait(true);
+        NotifyCompleted(recognizingText);
+    }
+
+    private void NotifyCompleted(string text)
+    {
+        if (recognizeCompleted)
+        {
+            return;
+        }
+
+        recognizeCompleted = true;
+        Recognized?.Invoke(this, new SpeechRecognizeEventArgs(true, text));
     }
 
     private static void CancelSource(CancellationTokenSource? source)
@@ -191,11 +215,17 @@ public sealed class SpeechService : ISpeechService, IDisposable
 
     private void SpeechToTextOnRecognitionResultUpdated(object? sender, SpeechToTextRecognitionResultUpdatedEventArgs e)
     {
+        recognizingText = e.RecognitionResult;
         Recognized?.Invoke(this, new SpeechRecognizeEventArgs(false, e.RecognitionResult));
     }
 
     private void SpeechToTextOnRecognitionResultCompleted(object? sender, SpeechToTextRecognitionResultCompletedEventArgs e)
     {
-        Recognized?.Invoke(this, new SpeechRecognizeEventArgs(true, e.RecognitionResult.Text ?? string.Empty));
+        NotifyCompleted(e.RecognitionResult.Text ?? string.Empty);
+
+        if (speechToText.CurrentState != SpeechToTextState.Stopped)
+        {
+            _ = speechToText.StopListenAsync(CancellationToken.None);
+        }
     }
 }
