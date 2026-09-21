@@ -45,7 +45,7 @@ public sealed class SpeechService : ISpeechService, IDisposable
     // Text to speech
     // ------------------------------------------------------------
 
-    public async ValueTask SpeakAsync(string text, float? pitch, float? volume)
+    public async ValueTask SpeakAsync(string text, float? pitch, float? volume, float? rate)
     {
         var source = new CancellationTokenSource();
         CancellationTokenSource? previous;
@@ -64,7 +64,8 @@ public sealed class SpeechService : ISpeechService, IDisposable
         var options = new SpeechOptions
         {
             Pitch = pitch,
-            Volume = volume
+            Volume = volume,
+            Rate = rate
         };
         try
         {

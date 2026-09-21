@@ -22,7 +22,7 @@ public interface ISpeechService
 
     // Text to speech
 
-    ValueTask SpeakAsync(string text, float? pitch = null, float? volume = null);
+    ValueTask SpeakAsync(string text, float? pitch = null, float? volume = null, float? rate = null);
 
     void SpeakCancel();
 
