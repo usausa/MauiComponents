@@ -51,13 +51,13 @@
   <Import Project="..\MauiComponents.targets" />
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.101" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.110" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.12" />
-    <PackageReference Include="Usa.Smart.Core" Version="2.19.0" />
-    <PackageReference Include="Usa.Smart.Maui" Version="2.25.0" />
-    <PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.25.0" />
-    <PackageReference Include="Usa.Smart.Resolver" Version="3.0.0" />
-    <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="3.0.0" />
+    <PackageReference Include="Usa.Smart.Core" Version="2.20.0" />
+    <PackageReference Include="Usa.Smart.Maui" Version="2.26.0" />
+    <PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.26.0" />
+    <PackageReference Include="Usa.Smart.Resolver" Version="3.1.0" />
+    <PackageReference Include="Usa.Smart.Resolver.Extensions.DependencyInjection" Version="3.1.0" />
   </ItemGroup>
 
 </Project>
