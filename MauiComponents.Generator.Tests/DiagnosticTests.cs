@@ -1,7 +1,5 @@
 namespace MauiComponents.Generator.Tests;
 
-using Microsoft.CodeAnalysis;
-
 public sealed class DiagnosticTests
 {
     [Fact]

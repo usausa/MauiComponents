@@ -1,13 +1,13 @@
 namespace MauiComponents.Generator.Models;
 
-using Microsoft.CodeAnalysis;
+using SourceGenerateHelper;
 
 internal sealed record SourceModel(
     string Namespace,
-    string ClassName,
-    bool IsValueType,
-    Accessibility MethodAccessibility,
-    string MethodName,
-    string ReturnTypeName,
+    EquatableArray<string> ContainingTypes,
+    string HintName,
+    string Signature,
     string EntryTypeName,
-    string PopupIdClassFullName);
+    string PopupIdClassFullName,
+    bool IsFallback = false,
+    string MethodName = "");

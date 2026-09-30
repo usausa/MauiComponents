@@ -10,7 +10,7 @@ public static class PopupNavigatorExtensions
     {
         foreach (var type in types)
         {
-            foreach (var attr in type.GetTypeInfo().GetCustomAttributes<PopupAttribute>())
+            foreach (var attr in type.GetTypeInfo().GetCustomAttributes<PopupAttribute>(false))
             {
                 config.Register(attr.Id, type);
             }

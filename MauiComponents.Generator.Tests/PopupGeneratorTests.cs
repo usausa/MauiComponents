@@ -88,7 +88,7 @@ public class PopupGeneratorTests
     }
 
     [Fact]
-    public void WhenNoMatchingPopupThenNoSourceIsGenerated()
+    public void WhenNoMatchingPopupThenEmptySequenceIsGenerated()
     {
         var generated = GeneratorTestHelper.GetGeneratedSource(GeneratorTestHelper.Attributes +
             """
@@ -114,7 +114,7 @@ public class PopupGeneratorTests
             }
             """);
 
-        Assert.Equal(string.Empty, generated);
+        Assert.Contains("yield break;", generated, StringComparison.Ordinal);
     }
 
     //-----------------------------------------------------------------------

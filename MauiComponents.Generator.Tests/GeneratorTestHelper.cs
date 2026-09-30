@@ -14,7 +14,7 @@ internal static class GeneratorTestHelper
 
         namespace MauiComponents
         {
-            [AttributeUsage(AttributeTargets.Class)]
+            [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
             public sealed class PopupAttribute : Attribute
             {
                 public PopupAttribute(object id)
@@ -41,6 +41,11 @@ internal static class GeneratorTestHelper
     public static IReadOnlyList<Diagnostic> GetDiagnosticsAll(string source) => Runner.GetDiagnosticsAll(source);
 
     public static string GetGeneratedSource(string source) => Runner.GetGeneratedSource(source);
+
+    public static string GetAllGeneratedSource(string source) => Runner.Run(source).AllGeneratedText;
+
+    public static IReadOnlyList<string> GetProblemIds(string source) =>
+        [.. Runner.GetProblems(source).Select(static x => x.Id)];
 
     public static IncrementalRunResult RunIncremental(string source, string addedSource) =>
         Runner.WithTracking().RunIncremental(source, addedSource);

@@ -18,8 +18,8 @@
     <ItemGroup>
       <TfmSpecificPackageFile Include="..\MauiComponents.Generator\bin\$(Configuration)\netstandard2.0\MauiComponents.Generator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
       <TfmSpecificPackageFile Include="$(PKGSourceGenerateHelper)\lib\netstandard2.0\SourceGenerateHelper.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-      <TfmSpecificPackageFile Include="..\MauiComponents.props" Pack="true" PackagePath="buildTransitive\Components.Maui.props" Visible="false" />
-      <TfmSpecificPackageFile Include="..\MauiComponents.targets" Pack="true" PackagePath="buildTransitive\Components.Maui.targets" Visible="false" />
+      <TfmSpecificPackageFile Include="..\MauiComponents.props" Pack="true" PackagePath="build\Components.Maui.props" Visible="false" />
+      <TfmSpecificPackageFile Include="..\MauiComponents.targets" Pack="true" PackagePath="build\Components.Maui.targets" Visible="false" />
     </ItemGroup>
   </Target>
 
@@ -55,7 +55,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Maui" Version="15.0.1" />
-    <PackageReference Include="SourceGenerateHelper" Version="1.28.0" GeneratePathProperty="true" PrivateAssets="all" />
+    <PackageReference Include="SourceGenerateHelper" Version="1.30.0" GeneratePathProperty="true" PrivateAssets="all" />
     <PackageReference Include="Usa.Smart.Core" Version="2.20.0" />
   </ItemGroup>
 
