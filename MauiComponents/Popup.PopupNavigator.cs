@@ -15,6 +15,10 @@ public sealed class PopupNavigator : IPopupNavigator
 
     private readonly Dictionary<object, Type> popupTypes;
 
+    private readonly List<ContentView> views = [];
+
+    private int closingDepth;
+
     public PopupNavigator(IPopupFactory popupFactory, IEnumerable<IPopupPlugin> plugins, PopupNavigatorConfig config)
     {
         this.popupFactory = popupFactory;
@@ -36,10 +40,16 @@ public sealed class PopupNavigator : IPopupNavigator
 
         var view = CreateView(type);
 
-        var option = optionFactory?.Invoke(type, id);
-        await Application.Current!.Windows[0].Page!.ShowPopupAsync(view, option).ConfigureAwait(true);
-
-        CloseView(view);
+        OpenView(view);
+        try
+        {
+            var option = optionFactory?.Invoke(type, id);
+            await Application.Current!.Windows[0].Page!.ShowPopupAsync(view, option).ConfigureAwait(true);
+        }
+        finally
+        {
+            await CloseViewAsync(view).ConfigureAwait(true);
+        }
     }
 
     public async ValueTask PopupAsync<TParameter>(object id, TParameter parameter)
@@ -51,20 +61,26 @@ public sealed class PopupNavigator : IPopupNavigator
 
         var view = CreateView(type);
 
-        if (view.BindingContext is IPopupInitialize<TParameter> initialize)
+        OpenView(view);
+        try
         {
-            initialize.Initialize(parameter);
-        }
+            if (view.BindingContext is IPopupInitialize<TParameter> initialize)
+            {
+                initialize.Initialize(parameter);
+            }
 
-        if (view.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
+            if (view.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
+            {
+                await initializeAsync.Initialize(parameter).ConfigureAwait(true);
+            }
+
+            var option = optionFactory?.Invoke(type, id);
+            await Application.Current!.Windows[0].Page!.ShowPopupAsync(view, option).ConfigureAwait(true);
+        }
+        finally
         {
-            await initializeAsync.Initialize(parameter).ConfigureAwait(true);
+            await CloseViewAsync(view).ConfigureAwait(true);
         }
-
-        var option = optionFactory?.Invoke(type, id);
-        await Application.Current!.Windows[0].Page!.ShowPopupAsync(view, option).ConfigureAwait(true);
-
-        CloseView(view);
     }
 
     public async ValueTask<TResult> PopupAsync<TResult>(object id)
@@ -76,12 +92,17 @@ public sealed class PopupNavigator : IPopupNavigator
 
         var view = CreateView(type);
 
-        var option = optionFactory?.Invoke(type, id);
-        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(view, option).ConfigureAwait(true);
-
-        CloseView(view);
-
-        return result.Result ?? default!;
+        OpenView(view);
+        try
+        {
+            var option = optionFactory?.Invoke(type, id);
+            var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(view, option).ConfigureAwait(true);
+            return result.Result ?? default!;
+        }
+        finally
+        {
+            await CloseViewAsync(view).ConfigureAwait(true);
+        }
     }
 
     public async ValueTask<TResult> PopupAsync<TParameter, TResult>(object id, TParameter parameter)
@@ -93,32 +114,87 @@ public sealed class PopupNavigator : IPopupNavigator
 
         var view = CreateView(type);
 
-        if (view.BindingContext is IPopupInitialize<TParameter> initialize)
+        OpenView(view);
+        try
         {
-            initialize.Initialize(parameter);
-        }
+            if (view.BindingContext is IPopupInitialize<TParameter> initialize)
+            {
+                initialize.Initialize(parameter);
+            }
 
-        if (view.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
+            if (view.BindingContext is IPopupInitializeAsync<TParameter> initializeAsync)
+            {
+                await initializeAsync.Initialize(parameter).ConfigureAwait(true);
+            }
+
+            var option = optionFactory?.Invoke(type, id);
+            var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(view, option).ConfigureAwait(true);
+            return result.Result ?? default!;
+        }
+        finally
         {
-            await initializeAsync.Initialize(parameter).ConfigureAwait(true);
+            await CloseViewAsync(view).ConfigureAwait(true);
         }
-
-        var option = optionFactory?.Invoke(type, id);
-        var result = await Application.Current!.Windows[0].Page!.ShowPopupAsync<TResult>(view, option).ConfigureAwait(true);
-
-        CloseView(view);
-
-        return result.Result ?? default!;
     }
 
     public async ValueTask CloseAsync()
     {
-        await Application.Current!.Windows[0].Page!.ClosePopupAsync().ConfigureAwait(true);
+        var view = BeginClose();
+        if (view is not null)
+        {
+            try
+            {
+                await NotifyClosingAsync(view).ConfigureAwait(true);
+                await Application.Current!.Windows[0].Page!.ClosePopupAsync().ConfigureAwait(true);
+            }
+            catch
+            {
+                closingDepth = 0;
+                throw;
+            }
+        }
     }
 
     public async ValueTask CloseAsync<TResult>(TResult result)
     {
-        await Application.Current!.Windows[0].Page!.ClosePopupAsync(result).ConfigureAwait(true);
+        var view = BeginClose();
+        if (view is not null)
+        {
+            try
+            {
+                await NotifyClosingAsync(view).ConfigureAwait(true);
+                await Application.Current!.Windows[0].Page!.ClosePopupAsync(result).ConfigureAwait(true);
+            }
+            catch
+            {
+                closingDepth = 0;
+                throw;
+            }
+        }
+    }
+
+    private ContentView? BeginClose()
+    {
+        if ((views.Count == 0) || (closingDepth == views.Count))
+        {
+            return null;
+        }
+
+        closingDepth = views.Count;
+        return views[^1];
+    }
+
+    private static async ValueTask NotifyClosingAsync(ContentView view)
+    {
+        if (view.BindingContext is IPopupClosing closing)
+        {
+            closing.OnClosing();
+        }
+
+        if (view.BindingContext is IPopupClosingAsync closingAsync)
+        {
+            await closingAsync.OnClosing().ConfigureAwait(true);
+        }
     }
 
     [UnconditionalSuppressMessage("Trimming", "IL2072", Justification = "Types stored in PopupNavigatorConfig.Register are annotated with DynamicallyAccessedMembers.")]
@@ -131,11 +207,42 @@ public sealed class PopupNavigator : IPopupNavigator
             plugin.Extend(view);
         }
 
+        if (view.BindingContext is IPopupNavigatorAware aware)
+        {
+            aware.SetPopupNavigator(this);
+        }
+
         return view;
     }
 
-    private static void CloseView(ContentView view)
+    private void OpenView(ContentView view)
     {
+        views.Add(view);
+
+        foreach (var plugin in plugins)
+        {
+            plugin.OnOpening(view);
+        }
+    }
+
+    private async ValueTask CloseViewAsync(ContentView view)
+    {
+        if (closingDepth == views.Count)
+        {
+            closingDepth = 0;
+        }
+        else
+        {
+            await NotifyClosingAsync(view).ConfigureAwait(true);
+        }
+
+        views.Remove(view);
+
+        foreach (var plugin in plugins)
+        {
+            plugin.OnClosed(view);
+        }
+
         view.Behaviors.Clear();
         view.Triggers.Clear();
 
@@ -144,7 +251,6 @@ public sealed class PopupNavigator : IPopupNavigator
             Cleanup(view.Content);
         }
 
-        // ReSharper disable once SuspiciousTypeConversion.Global
         if (view is IDisposable disposable)
         {
             disposable.Dispose();

@@ -12,14 +12,33 @@ public interface IPopupInitializeAsync<in T>
     ValueTask Initialize(T parameter);
 }
 
+public interface IPopupClosing
+{
+    void OnClosing();
+}
+
+public interface IPopupClosingAsync
+{
+    ValueTask OnClosing();
+}
+
 public interface IPopupFactory
 {
     ContentView Create([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type type);
 }
 
+public interface IPopupNavigatorAware
+{
+    void SetPopupNavigator(IPopupNavigator navigator);
+}
+
 public interface IPopupPlugin
 {
     void Extend(ContentView view);
+
+    void OnOpening(ContentView view);
+
+    void OnClosed(ContentView view);
 }
 
 public interface IPopupNavigator
