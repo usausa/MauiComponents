@@ -2,6 +2,20 @@ namespace MauiComponents.Controls;
 
 public sealed class TreeView : ContentView
 {
+    private const double RowSpacing = 2;
+
+    private const double RowHorizontalPadding = 4;
+
+    private const double RowVerticalPadding = 6;
+
+    private const double IconSpacing = 4;
+
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
+    private readonly VerticalStackLayout container;
+
     //--------------------------------------------------------------------------------
     // Property
     //--------------------------------------------------------------------------------
@@ -46,6 +60,13 @@ public sealed class TreeView : ContentView
         typeof(TreeView),
         propertyChanged: static (bindable, _, _) => ((TreeView)bindable).Rebuild());
 
+    public static readonly BindableProperty IconSizeProperty = BindableProperty.Create(
+        nameof(IconSize),
+        typeof(double),
+        typeof(TreeView),
+        20d,
+        propertyChanged: static (bindable, _, _) => ((TreeView)bindable).Rebuild());
+
     public static readonly BindableProperty IconColorProperty = BindableProperty.Create(
         nameof(IconColor),
         typeof(Color),
@@ -65,6 +86,13 @@ public sealed class TreeView : ContentView
         typeof(string),
         typeof(TreeView),
         "📄",
+        propertyChanged: static (bindable, _, _) => ((TreeView)bindable).Rebuild());
+
+    public static readonly BindableProperty FontSizeProperty = BindableProperty.Create(
+        nameof(FontSize),
+        typeof(double),
+        typeof(TreeView),
+        14d,
         propertyChanged: static (bindable, _, _) => ((TreeView)bindable).Rebuild());
 
     public static readonly BindableProperty TextColorProperty = BindableProperty.Create(
@@ -117,6 +145,12 @@ public sealed class TreeView : ContentView
         set => SetValue(IconFontFamilyProperty, value);
     }
 
+    public double IconSize
+    {
+        get => (double)GetValue(IconSizeProperty);
+        set => SetValue(IconSizeProperty, value);
+    }
+
     public Color IconColor
     {
         get => (Color)GetValue(IconColorProperty);
@@ -135,6 +169,12 @@ public sealed class TreeView : ContentView
         set => SetValue(LeafIconProperty, value);
     }
 
+    public double FontSize
+    {
+        get => (double)GetValue(FontSizeProperty);
+        set => SetValue(FontSizeProperty, value);
+    }
+
     public Color TextColor
     {
         get => (Color)GetValue(TextColorProperty);
@@ -147,15 +187,13 @@ public sealed class TreeView : ContentView
         set => SetValue(SelectedBackgroundProperty, value);
     }
 
-    private readonly VerticalStackLayout container;
-
     //--------------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------------
 
     public TreeView()
     {
-        container = new VerticalStackLayout { Spacing = 2 };
+        container = new VerticalStackLayout { Spacing = RowSpacing };
         Content = container;
     }
 
@@ -189,8 +227,8 @@ public sealed class TreeView : ContentView
     {
         var row = new Grid
         {
-            Padding = new Thickness((depth * IndentSize) + 4, 6, 4, 6),
-            ColumnSpacing = 4,
+            Padding = new Thickness((depth * IndentSize) + RowHorizontalPadding, RowVerticalPadding, RowHorizontalPadding, RowVerticalPadding),
+            ColumnSpacing = IconSpacing,
             ColumnDefinitions =
             {
                 new ColumnDefinition(GridLength.Auto),
@@ -205,8 +243,8 @@ public sealed class TreeView : ContentView
             Text = node.HasChildren ? (node.IsExpanded ? ExpandedIcon : CollapsedIcon) : string.Empty,
             FontFamily = IconFontFamily,
             TextColor = IconColor,
-            FontSize = 20,
-            WidthRequest = 20,
+            FontSize = IconSize,
+            WidthRequest = IconSize,
             VerticalTextAlignment = TextAlignment.Center
         };
         row.Add(chevron, 0);
@@ -214,7 +252,7 @@ public sealed class TreeView : ContentView
         var icon = new Label
         {
             Text = node.HasChildren ? BranchIcon : LeafIcon,
-            FontSize = 14,
+            FontSize = FontSize,
             VerticalTextAlignment = TextAlignment.Center
         };
         row.Add(icon, 1);
@@ -223,7 +261,7 @@ public sealed class TreeView : ContentView
         {
             Text = node.Text,
             TextColor = TextColor,
-            FontSize = 14,
+            FontSize = FontSize,
             VerticalTextAlignment = TextAlignment.Center
         };
         row.Add(text, 2);

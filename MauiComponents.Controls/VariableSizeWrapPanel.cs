@@ -4,6 +4,8 @@ using Microsoft.Maui.Layouts;
 
 public sealed class VariableSizeWrapPanel : Layout
 {
+    private const double UnboundedColumnWidth = 300;
+
     //--------------------------------------------------------------------------------
     // Property
     //--------------------------------------------------------------------------------
@@ -108,7 +110,7 @@ public sealed class VariableSizeWrapPanel : Layout
 
             var contentWidth = Double.IsFinite(widthConstraint)
                 ? widthConstraint - padding.HorizontalThickness
-                : 300d * columns;
+                : UnboundedColumnWidth * columns;
             var cellWidth = CellSize(contentWidth, columns, spacing);
 
             var placements = Place(columns, out var rowCount);

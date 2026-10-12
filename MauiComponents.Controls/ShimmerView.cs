@@ -5,6 +5,26 @@ public sealed class ShimmerView : ContentView
 {
     private const string AnimationName = "ShimmerWave";
 
+    private const uint AnimationRate = 16;
+
+    private static readonly Point WaveStartPoint = new(0, 0);
+
+    private static readonly Point WaveEndPoint = new(1, 1);
+
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
+    private readonly Grid root;
+
+    private readonly GraphicsView canvas;
+
+    private PathF? shapes;
+
+    private double position;
+
+    private bool running;
+
     //--------------------------------------------------------------------------------
     // Property
     //--------------------------------------------------------------------------------
@@ -56,16 +76,6 @@ public sealed class ShimmerView : ContentView
         typeof(ShimmerView),
         1000u,
         propertyChanged: static (bindable, _, _) => ((ShimmerView)bindable).RestartAnimation());
-
-    private readonly Grid root;
-
-    private readonly GraphicsView canvas;
-
-    private PathF? shapes;
-
-    private double position;
-
-    private bool running;
 
     public View? Skeleton
     {
@@ -185,7 +195,7 @@ public sealed class ShimmerView : ContentView
                 },
                 0,
                 end,
-                16,
+                AnimationRate,
                 Duration,
                 Easing.Linear,
                 null,
@@ -213,8 +223,8 @@ public sealed class ShimmerView : ContentView
             var right = (float)position;
             var paint = new LinearGradientPaint
             {
-                StartPoint = new Point(0, 0),
-                EndPoint = new Point(1, 1),
+                StartPoint = WaveStartPoint,
+                EndPoint = WaveEndPoint,
                 GradientStops =
                 [
                     new PaintGradientStop(Math.Clamp(right - wave, 0, 1), Fill),

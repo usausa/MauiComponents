@@ -10,11 +10,25 @@ public sealed class TabStrip : ContentView
 
     private const uint Duration = 250;
 
+    private const uint AnimationRate = 16;
+
     private const string SelectedState = "Selected";
 
     private const string UnselectedState = "Unselected";
 
     private const double IndicatorWidth = 100;
+
+    private const double FollowRange = 0.99;
+
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
+    private readonly ScrollView scroll;
+
+    private readonly HorizontalStackLayout headers;
+
+    private readonly BoxView indicator;
 
     //--------------------------------------------------------------------------------
     // Property
@@ -68,12 +82,6 @@ public sealed class TabStrip : ContentView
         Double.NaN,
         propertyChanged: static (bindable, oldValue, newValue) => ((TabStrip)bindable).OnPagePositionChanged((double)oldValue, (double)newValue));
 
-    private readonly ScrollView scroll;
-
-    private readonly HorizontalStackLayout headers;
-
-    private readonly BoxView indicator;
-
     public IEnumerable? ItemsSource
     {
         get => (IEnumerable?)GetValue(ItemsSourceProperty);
@@ -116,7 +124,7 @@ public sealed class TabStrip : ContentView
         set => SetValue(PagePositionProperty, value);
     }
 
-    private bool IsFollowing => !Double.IsNaN(PagePosition) && (Math.Abs(PagePosition - SelectedIndex) < 0.99);
+    private bool IsFollowing => !Double.IsNaN(PagePosition) && (Math.Abs(PagePosition - SelectedIndex) < FollowRange);
 
     //--------------------------------------------------------------------------------
     // Constructor
@@ -207,7 +215,7 @@ public sealed class TabStrip : ContentView
 
     private void OnPagePositionChanged(double oldPosition, double position)
     {
-        if (!Double.IsNaN(position) && (Double.IsNaN(oldPosition) || (Math.Abs(position - oldPosition) < 0.99)))
+        if (!Double.IsNaN(position) && (Double.IsNaN(oldPosition) || (Math.Abs(position - oldPosition) < FollowRange)))
         {
             FollowPosition(position);
         }
@@ -231,8 +239,6 @@ public sealed class TabStrip : ContentView
             _ = scroll.ScrollToAsync(x, 0, false);
         }
     }
-
-    private static double Lerp(double from, double to, double t) => from + ((to - from) * t);
 
     private void ChangeIndicatorColor(Color from, Color to)
     {
@@ -260,7 +266,7 @@ public sealed class TabStrip : ContentView
                     indicator.TranslationX = startX + ((x - startX) * v);
                     indicator.ScaleX = startScale + ((scale - startScale) * v);
                 },
-                16,
+                AnimationRate,
                 Duration,
                 Easing.CubicOut);
         }
@@ -270,4 +276,6 @@ public sealed class TabStrip : ContentView
             indicator.ScaleX = scale;
         }
     }
+
+    private static double Lerp(double from, double to, double t) => from + ((to - from) * t);
 }

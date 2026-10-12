@@ -3,11 +3,22 @@ namespace MauiComponents.Controls;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.Text;
 
 using Microsoft.Maui.Controls.Shapes;
 
 public sealed class AvatarGroup : ContentView
 {
+    private const double StrokeThickness = 2d;
+
+    private static readonly CompositeFormat CountFormat = CompositeFormat.Parse("+{0}");
+
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
+    private readonly OverlapPanel panel = new() { ReverseZIndex = true };
+
     //--------------------------------------------------------------------------------
     // Property
     //--------------------------------------------------------------------------------
@@ -66,6 +77,13 @@ public sealed class AvatarGroup : ContentView
         Color.FromArgb("#E0E0E0"),
         propertyChanged: Rebuild);
 
+    public static readonly BindableProperty CountFontSizeProperty = BindableProperty.Create(
+        nameof(CountFontSize),
+        typeof(double),
+        typeof(AvatarGroup),
+        11d,
+        propertyChanged: Rebuild);
+
     public static readonly BindableProperty CountTextColorProperty = BindableProperty.Create(
         nameof(CountTextColor),
         typeof(Color),
@@ -121,15 +139,17 @@ public sealed class AvatarGroup : ContentView
         set => SetValue(CountBackgroundColorProperty, value);
     }
 
+    public double CountFontSize
+    {
+        get => (double)GetValue(CountFontSizeProperty);
+        set => SetValue(CountFontSizeProperty, value);
+    }
+
     public Color CountTextColor
     {
         get => (Color)GetValue(CountTextColorProperty);
         set => SetValue(CountTextColorProperty, value);
     }
-
-    private const double StrokeThickness = 2d;
-
-    private readonly OverlapPanel panel = new() { ReverseZIndex = true };
 
     //--------------------------------------------------------------------------------
     // Constructor
@@ -221,12 +241,12 @@ public sealed class AvatarGroup : ContentView
         border.BackgroundColor = CountBackgroundColor;
         border.Content = new Label
         {
-            FontSize = 11,
+            FontSize = CountFontSize,
             FontAttributes = FontAttributes.Bold,
             TextColor = CountTextColor,
             HorizontalOptions = LayoutOptions.Center,
             VerticalOptions = LayoutOptions.Center,
-            Text = "+" + rest.ToString(CultureInfo.InvariantCulture)
+            Text = String.Format(CultureInfo.InvariantCulture, CountFormat, rest)
         };
         return border;
     }

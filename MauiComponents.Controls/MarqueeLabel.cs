@@ -4,6 +4,16 @@ public sealed class MarqueeLabel : ContentView
 {
     private const string AnimationName = "MarqueeScroll";
 
+    private const uint AnimationRate = 16;
+
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
+    private readonly Label label;
+
+    private bool running;
+
     //--------------------------------------------------------------------------------
     // Property
     //--------------------------------------------------------------------------------
@@ -59,10 +69,6 @@ public sealed class MarqueeLabel : ContentView
         set => SetValue(SpeedProperty, value);
     }
 
-    private readonly Label label;
-
-    private bool running;
-
     //--------------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------------
@@ -106,7 +112,7 @@ public sealed class MarqueeLabel : ContentView
         var textWidth = label.Measure(Double.PositiveInfinity, Double.PositiveInfinity).Width;
         var start = Width;
         var end = -textWidth;
-        var length = (uint)Math.Max(1d, (start - end) / Speed * 1000d);
+        var length = (uint)Math.Max(1d, TimeSpan.FromSeconds((start - end) / Speed).TotalMilliseconds);
 
         running = true;
         this.Animate(
@@ -114,7 +120,7 @@ public sealed class MarqueeLabel : ContentView
             v => label.TranslationX = v,
             start,
             end,
-            16,
+            AnimationRate,
             length,
             Easing.Linear,
             null,

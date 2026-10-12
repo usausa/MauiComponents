@@ -8,6 +8,8 @@ public sealed class BottomSheetView : Grid
 
     private const uint Duration = 250;
 
+    private const uint AnimationRate = 16;
+
     private const uint MinFlingDuration = 80;
 
     private const uint MaxFlingDuration = 400;
@@ -21,6 +23,48 @@ public sealed class BottomSheetView : Grid
     private const double DirectionDistance = 1;
 
     private const long PauseInterval = 100;
+
+    private const double GrabberWidth = 40;
+
+    private const double GrabberHeight = 4;
+
+    private const double GrabberTopMargin = 10;
+
+    private const double GrabberBottomMargin = 6;
+
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
+    private readonly BoxView backdrop;
+
+    private readonly BoxView grabber;
+
+    private readonly Border sheet;
+
+    private readonly Grid body;
+
+    private readonly ContentView contentHost;
+
+    private double panStart;
+
+    private double panTotal;
+
+    private double panVelocity;
+
+    private int panDirection;
+
+    private long panTimestamp;
+
+    private bool expanded;
+
+    private bool panning;
+
+    private uint? closeDuration;
+
+    private bool pendingOpen;
+
+    private bool attached;
 
     //--------------------------------------------------------------------------------
     // Property
@@ -84,36 +128,6 @@ public sealed class BottomSheetView : Grid
         typeof(double),
         typeof(BottomSheetView),
         0.4d);
-
-    private readonly BoxView backdrop;
-
-    private readonly BoxView grabber;
-
-    private readonly Border sheet;
-
-    private readonly Grid body;
-
-    private readonly ContentView contentHost;
-
-    private double panStart;
-
-    private double panTotal;
-
-    private double panVelocity;
-
-    private int panDirection;
-
-    private long panTimestamp;
-
-    private bool expanded;
-
-    private bool panning;
-
-    private uint? closeDuration;
-
-    private bool pendingOpen;
-
-    private bool attached;
 
     public bool IsOpen
     {
@@ -188,13 +202,13 @@ public sealed class BottomSheetView : Grid
 
         grabber = new BoxView
         {
-            WidthRequest = 40,
-            HeightRequest = 4,
-            CornerRadius = 2,
+            WidthRequest = GrabberWidth,
+            HeightRequest = GrabberHeight,
+            CornerRadius = GrabberHeight / 2,
             Color = GrabberColor,
             BackgroundColor = Colors.Transparent,
             HorizontalOptions = LayoutOptions.Center,
-            Margin = new Thickness(0, 10, 0, 6)
+            Margin = new Thickness(0, GrabberTopMargin, 0, GrabberBottomMargin)
         };
         contentHost = new ContentView();
         body = new Grid
@@ -225,14 +239,6 @@ public sealed class BottomSheetView : Grid
     // Layout
     //--------------------------------------------------------------------------------
 
-    private static RoundRectangle CreateShape(double radius) => new() { CornerRadius = new CornerRadius(radius, radius, 0, 0) };
-
-    private void MeasureSheet()
-    {
-        SheetHeight = Math.Min(Height * ExpandedRatio, body.Measure(Width, double.PositiveInfinity).Height);
-        sheet.HeightRequest = SheetHeight;
-    }
-
     private void UpdateSheetSize()
     {
         if (!attached || (Width <= 0) || (Height <= 0))
@@ -252,6 +258,14 @@ public sealed class BottomSheetView : Grid
             sheet.TranslationY = IsOpen ? (expanded ? 0 : HalfY) : SheetHeight;
         }
     }
+
+    private void MeasureSheet()
+    {
+        SheetHeight = Math.Min(Height * ExpandedRatio, body.Measure(Width, double.PositiveInfinity).Height);
+        sheet.HeightRequest = SheetHeight;
+    }
+
+    private static RoundRectangle CreateShape(double radius) => new() { CornerRadius = new CornerRadius(radius, radius, 0, 0) };
 
     //--------------------------------------------------------------------------------
     // Animation
@@ -303,7 +317,7 @@ public sealed class BottomSheetView : Grid
                     sheet.TranslationY = start + ((end - start) * v);
                     backdrop.Opacity = startOpacity * (1 - v);
                 },
-                16,
+                AnimationRate,
                 duration,
                 fling ? Easing.SinOut : Easing.CubicIn,
                 (_, _) => IsVisible = IsOpen);
@@ -324,13 +338,10 @@ public sealed class BottomSheetView : Grid
                 sheet.TranslationY = start + ((y - start) * v);
                 backdrop.Opacity = startOpacity + ((endOpacity - startOpacity) * v);
             },
-            16,
+            AnimationRate,
             duration,
             easing ?? Easing.CubicOut);
     }
-
-    private static uint FlingDuration(double distance, double velocity) =>
-        velocity > 0 ? (uint)Math.Clamp(FlingSlope * distance / velocity, MinFlingDuration, MaxFlingDuration) : Duration;
 
     //--------------------------------------------------------------------------------
     // Drag
@@ -426,4 +437,7 @@ public sealed class BottomSheetView : Grid
 
         MoveTo(y < HalfY / 2 ? 0 : HalfY);
     }
+
+    private static uint FlingDuration(double distance, double velocity) =>
+        velocity > 0 ? (uint)Math.Clamp(FlingSlope * distance / velocity, MinFlingDuration, MaxFlingDuration) : Duration;
 }

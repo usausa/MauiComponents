@@ -14,6 +14,8 @@ public sealed class ChipGroup : ContentView
 
     private const double HeightPadding = 13;
 
+    private const double StrokeThickness = 1;
+
     //--------------------------------------------------------------------------------
     // Property
     //--------------------------------------------------------------------------------
@@ -261,7 +263,7 @@ public sealed class ChipGroup : ContentView
             Margin = ChipPadding,
             Padding = 0,
             HeightRequest = (ChipTextSize * TextHeightRate) + HeightPadding,
-            StrokeThickness = 1,
+            StrokeThickness = StrokeThickness,
             StrokeShape = new RoundRectangle { CornerRadius = ChipCornerRadius },
             Content = label
         };

@@ -11,6 +11,26 @@ public sealed class SegmentedView : ContentView
 
     private const uint Duration = 250;
 
+    private const uint AnimationRate = 16;
+
+    private const double StrokeThickness = 1;
+
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
+    private readonly Border border;
+
+    private readonly Grid grid;
+
+    private readonly BoxView selection;
+
+    private readonly List<Label> labels = [];
+
+    private List<object?> items = [];
+
+    private double position;
+
     //--------------------------------------------------------------------------------
     // Property
     //--------------------------------------------------------------------------------
@@ -90,18 +110,6 @@ public sealed class SegmentedView : ContentView
         typeof(SegmentedView),
         20d,
         propertyChanged: static (bindable, _, newValue) => ((SegmentedView)bindable).border.StrokeShape = new RoundRectangle { CornerRadius = (double)newValue });
-
-    private readonly Border border;
-
-    private readonly Grid grid;
-
-    private readonly BoxView selection;
-
-    private readonly List<Label> labels = [];
-
-    private List<object?> items = [];
-
-    private double position;
 
     public IEnumerable? ItemsSource
     {
@@ -194,7 +202,7 @@ public sealed class SegmentedView : ContentView
         border = new Border
         {
             Padding = 0,
-            StrokeThickness = 1,
+            StrokeThickness = StrokeThickness,
             StrokeShape = new RoundRectangle { CornerRadius = CornerRadius },
             Content = grid
         };
@@ -219,7 +227,7 @@ public sealed class SegmentedView : ContentView
         {
             if (i > 0)
             {
-                grid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1)));
+                grid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(StrokeThickness)));
                 grid.Add(new BoxView { Color = Stroke, BackgroundColor = Colors.Transparent, InputTransparent = true }, (i * 2) - 1);
             }
 
@@ -269,7 +277,7 @@ public sealed class SegmentedView : ContentView
             return;
         }
 
-        var step = SegmentWidth + 1;
+        var step = SegmentWidth + StrokeThickness;
         var index = (int)Math.Floor(point.X / step);
         if ((index >= 0) && (index < labels.Count) && (point.X - (index * step) < SegmentWidth))
         {
@@ -283,7 +291,7 @@ public sealed class SegmentedView : ContentView
         if (animated && (labels.Count > 0))
         {
             var start = position;
-            selection.Animate(AnimationName, v => SetPosition(start + ((index - start) * v)), 16, Duration, Easing.CubicOut);
+            selection.Animate(AnimationName, v => SetPosition(start + ((index - start) * v)), AnimationRate, Duration, Easing.CubicOut);
         }
         else
         {
@@ -294,7 +302,7 @@ public sealed class SegmentedView : ContentView
     private void SetPosition(double value)
     {
         position = value;
-        selection.TranslationX = value * (SegmentWidth + 1);
+        selection.TranslationX = value * (SegmentWidth + StrokeThickness);
         UpdateColors();
     }
 

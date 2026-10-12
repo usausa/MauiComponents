@@ -48,12 +48,6 @@ public sealed class OverlapPanel : Layout
     }
 
     //--------------------------------------------------------------------------------
-    // Layout
-    //--------------------------------------------------------------------------------
-
-    protected override ILayoutManager CreateLayoutManager() => new OverlapLayoutManager(this);
-
-    //--------------------------------------------------------------------------------
     // Children
     //--------------------------------------------------------------------------------
 
@@ -94,8 +88,10 @@ public sealed class OverlapPanel : Layout
     }
 
     //--------------------------------------------------------------------------------
-    // Layout manager
+    // Layout
     //--------------------------------------------------------------------------------
+
+    protected override ILayoutManager CreateLayoutManager() => new OverlapLayoutManager(this);
 
     private sealed class OverlapLayoutManager : ILayoutManager
     {

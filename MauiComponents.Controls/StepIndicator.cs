@@ -1,9 +1,20 @@
 namespace MauiComponents.Controls;
 
 using System.Globalization;
+using System.Text;
 
 public sealed class StepIndicator : ContentView
 {
+    private const double DotSpacing = 6;
+
+    private const double DotSize = 10;
+
+    private const double CurrentDotWidth = 24;
+
+    private const double CountMargin = 10;
+
+    private static readonly CompositeFormat CountFormat = CompositeFormat.Parse("{0} / {1}");
+
     //--------------------------------------------------------------------------------
     // Property
     //--------------------------------------------------------------------------------
@@ -15,24 +26,12 @@ public sealed class StepIndicator : ContentView
         1,
         propertyChanged: Rebuild);
 
-    public int CurrentStep
-    {
-        get => (int)GetValue(CurrentStepProperty);
-        set => SetValue(CurrentStepProperty, value);
-    }
-
     public static readonly BindableProperty TotalStepsProperty = BindableProperty.Create(
         nameof(TotalSteps),
         typeof(int),
         typeof(StepIndicator),
         3,
         propertyChanged: Rebuild);
-
-    public int TotalSteps
-    {
-        get => (int)GetValue(TotalStepsProperty);
-        set => SetValue(TotalStepsProperty, value);
-    }
 
     public static readonly BindableProperty AccentColorProperty = BindableProperty.Create(
         nameof(AccentColor),
@@ -41,12 +40,6 @@ public sealed class StepIndicator : ContentView
         Color.FromArgb("#2196F3"),
         propertyChanged: Rebuild);
 
-    public Color AccentColor
-    {
-        get => (Color)GetValue(AccentColorProperty);
-        set => SetValue(AccentColorProperty, value);
-    }
-
     public static readonly BindableProperty UpcomingColorProperty = BindableProperty.Create(
         nameof(UpcomingColor),
         typeof(Color),
@@ -54,11 +47,12 @@ public sealed class StepIndicator : ContentView
         Color.FromArgb("#E0E0E0"),
         propertyChanged: Rebuild);
 
-    public Color UpcomingColor
-    {
-        get => (Color)GetValue(UpcomingColorProperty);
-        set => SetValue(UpcomingColorProperty, value);
-    }
+    public static readonly BindableProperty CountFontSizeProperty = BindableProperty.Create(
+        nameof(CountFontSize),
+        typeof(double),
+        typeof(StepIndicator),
+        14d,
+        propertyChanged: Rebuild);
 
     public static readonly BindableProperty CountTextColorProperty = BindableProperty.Create(
         nameof(CountTextColor),
@@ -67,18 +61,48 @@ public sealed class StepIndicator : ContentView
         Color.FromArgb("#546E7A"),
         propertyChanged: Rebuild);
 
-    public Color CountTextColor
-    {
-        get => (Color)GetValue(CountTextColorProperty);
-        set => SetValue(CountTextColorProperty, value);
-    }
-
     public static readonly BindableProperty IsCountVisibleProperty = BindableProperty.Create(
         nameof(IsCountVisible),
         typeof(bool),
         typeof(StepIndicator),
         true,
         propertyChanged: Rebuild);
+
+    public int CurrentStep
+    {
+        get => (int)GetValue(CurrentStepProperty);
+        set => SetValue(CurrentStepProperty, value);
+    }
+
+    public int TotalSteps
+    {
+        get => (int)GetValue(TotalStepsProperty);
+        set => SetValue(TotalStepsProperty, value);
+    }
+
+    public Color AccentColor
+    {
+        get => (Color)GetValue(AccentColorProperty);
+        set => SetValue(AccentColorProperty, value);
+    }
+
+    public Color UpcomingColor
+    {
+        get => (Color)GetValue(UpcomingColorProperty);
+        set => SetValue(UpcomingColorProperty, value);
+    }
+
+    public double CountFontSize
+    {
+        get => (double)GetValue(CountFontSizeProperty);
+        set => SetValue(CountFontSizeProperty, value);
+    }
+
+    public Color CountTextColor
+    {
+        get => (Color)GetValue(CountTextColorProperty);
+        set => SetValue(CountTextColorProperty, value);
+    }
 
     public bool IsCountVisible
     {
@@ -108,7 +132,7 @@ public sealed class StepIndicator : ContentView
     {
         var layout = new HorizontalStackLayout
         {
-            Spacing = 6,
+            Spacing = DotSpacing,
             HorizontalOptions = LayoutOptions.Center
         };
 
@@ -116,9 +140,9 @@ public sealed class StepIndicator : ContentView
         {
             layout.Children.Add(new BoxView
             {
-                WidthRequest = i == CurrentStep ? 24 : 10,
-                HeightRequest = 10,
-                CornerRadius = 5,
+                WidthRequest = i == CurrentStep ? CurrentDotWidth : DotSize,
+                HeightRequest = DotSize,
+                CornerRadius = DotSize / 2,
                 Color = i <= CurrentStep ? AccentColor : UpcomingColor,
                 BackgroundColor = Colors.Transparent,
                 VerticalOptions = LayoutOptions.Center
@@ -129,12 +153,12 @@ public sealed class StepIndicator : ContentView
         {
             layout.Children.Add(new Label
             {
-                Margin = new Thickness(10, 0, 0, 0),
-                FontSize = 14,
+                Margin = new Thickness(CountMargin, 0, 0, 0),
+                FontSize = CountFontSize,
                 FontAttributes = FontAttributes.Bold,
                 TextColor = CountTextColor,
                 VerticalOptions = LayoutOptions.Center,
-                Text = String.Format(CultureInfo.CurrentCulture, "{0} / {1}", CurrentStep, TotalSteps)
+                Text = String.Format(CultureInfo.CurrentCulture, CountFormat, CurrentStep, TotalSteps)
             });
         }
 

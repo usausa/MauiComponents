@@ -6,13 +6,13 @@ public sealed partial class SideDrawer : Grid
 
     private const uint Duration = 150;
 
+    private const uint AnimationRate = 16;
+
     private const uint MinFlingDuration = 80;
 
     private const uint MaxFlingDuration = 400;
 
     private const double FlingSlope = Math.PI / 2;
-
-    private const double BackdropOpacity = 0.4;
 
     private const double SwipeDistance = 16;
 
@@ -21,6 +21,36 @@ public sealed partial class SideDrawer : Grid
     private const double DirectionDistance = 1;
 
     private const long PauseInterval = 100;
+
+    private const float ShadowOpacity = 0.25f;
+
+    private const float ShadowRadius = 12;
+
+    private static readonly Color EdgeColor = Color.FromRgba(0, 0, 0, 0.01);
+
+    private static readonly Point ShadowOffset = new(2, 0);
+
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
+    private readonly Grid edge;
+
+    private readonly BoxView backdrop;
+
+    private readonly Grid panel;
+
+    private double panStart;
+
+    private double panTotal;
+
+    private double panVelocity;
+
+    private int panDirection;
+
+    private long panTimestamp;
+
+    private uint? flingDuration;
 
     //--------------------------------------------------------------------------------
     // Property
@@ -68,23 +98,11 @@ public sealed partial class SideDrawer : Grid
         Colors.White,
         propertyChanged: static (bindable, _, newValue) => ((SideDrawer)bindable).panel.BackgroundColor = (Color)newValue);
 
-    private readonly Grid edge;
-
-    private readonly BoxView backdrop;
-
-    private readonly Grid panel;
-
-    private double panStart;
-
-    private double panTotal;
-
-    private double panVelocity;
-
-    private int panDirection;
-
-    private long panTimestamp;
-
-    private uint? flingDuration;
+    public static readonly BindableProperty BackdropOpacityProperty = BindableProperty.Create(
+        nameof(BackdropOpacity),
+        typeof(double),
+        typeof(SideDrawer),
+        0.4d);
 
     public bool IsOpen
     {
@@ -122,6 +140,12 @@ public sealed partial class SideDrawer : Grid
         set => SetValue(DrawerBackgroundColorProperty, value);
     }
 
+    public double BackdropOpacity
+    {
+        get => (double)GetValue(BackdropOpacityProperty);
+        set => SetValue(BackdropOpacityProperty, value);
+    }
+
     //--------------------------------------------------------------------------------
     // Constructor
     //--------------------------------------------------------------------------------
@@ -135,7 +159,7 @@ public sealed partial class SideDrawer : Grid
         {
             HorizontalOptions = LayoutOptions.Start,
             WidthRequest = EdgeWidth,
-            BackgroundColor = Color.FromRgba(0, 0, 0, 0.01)
+            BackgroundColor = EdgeColor
         };
         var edgePan = new PanGestureRecognizer();
         edgePan.PanUpdated += OnPanUpdated;
@@ -157,7 +181,7 @@ public sealed partial class SideDrawer : Grid
         panel.BackgroundColor = DrawerBackgroundColor;
         panel.TranslationX = -DrawerWidth;
         panel.IsVisible = false;
-        panel.Shadow = new Shadow { Brush = Brush.Black, Opacity = 0.25f, Radius = 12, Offset = new Point(2, 0) };
+        panel.Shadow = new Shadow { Brush = Brush.Black, Opacity = ShadowOpacity, Radius = ShadowRadius, Offset = ShadowOffset };
 
         Children.Add(edge);
         Children.Add(backdrop);
@@ -225,7 +249,7 @@ public sealed partial class SideDrawer : Grid
                 panel.TranslationX = start + ((x - start) * v);
                 backdrop.Opacity = startOpacity + ((endOpacity - startOpacity) * v);
             },
-            16,
+            AnimationRate,
             duration,
             easing ?? (open ? Easing.CubicOut : Easing.CubicIn),
             (_, _) =>

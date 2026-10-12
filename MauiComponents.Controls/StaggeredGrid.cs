@@ -4,6 +4,8 @@ using Microsoft.Maui.Layouts;
 
 public sealed class StaggeredGrid : Layout
 {
+    private const double UnboundedColumnWidth = 300;
+
     //--------------------------------------------------------------------------------
     // Property
     //--------------------------------------------------------------------------------
@@ -57,7 +59,7 @@ public sealed class StaggeredGrid : Layout
 
             var contentWidth = Double.IsFinite(widthConstraint)
                 ? widthConstraint - padding.HorizontalThickness
-                : 300d * columns;
+                : UnboundedColumnWidth * columns;
             var columnWidth = (contentWidth - ((columns - 1) * spacing)) / columns;
 
             var heights = new double[columns];

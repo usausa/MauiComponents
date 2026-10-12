@@ -48,6 +48,28 @@ public sealed class AccordionItem : Grid
 
     private const uint Duration = 250;
 
+    private const uint AnimationRate = 16;
+
+    private const double IconMargin = 8;
+
+    private const double LineThickness = 0.5;
+
+    private const double ExpandedRotation = 180;
+
+    //--------------------------------------------------------------------------------
+    // Member
+    //--------------------------------------------------------------------------------
+
+    private readonly Grid headerRow;
+
+    private readonly Label icon;
+
+    private readonly BoxView line;
+
+    private readonly ContentView body;
+
+    private bool revealOnExpanded;
+
     //--------------------------------------------------------------------------------
     // Property
     //--------------------------------------------------------------------------------
@@ -85,6 +107,13 @@ public sealed class AccordionItem : Grid
         typeof(AccordionItem),
         propertyChanged: static (bindable, _, newValue) => ((AccordionItem)bindable).icon.FontFamily = (string?)newValue);
 
+    public static readonly BindableProperty IconSizeProperty = BindableProperty.Create(
+        nameof(IconSize),
+        typeof(double),
+        typeof(AccordionItem),
+        24d,
+        propertyChanged: static (bindable, _, newValue) => ((AccordionItem)bindable).icon.FontSize = (double)newValue);
+
     public static readonly BindableProperty IconColorProperty = BindableProperty.Create(
         nameof(IconColor),
         typeof(Color),
@@ -104,16 +133,6 @@ public sealed class AccordionItem : Grid
         typeof(Style),
         typeof(AccordionItem),
         propertyChanged: static (bindable, _, newValue) => ((AccordionItem)bindable).headerRow.Style = (Style?)newValue);
-
-    private readonly Grid headerRow;
-
-    private readonly Label icon;
-
-    private readonly BoxView line;
-
-    private readonly ContentView body;
-
-    private bool revealOnExpanded;
 
     public View? Header
     {
@@ -143,6 +162,12 @@ public sealed class AccordionItem : Grid
     {
         get => (string?)GetValue(IconFontFamilyProperty);
         set => SetValue(IconFontFamilyProperty, value);
+    }
+
+    public double IconSize
+    {
+        get => (double)GetValue(IconSizeProperty);
+        set => SetValue(IconSizeProperty, value);
     }
 
     public Color IconColor
@@ -180,9 +205,9 @@ public sealed class AccordionItem : Grid
         {
             Text = Icon,
             FontFamily = IconFontFamily,
-            FontSize = 24,
+            FontSize = IconSize,
             TextColor = IconColor,
-            Margin = new Thickness(0, 0, 8, 0),
+            Margin = new Thickness(0, 0, IconMargin, 0),
             VerticalOptions = LayoutOptions.Center,
             InputTransparent = true
         };
@@ -197,7 +222,7 @@ public sealed class AccordionItem : Grid
 
         line = new BoxView
         {
-            HeightRequest = 0.5,
+            HeightRequest = LineThickness,
             Color = LineColor,
             BackgroundColor = Colors.Transparent,
             VerticalOptions = LayoutOptions.Start,
@@ -239,20 +264,6 @@ public sealed class AccordionItem : Grid
         IsExpanded = !IsExpanded;
     }
 
-    private void Reveal()
-    {
-        var parent = Parent;
-        while ((parent is not null) && (parent is not ScrollView))
-        {
-            parent = parent.Parent;
-        }
-
-        if (parent is ScrollView scroll)
-        {
-            _ = scroll.ScrollToAsync(this, ScrollToPosition.MakeVisible, true);
-        }
-    }
-
     private void OnIsExpandedChanged(bool expanded)
     {
         line.IsVisible = expanded;
@@ -267,7 +278,7 @@ public sealed class AccordionItem : Grid
             var from = body.IsVisible ? body.Height : 0;
             var to = expanded ? content.Measure(Width, Double.PositiveInfinity).Height : 0;
             var fromRotation = icon.Rotation;
-            var toRotation = expanded ? 180d : 0d;
+            var toRotation = expanded ? ExpandedRotation : 0d;
             body.HeightRequest = from;
             body.IsVisible = true;
             this.Animate(
@@ -277,7 +288,7 @@ public sealed class AccordionItem : Grid
                     body.HeightRequest = from + ((to - from) * v);
                     icon.Rotation = fromRotation + ((toRotation - fromRotation) * v);
                 },
-                16,
+                AnimationRate,
                 Duration,
                 Easing.Linear,
                 (_, canceled) =>
@@ -285,7 +296,7 @@ public sealed class AccordionItem : Grid
                     if (!canceled)
                     {
                         body.IsVisible = expanded;
-                        body.HeightRequest = -1;
+                        body.ClearValue(HeightRequestProperty);
                         if (expanded && revealOnExpanded)
                         {
                             revealOnExpanded = false;
@@ -297,8 +308,22 @@ public sealed class AccordionItem : Grid
         else
         {
             body.IsVisible = expanded;
-            body.HeightRequest = -1;
-            icon.Rotation = expanded ? 180 : 0;
+            body.ClearValue(HeightRequestProperty);
+            icon.Rotation = expanded ? ExpandedRotation : 0;
+        }
+    }
+
+    private void Reveal()
+    {
+        var parent = Parent;
+        while ((parent is not null) && (parent is not ScrollView))
+        {
+            parent = parent.Parent;
+        }
+
+        if (parent is ScrollView scroll)
+        {
+            _ = scroll.ScrollToAsync(this, ScrollToPosition.MakeVisible, true);
         }
     }
 }
