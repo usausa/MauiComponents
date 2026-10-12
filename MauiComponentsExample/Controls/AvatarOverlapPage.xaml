@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:local="clr-namespace:MauiComponentsExample.Controls"
+             xmlns:controls="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             x:Class="MauiComponentsExample.Controls.AvatarOverlapPage"
+             x:DataType="{x:Type local:AvatarOverlapPageViewModel}"
+             s:BindingContextResolver.Type="{x:Type local:AvatarOverlapPageViewModel}"
+             Title="AvatarGroup / OverlapPanel">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="InitialBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="StrokeShape" Value="Ellipse" />
+            </Style>
+
+            <Style x:Key="InitialLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+            <Style x:Key="PanelBorder"
+                   TargetType="Border">
+                <Setter Property="WidthRequest" Value="140" />
+                <Setter Property="HeightRequest" Value="90" />
+                <Setter Property="Stroke" Value="White" />
+                <Setter Property="StrokeThickness" Value="2" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="PanelLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource SampleStack}">
+
+            <Label Style="{StaticResource SectionLabel}"
+                   Text="AvatarGroup" />
+
+            <Border Style="{StaticResource SampleBorder}"
+                    Padding="16">
+                <VerticalStackLayout Spacing="16">
+                    <controls:AvatarGroup ItemsSource="{Binding Avatars}"
+                                          AvatarSize="{Binding AvatarSize}"
+                                          MaxDisplayed="{Binding MaxDisplayed}"
+                                          Overlap="{Binding Overlap}"
+                                          ShowCount="{Binding ShowCount}"
+                                          StrokeColor="{Binding StrokeColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#FFFFFF}" />
+                    <controls:AvatarGroup ItemsSource="{Binding People}"
+                                          AvatarSize="48"
+                                          MaxDisplayed="{Binding MaxDisplayed}"
+                                          Overlap="{Binding Overlap}"
+                                          ShowCount="{Binding ShowCount}"
+                                          StrokeColor="{Binding StrokeColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#FFFFFF}">
+                        <controls:AvatarGroup.ItemTemplate>
+                            <DataTemplate x:DataType="local:SamplePerson">
+                                <Border Style="{StaticResource InitialBorder}"
+                                        BackgroundColor="{Binding Color}">
+                                    <Label Style="{StaticResource InitialLabel}"
+                                           Text="{Binding Initial}" />
+                                </Border>
+                            </DataTemplate>
+                        </controls:AvatarGroup.ItemTemplate>
+                    </controls:AvatarGroup>
+                </VerticalStackLayout>
+            </Border>
+
+            <Grid Style="{StaticResource ButtonGrid}"
+                  ColumnDefinitions="*,*">
+                <Button Grid.Column="0"
+                        Command="{Binding RemoveCommand}"
+                        Text="Remove" />
+                <Button Grid.Column="1"
+                        Command="{Binding AddCommand}"
+                        Text="Add" />
+            </Grid>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="{Binding MaxDisplayed, StringFormat='MaxDisplayed {0}'}" />
+                <Stepper Grid.Column="1"
+                         Value="{Binding MaxDisplayed}"
+                         Minimum="0" Maximum="8" />
+            </Grid>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding AvatarSize, StringFormat='AvatarSize {0:F0}'}" />
+                <Slider Value="{Binding AvatarSize}"
+                        Minimum="24" Maximum="72" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding Overlap, StringFormat='Overlap {0:F0}'}" />
+                <Slider Value="{Binding Overlap}"
+                        Minimum="0" Maximum="32" />
+            </VerticalStackLayout>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="ShowCount" />
+                <Switch Grid.Column="1"
+                        IsToggled="{Binding ShowCount}" />
+            </Grid>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="StrokeColor" />
+                <Picker Grid.Column="1"
+                        ItemsSource="{x:Static local:SampleColors.Names}"
+                        SelectedIndex="{Binding StrokeColorIndex}" />
+            </Grid>
+
+            <Label Style="{StaticResource SectionLabel}"
+                   Text="OverlapPanel" />
+
+            <Border Style="{StaticResource SampleBorder}"
+                    Padding="16">
+                <controls:OverlapPanel HorizontalOptions="Center"
+                                       OffsetX="{Binding OffsetX}"
+                                       OffsetY="{Binding OffsetY}"
+                                       ReverseZIndex="{Binding ReverseZIndex}">
+                    <Border Style="{StaticResource PanelBorder}"
+                            BackgroundColor="#2196F3">
+                        <Label Style="{StaticResource PanelLabel}"
+                               Text="1" />
+                    </Border>
+                    <Border Style="{StaticResource PanelBorder}"
+                            BackgroundColor="#4CAF50">
+                        <Label Style="{StaticResource PanelLabel}"
+                               Text="2" />
+                    </Border>
+                    <Border Style="{StaticResource PanelBorder}"
+                            BackgroundColor="#FF9800">
+                        <Label Style="{StaticResource PanelLabel}"
+                               Text="3" />
+                    </Border>
+                    <Border Style="{StaticResource PanelBorder}"
+                            BackgroundColor="#9C27B0">
+                        <Label Style="{StaticResource PanelLabel}"
+                               Text="4" />
+                    </Border>
+                </controls:OverlapPanel>
+            </Border>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding OffsetX, StringFormat='OffsetX {0:F0}'}" />
+                <Slider Value="{Binding OffsetX}"
+                        Minimum="-60" Maximum="60" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding OffsetY, StringFormat='OffsetY {0:F0}'}" />
+                <Slider Value="{Binding OffsetY}"
+                        Minimum="-40" Maximum="40" />
+            </VerticalStackLayout>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="ReverseZIndex" />
+                <Switch Grid.Column="1"
+                        IsToggled="{Binding ReverseZIndex}" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

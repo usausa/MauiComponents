@@ -4,6 +4,7 @@
 |:-|:-|
 | Components.Maui | [![NuGet](https://img.shields.io/nuget/v/Components.Maui.svg)](https://www.nuget.org/packages/Components.Maui) |
 | Components.Maui.Resolver | [![NuGet](https://img.shields.io/nuget/v/Components.Maui.Resolver.svg)](https://www.nuget.org/packages/Components.Maui.Resolver) |
+| Components.Maui.Controls | [![NuGet](https://img.shields.io/nuget/v/Components.Maui.Controls.svg)](https://www.nuget.org/packages/Components.Maui.Controls) |
 
 Component library for .NET MAUI applications.
 
@@ -84,3 +85,38 @@ File logger and Android logger provider integrations for `Microsoft.Extensions.L
 ## Smart.Resolver Integration
 
 `Components.Maui.Resolver` provides integration with the [Smart.Resolver](https://github.com/usausa/Smart-Net-Resolver) DI container.
+
+## Controls
+
+`Components.Maui.Controls` provides controls and layouts built with MAUI views only.
+
+| Control | Description |
+|:-|:-|
+| `BottomSheetView` | Sheet from the bottom that opens half expanded or expanded, with drag, fling and backdrop tap |
+| `SideDrawer` | Drawer from the left with edge swipe and fling |
+| `TabStrip` | Scrolling tab headers with an indicator that follows the page swipe |
+| `ChipGroup` | Chips to select one item, in a row or wrapped |
+| `SegmentedView` | Segments to select one item with a sliding fill |
+| `AccordionView` | Items (`AccordionItem`) that expand and collapse by tapping the header |
+| `ShimmerView` | Light band moving over a loading skeleton |
+| `StepIndicator` | Dots of the steps and an "n / N" label |
+| `MarqueeLabel` | Text that keeps scrolling from right to left |
+| `AvatarGroup` | Overlapped avatars with a "+N" count |
+| `OverlapPanel` | Layout that overlaps the children by an X / Y offset |
+| `StaggeredGrid` | Layout that places items of different heights in the shortest column |
+| `VariableSizeWrapPanel` | Tiles in fixed columns with `ColumnSpan` / `RowSpan` |
+| `TreeView` | Simple tree of `TreeNode` that expands and collapses |
+
+```xml
+<ContentPage xmlns:controls="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls">
+    <Grid>
+        <controls:ChipGroup ItemsSource="{Binding Categories}"
+                            SelectedItem="{Binding SelectedCategory}" />
+        <controls:BottomSheetView IsOpen="{Binding IsSheetOpen}">
+            <controls:BottomSheetView.SheetContent>
+                <Label Text="Sheet" />
+            </controls:BottomSheetView.SheetContent>
+        </controls:BottomSheetView>
+    </Grid>
+</ContentPage>
+```

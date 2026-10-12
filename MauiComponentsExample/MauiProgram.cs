@@ -4,6 +4,8 @@ namespace MauiComponentsExample;
 using Android.Views;
 #endif
 
+using BunnyTail.DependencyInjection;
+
 using CommunityToolkit.Maui;
 
 using MauiComponents;
@@ -13,10 +15,13 @@ using MauiComponentsExample.Dialogs;
 using Microsoft.Extensions.Logging;
 
 using Smart.Maui;
-using Smart.Resolver;
 
-public static class MauiProgram
+public static partial class MauiProgram
 {
+    private const string DialogsNamespace = "MauiComponentsExample.Dialogs";
+
+    private const string ControlsNamespace = "MauiComponentsExample.Controls";
+
     public static MauiApp CreateMauiApp()
     {
         var builder = MauiApp.CreateBuilder();
@@ -53,7 +58,7 @@ public static class MauiProgram
                     c.AutoRegister(ViewRegistry.DialogSource());
                 });
             })
-            .ConfigureContainer(new SmartServiceProviderFactory(), ConfigureContainer);
+            .ConfigureContainer(new GeneratedServiceProviderFactory(static options => options.TrackTransientDisposables = false), ConfigureContainer);
 
 #if DEBUG
         builder.Logging.AddDebug();
@@ -62,14 +67,21 @@ public static class MauiProgram
         return builder.Build();
     }
 
-    private static void ConfigureContainer(ResolverConfig config)
+    private static void ConfigureContainer(IServiceCollection services)
     {
-        config
-            .UseAutoBinding()
-            .UseArrayBinding()
-            .UseAssignableBinding()
-            .UsePropertyInjector();
+        services.AddSingleton<IMauiInitializeService, ApplicationInitializer>();
 
-        config.BindSingleton<IMauiInitializeService, ApplicationInitializer>();
+        services.AddTransient<MainPage>();
+        services.AddTransient<MainPageViewModel>();
+        services.AddDialogs();
+        services.AddControls();
     }
+
+    // ReSharper disable UnusedMethodReturnValue.Local
+    [ComponentRegistration(Lifetime.Transient, "Dialog$|Page$|ViewModel$", Namespace = DialogsNamespace)]
+    private static partial IServiceCollection AddDialogs(this IServiceCollection services);
+
+    [ComponentRegistration(Lifetime.Transient, "Page$|ViewModel$", Namespace = ControlsNamespace)]
+    private static partial IServiceCollection AddControls(this IServiceCollection services);
+    // ReSharper restore UnusedMethodReturnValue.Local
 }

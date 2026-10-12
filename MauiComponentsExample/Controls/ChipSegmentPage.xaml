@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:local="clr-namespace:MauiComponentsExample.Controls"
+             xmlns:controls="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             x:Class="MauiComponentsExample.Controls.ChipSegmentPage"
+             x:DataType="{x:Type local:ChipSegmentPageViewModel}"
+             s:BindingContextResolver.Type="{x:Type local:ChipSegmentPageViewModel}"
+             Title="ChipGroup / SegmentedView">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="BoldChipLabel"
+                   TargetType="Label">
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource SampleStack}">
+
+            <Label Style="{StaticResource SectionLabel}"
+                   Text="ChipGroup" />
+
+            <ScrollView Orientation="Horizontal"
+                        HorizontalScrollBarVisibility="Never">
+                <controls:ChipGroup ItemsSource="{Binding Fruits}"
+                                    ChipCornerRadius="{Binding ChipCornerRadius}"
+                                    ChipTextSize="{Binding ChipTextSize}"
+                                    SelectedChipBackground="{Binding SelectedChipColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#0000FF}"
+                                    SelectedItem="{Binding SelectedFruit}"
+                                    Spacing="{Binding Spacing}" />
+            </ScrollView>
+
+            <controls:ChipGroup ItemsSource="{Binding Fruits}"
+                                ChipCornerRadius="{Binding ChipCornerRadius}"
+                                ChipPadding="0,0,8,8"
+                                ChipTextSize="{Binding ChipTextSize}"
+                                SelectedChipBackground="{Binding SelectedChipColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#0000FF}"
+                                SelectedItem="{Binding SelectedFruit}"
+                                Wrap="True" />
+
+            <controls:ChipGroup ItemsSource="{Binding Categories}"
+                                ChipCornerRadius="{Binding ChipCornerRadius}"
+                                ChipPadding="0,0,8,8"
+                                ChipTextSize="{Binding ChipTextSize}"
+                                SelectedChipBackground="{Binding SelectedChipColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#0000FF}"
+                                SelectedItem="{Binding SelectedCategory}"
+                                Wrap="True">
+                <controls:ChipGroup.Triggers>
+                    <DataTrigger TargetType="controls:ChipGroup"
+                                 Value="True"
+                                 Binding="{Binding BoldItems}">
+                        <Setter Property="ItemStyle" Value="{StaticResource BoldChipLabel}" />
+                    </DataTrigger>
+                </controls:ChipGroup.Triggers>
+                <controls:ChipGroup.ItemTemplate>
+                    <DataTemplate x:DataType="local:SampleCategory">
+                        <Label Text="{Binding Text}" />
+                    </DataTemplate>
+                </controls:ChipGroup.ItemTemplate>
+            </controls:ChipGroup>
+
+            <Button Command="{Binding ClearCommand}"
+                    Text="Clear" />
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding ChipTextSize, StringFormat='ChipTextSize {0:F0}'}" />
+                <Slider Value="{Binding ChipTextSize}"
+                        Minimum="12" Maximum="22" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding ChipCornerRadius, StringFormat='ChipCornerRadius {0:F0}'}" />
+                <Slider Value="{Binding ChipCornerRadius}"
+                        Minimum="0" Maximum="24" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding Spacing, StringFormat='Spacing {0:F0}'}" />
+                <Slider Value="{Binding Spacing}"
+                        Minimum="0" Maximum="16" />
+            </VerticalStackLayout>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="ItemStyle (Bold)" />
+                <Switch Grid.Column="1"
+                        IsToggled="{Binding BoldItems}" />
+            </Grid>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="SelectedChipBackground" />
+                <Picker Grid.Column="1"
+                        ItemsSource="{x:Static local:SampleColors.Names}"
+                        SelectedIndex="{Binding SelectedChipColorIndex}" />
+            </Grid>
+
+            <Label Style="{StaticResource SectionLabel}"
+                   Text="SegmentedView" />
+
+            <controls:SegmentedView ItemsSource="{Binding Periods}"
+                                    FontSize="{Binding SegmentFontSize}"
+                                    CornerRadius="{Binding SegmentCornerRadius}"
+                                    SegmentHeight="{Binding SegmentHeight}"
+                                    SegmentWidth="{Binding SegmentWidth}"
+                                    SelectedBackground="{Binding SelectedBackgroundIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#6750A4}"
+                                    SelectedIndex="{Binding PeriodIndex}" />
+
+            <Grid Style="{StaticResource ButtonGrid}"
+                  ColumnDefinitions="*,*">
+                <Button Grid.Column="0"
+                        Command="{Binding PreviousCommand}"
+                        Text="Previous" />
+                <Button Grid.Column="1"
+                        Command="{Binding NextCommand}"
+                        Text="Next" />
+            </Grid>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding SegmentWidth, StringFormat='SegmentWidth {0:F0}'}" />
+                <Slider Value="{Binding SegmentWidth}"
+                        Minimum="60" Maximum="120" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding SegmentHeight, StringFormat='SegmentHeight {0:F0}'}" />
+                <Slider Value="{Binding SegmentHeight}"
+                        Minimum="28" Maximum="56" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding SegmentCornerRadius, StringFormat='CornerRadius {0:F0}'}" />
+                <Slider Value="{Binding SegmentCornerRadius}"
+                        Minimum="0" Maximum="28" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding SegmentFontSize, StringFormat='FontSize {0:F0}'}" />
+                <Slider Value="{Binding SegmentFontSize}"
+                        Minimum="12" Maximum="22" />
+            </VerticalStackLayout>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="SelectedBackground" />
+                <Picker Grid.Column="1"
+                        ItemsSource="{x:Static local:SampleColors.Names}"
+                        SelectedIndex="{Binding SelectedBackgroundIndex}" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="MauiComponents/MauiComponents.csproj" />
+  <Project Path="MauiComponents.Controls/MauiComponents.Controls.csproj" />
   <Project Path="MauiComponents.Generator/MauiComponents.Generator.csproj" />
   <Project Path="MauiComponents.Resolver/MauiComponents.Resolver.csproj" />
 </Solution>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:local="clr-namespace:MauiComponentsExample.Controls"
+             xmlns:controls="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             x:Class="MauiComponentsExample.Controls.SideDrawerPage"
+             x:DataType="{x:Type local:SideDrawerPageViewModel}"
+             s:BindingContextResolver.Type="{x:Type local:SideDrawerPageViewModel}"
+             Title="SideDrawer">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="MenuLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="24,16" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="#212121" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout Style="{StaticResource SampleStack}">
+
+                <Label Style="{StaticResource SectionLabel}"
+                       Text="{Binding Current}"
+                       FontSize="28" />
+
+                <Button Command="{Binding OpenCommand}"
+                        Text="Open" />
+
+                <Grid Style="{StaticResource OptionGrid}"
+                      ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource OptionLabel}"
+                           Text="EdgeSwipeEnabled" />
+                    <Switch Grid.Column="1"
+                            IsToggled="{Binding EdgeSwipeEnabled}" />
+                </Grid>
+
+                <VerticalStackLayout Style="{StaticResource OptionStack}">
+                    <Label Style="{StaticResource OptionLabel}"
+                           Text="{Binding EdgeWidth, StringFormat='EdgeWidth {0:F0}'}" />
+                    <Slider Value="{Binding EdgeWidth}"
+                            Minimum="8" Maximum="64" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Style="{StaticResource OptionStack}">
+                    <Label Style="{StaticResource OptionLabel}"
+                           Text="{Binding DrawerWidth, StringFormat='DrawerWidth {0:F0}'}" />
+                    <Slider Value="{Binding DrawerWidth}"
+                            Minimum="200" Maximum="340" />
+                </VerticalStackLayout>
+
+                <Grid Style="{StaticResource OptionGrid}"
+                      ColumnDefinitions="*,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource OptionLabel}"
+                           Text="DrawerBackgroundColor" />
+                    <Picker Grid.Column="1"
+                            ItemsSource="{x:Static local:SampleColors.Names}"
+                            SelectedIndex="{Binding DrawerBackgroundColorIndex}" />
+                </Grid>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <controls:SideDrawer DrawerBackgroundColor="{Binding DrawerBackgroundColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#FFFFFF}"
+                             DrawerWidth="{Binding DrawerWidth}"
+                             EdgeSwipeEnabled="{Binding EdgeSwipeEnabled}"
+                             EdgeWidth="{Binding EdgeWidth}"
+                             IsOpen="{Binding IsOpen}">
+            <controls:SideDrawer.DrawerContent>
+                <VerticalStackLayout Padding="0,24,0,0"
+                                     BindableLayout.ItemsSource="{Binding MenuItems}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="local:SampleAction">
+                            <Label Style="{StaticResource MenuLabel}"
+                                   Text="{Binding Text}">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Command}"
+                                                          CommandParameter="{Binding Text}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </controls:SideDrawer.DrawerContent>
+        </controls:SideDrawer>
+    </Grid>
+
+</ContentPage>

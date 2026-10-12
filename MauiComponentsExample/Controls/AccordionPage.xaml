@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:local="clr-namespace:MauiComponentsExample.Controls"
+             xmlns:controls="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             x:Class="MauiComponentsExample.Controls.AccordionPage"
+             x:DataType="{x:Type local:AccordionPageViewModel}"
+             s:BindingContextResolver.Type="{x:Type local:AccordionPageViewModel}"
+             Title="AccordionView">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style TargetType="controls:AccordionItem">
+                <Setter Property="Icon" Value="{Binding Icon}" />
+                <Setter Property="IconColor" Value="{Binding IconColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#49454F}" />
+                <Setter Property="LineColor" Value="{Binding LineColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#CAC4D0}" />
+            </Style>
+
+            <Style x:Key="HeaderLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="FontSize" Value="17" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+
+            <Style x:Key="BodyLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="16,0,16,16" />
+                <Setter Property="FontSize" Value="15" />
+            </Style>
+
+            <Style x:Key="SpecGrid"
+                   TargetType="Grid">
+                <Setter Property="Padding" Value="16,0,16,8" />
+            </Style>
+
+            <Style x:Key="SpecLabel"
+                   TargetType="Label">
+                <Setter Property="FontSize" Value="15" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource SampleStack}">
+
+            <Border Style="{StaticResource SampleBorder}">
+                <controls:AccordionView ExpandMode="{Binding ExpandMode}">
+                    <controls:AccordionItem IsExpanded="{Binding IsShippingExpanded}">
+                        <controls:AccordionItem.Header>
+                            <Label Style="{StaticResource HeaderLabel}"
+                                   Text="Shipping" />
+                        </controls:AccordionItem.Header>
+                        <controls:AccordionItem.Content>
+                            <Label Style="{StaticResource BodyLabel}"
+                                   Text="Orders placed by 2 p.m. ship the same day. Standard delivery takes two to four business days." />
+                        </controls:AccordionItem.Content>
+                    </controls:AccordionItem>
+                    <controls:AccordionItem>
+                        <controls:AccordionItem.Header>
+                            <Label Style="{StaticResource HeaderLabel}"
+                                   Text="Returns" />
+                        </controls:AccordionItem.Header>
+                        <controls:AccordionItem.Content>
+                            <Label Style="{StaticResource BodyLabel}"
+                                   Text="Unopened items can be returned within 30 days of delivery for a full refund." />
+                        </controls:AccordionItem.Content>
+                    </controls:AccordionItem>
+                    <controls:AccordionItem>
+                        <controls:AccordionItem.Header>
+                            <Label Style="{StaticResource HeaderLabel}"
+                                   Text="Specifications" />
+                        </controls:AccordionItem.Header>
+                        <controls:AccordionItem.Content>
+                            <VerticalStackLayout Padding="0,0,0,8">
+                                <Grid Style="{StaticResource SpecGrid}"
+                                      ColumnDefinitions="120,*">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource SpecLabel}"
+                                           Text="Weight" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource SpecLabel}"
+                                           Text="1.2 kg" />
+                                </Grid>
+                                <Grid Style="{StaticResource SpecGrid}"
+                                      ColumnDefinitions="120,*">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource SpecLabel}"
+                                           Text="Size" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource SpecLabel}"
+                                           Text="30 x 20 x 10 cm" />
+                                </Grid>
+                                <Grid Style="{StaticResource SpecGrid}"
+                                      ColumnDefinitions="120,*">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource SpecLabel}"
+                                           Text="Material" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource SpecLabel}"
+                                           Text="Aluminum" />
+                                </Grid>
+                                <Grid Style="{StaticResource SpecGrid}"
+                                      ColumnDefinitions="120,*">
+                                    <Label Grid.Column="0"
+                                           Style="{StaticResource SpecLabel}"
+                                           Text="Color" />
+                                    <Label Grid.Column="1"
+                                           Style="{StaticResource SpecLabel}"
+                                           Text="Silver" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </controls:AccordionItem.Content>
+                    </controls:AccordionItem>
+                    <controls:AccordionItem>
+                        <controls:AccordionItem.Header>
+                            <Label Style="{StaticResource HeaderLabel}"
+                                   Text="Payment" />
+                        </controls:AccordionItem.Header>
+                        <controls:AccordionItem.Content>
+                            <Label Style="{StaticResource BodyLabel}"
+                                   Text="Credit cards, bank transfer and cash on delivery are available. The amount is charged when the item ships." />
+                        </controls:AccordionItem.Content>
+                    </controls:AccordionItem>
+                </controls:AccordionView>
+            </Border>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="ExpandMode" />
+                <Picker Grid.Column="1"
+                        ItemsSource="{Binding ExpandModes}"
+                        SelectedItem="{Binding ExpandMode}" />
+            </Grid>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="IsExpanded (Shipping)" />
+                <Switch Grid.Column="1"
+                        IsToggled="{Binding IsShippingExpanded}" />
+            </Grid>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="Icon" />
+                <Picker Grid.Column="1"
+                        ItemsSource="{Binding Icons}"
+                        SelectedItem="{Binding Icon}" />
+            </Grid>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="IconColor" />
+                <Picker Grid.Column="1"
+                        ItemsSource="{x:Static local:SampleColors.Names}"
+                        SelectedIndex="{Binding IconColorIndex}" />
+            </Grid>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="LineColor" />
+                <Picker Grid.Column="1"
+                        ItemsSource="{x:Static local:SampleColors.Names}"
+                        SelectedIndex="{Binding LineColorIndex}" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

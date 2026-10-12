@@ -9,12 +9,15 @@ public sealed partial class App
     {
         this.provider = provider;
 
+        // Light theme based application
+        Current!.UserAppTheme = AppTheme.Light;
+
         InitializeComponent();
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        return new Window(provider.GetRequiredService<MainPage>());
+        return new Window(new NavigationPage(provider.GetRequiredService<MainPage>()));
     }
 }
 #pragma warning restore CA1724

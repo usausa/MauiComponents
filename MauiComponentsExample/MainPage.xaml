@@ -3,39 +3,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:s="http://smart/maui"
              xmlns:local="clr-namespace:MauiComponentsExample"
+             xmlns:controls="clr-namespace:MauiComponentsExample.Controls"
+             xmlns:dialogs="clr-namespace:MauiComponentsExample.Dialogs"
              x:Class="MauiComponentsExample.MainPage"
              x:DataType="{x:Type local:MainPageViewModel}"
-             s:BindingContextResolver.Type="{x:Type local:MainPageViewModel}">
+             s:BindingContextResolver.Type="{x:Type local:MainPageViewModel}"
+             NavigationPage.HasNavigationBar="False">
 
     <ScrollView>
-        <VerticalStackLayout Padding="30,0"
+        <VerticalStackLayout Padding="30,24"
                              Spacing="12" VerticalOptions="Center">
 
-            <Button Command="{Binding InformationCommand}"
-                    Text="Information" />
-            <Button Command="{Binding ConfirmCommand}"
-                    Text="Confirm" />
-            <Button Command="{Binding Confirm3Command}"
-                    Text="Confirm3" />
-            <Button Command="{Binding SelectCommand}"
-                    Text="Select" />
-            <Button Command="{Binding InputCommand}"
-                    Text="Input" />
-            <Button Command="{Binding IndicatorCommand}"
-                    Text="Indicator" />
-            <Button Command="{Binding LockCommand}"
-                    Text="Lock" />
-            <Button Command="{Binding LoadingCommand}"
-                    Text="Loading" />
-            <Button Command="{Binding ProgressCommand}"
-                    Text="Progress" />
-            <Button Command="{Binding SnackbarCommand}"
-                    Text="Snackbar" />
-            <Button Command="{Binding ToastCommand}"
-                    Text="Toast" />
-
-            <Button Command="{Binding PopupCommand}"
-                    Text="Popup" />
+            <Button Command="{Binding NavigateCommand}"
+                    CommandParameter="{x:Type dialogs:DialogMenuPage}"
+                    Text="Dialogs" />
+            <Button Command="{Binding NavigateCommand}"
+                    CommandParameter="{x:Type controls:ControlMenuPage}"
+                    Text="Controls" />
 
         </VerticalStackLayout>
     </ScrollView>

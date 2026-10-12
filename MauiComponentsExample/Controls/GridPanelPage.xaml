@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:local="clr-namespace:MauiComponentsExample.Controls"
+             xmlns:controls="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             x:Class="MauiComponentsExample.Controls.GridPanelPage"
+             x:DataType="{x:Type local:GridPanelPageViewModel}"
+             s:BindingContextResolver.Type="{x:Type local:GridPanelPageViewModel}"
+             Title="StaggeredGrid / VariableSizeWrapPanel">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="TileBorder"
+                   TargetType="Border">
+                <Setter Property="Padding" Value="8" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="StrokeShape" Value="RoundRectangle 8" />
+            </Style>
+
+            <Style x:Key="TileLabel"
+                   TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="#37474F" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource SampleStack}">
+
+            <Label Style="{StaticResource SectionLabel}"
+                   Text="StaggeredGrid" />
+
+            <controls:StaggeredGrid Columns="{Binding StaggeredColumns}"
+                                    Spacing="{Binding StaggeredSpacing}">
+                <Border Style="{StaticResource TileBorder}"
+                        HeightRequest="96"
+                        BackgroundColor="#BBDEFB">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="1" />
+                </Border>
+                <Border Style="{StaticResource TileBorder}"
+                        HeightRequest="60"
+                        BackgroundColor="#C8E6C9">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="2" />
+                </Border>
+                <Border Style="{StaticResource TileBorder}"
+                        HeightRequest="128"
+                        BackgroundColor="#FFECB3">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="3" />
+                </Border>
+                <Border Style="{StaticResource TileBorder}"
+                        HeightRequest="76"
+                        BackgroundColor="#F8BBD0">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="4" />
+                </Border>
+                <Border Style="{StaticResource TileBorder}"
+                        HeightRequest="108"
+                        BackgroundColor="#B2EBF2">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="5" />
+                </Border>
+                <Border Style="{StaticResource TileBorder}"
+                        HeightRequest="68"
+                        BackgroundColor="#E1BEE7">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="6" />
+                </Border>
+                <Border Style="{StaticResource TileBorder}"
+                        HeightRequest="88"
+                        BackgroundColor="#FFE0B2">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="7" />
+                </Border>
+                <Border Style="{StaticResource TileBorder}"
+                        HeightRequest="116"
+                        BackgroundColor="#E0E0E0">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="8" />
+                </Border>
+                <Border Style="{StaticResource TileBorder}"
+                        HeightRequest="72"
+                        BackgroundColor="#DCEDC8">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="9" />
+                </Border>
+            </controls:StaggeredGrid>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="{Binding StaggeredColumns, StringFormat='Columns {0}'}" />
+                <Stepper Grid.Column="1"
+                         Value="{Binding StaggeredColumns}"
+                         Minimum="1" Maximum="5" />
+            </Grid>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding StaggeredSpacing, StringFormat='Spacing {0:F0}'}" />
+                <Slider Value="{Binding StaggeredSpacing}"
+                        Minimum="0" Maximum="24" />
+            </VerticalStackLayout>
+
+            <Label Style="{StaticResource SectionLabel}"
+                   Text="VariableSizeWrapPanel" />
+
+            <controls:VariableSizeWrapPanel Columns="{Binding WrapColumns}"
+                                            RowHeight="{Binding RowHeight}"
+                                            Spacing="{Binding WrapSpacing}">
+                <Border Style="{StaticResource TileBorder}"
+                        BackgroundColor="#BBDEFB"
+                        controls:VariableSizeWrapPanel.ColumnSpan="2">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="2x1" />
+                </Border>
+                <Border Style="{StaticResource TileBorder}"
+                        BackgroundColor="#C8E6C9"
+                        controls:VariableSizeWrapPanel.RowSpan="2">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="1x2" />
+                </Border>
+                <Border Style="{StaticResource TileBorder}"
+                        BackgroundColor="#FFECB3">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="1x1" />
+                </Border>
+                <Border Style="{StaticResource TileBorder}"
+                        BackgroundColor="#F8BBD0">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="1x1" />
+                </Border>
+                <Border Style="{StaticResource TileBorder}"
+                        BackgroundColor="#B2EBF2"
+                        controls:VariableSizeWrapPanel.ColumnSpan="2" controls:VariableSizeWrapPanel.RowSpan="2">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="2x2" />
+                </Border>
+                <Border Style="{StaticResource TileBorder}"
+                        BackgroundColor="#E1BEE7">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="1x1" />
+                </Border>
+                <Border Style="{StaticResource TileBorder}"
+                        BackgroundColor="#FFE0B2"
+                        controls:VariableSizeWrapPanel.ColumnSpan="3">
+                    <Label Style="{StaticResource TileLabel}"
+                           Text="3x1" />
+                </Border>
+            </controls:VariableSizeWrapPanel>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="{Binding WrapColumns, StringFormat='Columns {0}'}" />
+                <Stepper Grid.Column="1"
+                         Value="{Binding WrapColumns}"
+                         Minimum="1" Maximum="5" />
+            </Grid>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding WrapSpacing, StringFormat='Spacing {0:F0}'}" />
+                <Slider Value="{Binding WrapSpacing}"
+                        Minimum="0" Maximum="24" />
+            </VerticalStackLayout>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="RowHeight (Auto)" />
+                <Switch Grid.Column="1"
+                        IsToggled="{Binding AutoRowHeight}" />
+            </Grid>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding FixedRowHeight, StringFormat='RowHeight {0:F0}'}" />
+                <Slider Value="{Binding FixedRowHeight}"
+                        Minimum="40" Maximum="120" />
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

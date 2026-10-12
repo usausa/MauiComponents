@@ -19,6 +19,7 @@
   <Project Path="MauiComponents/MauiComponents.csproj">
     <BuildDependency Project="MauiComponents.Generator/MauiComponents.Generator.csproj" />
   </Project>
+  <Project Path="MauiComponents.Controls/MauiComponents.Controls.csproj" />
   <Project Path="MauiComponents.Generator/MauiComponents.Generator.csproj" />
   <Project Path="MauiComponents.Generator.Tests/MauiComponents.Generator.Tests.csproj" />
   <Project Path="MauiComponents.Resolver/MauiComponents.Resolver.csproj" />

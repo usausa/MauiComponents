@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:local="clr-namespace:MauiComponentsExample.Controls"
+             x:Class="MauiComponentsExample.Controls.ControlMenuPage"
+             x:DataType="{x:Type local:ControlMenuPageViewModel}"
+             s:BindingContextResolver.Type="{x:Type local:ControlMenuPageViewModel}"
+             Title="Controls">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30,24"
+                             Spacing="12">
+
+            <Button Command="{Binding NavigateCommand}"
+                    CommandParameter="{x:Type local:BottomSheetPage}"
+                    Text="BottomSheetView" />
+            <Button Command="{Binding NavigateCommand}"
+                    CommandParameter="{x:Type local:SideDrawerPage}"
+                    Text="SideDrawer" />
+            <Button Command="{Binding NavigateCommand}"
+                    CommandParameter="{x:Type local:TabStripPage}"
+                    Text="TabStrip" />
+            <Button Command="{Binding NavigateCommand}"
+                    CommandParameter="{x:Type local:ChipSegmentPage}"
+                    Text="ChipGroup / SegmentedView" />
+            <Button Command="{Binding NavigateCommand}"
+                    CommandParameter="{x:Type local:AccordionPage}"
+                    Text="AccordionView" />
+            <Button Command="{Binding NavigateCommand}"
+                    CommandParameter="{x:Type local:TreeViewPage}"
+                    Text="TreeView" />
+            <Button Command="{Binding NavigateCommand}"
+                    CommandParameter="{x:Type local:ShimmerPage}"
+                    Text="ShimmerView" />
+            <Button Command="{Binding NavigateCommand}"
+                    CommandParameter="{x:Type local:StepMarqueePage}"
+                    Text="StepIndicator / MarqueeLabel" />
+            <Button Command="{Binding NavigateCommand}"
+                    CommandParameter="{x:Type local:AvatarOverlapPage}"
+                    Text="AvatarGroup / OverlapPanel" />
+            <Button Command="{Binding NavigateCommand}"
+                    CommandParameter="{x:Type local:GridPanelPage}"
+                    Text="StaggeredGrid / VariableSizeWrapPanel" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:local="clr-namespace:MauiComponentsExample.Controls"
+             xmlns:controls="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             x:Class="MauiComponentsExample.Controls.BottomSheetPage"
+             x:DataType="{x:Type local:BottomSheetPageViewModel}"
+             s:BindingContextResolver.Type="{x:Type local:BottomSheetPageViewModel}"
+             Title="BottomSheetView">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="SheetItemLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="8,14" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="TextColor" Value="#212121" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout Style="{StaticResource SampleStack}">
+
+                <Button Command="{Binding OpenCommand}"
+                        Text="Open" />
+
+                <VerticalStackLayout Style="{StaticResource OptionStack}">
+                    <Label Style="{StaticResource OptionLabel}"
+                           Text="{Binding HalfExpandedRatio, StringFormat='HalfExpandedRatio {0:F2}'}" />
+                    <Slider Value="{Binding HalfExpandedRatio}"
+                            Minimum="0.2" Maximum="0.9" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Style="{StaticResource OptionStack}">
+                    <Label Style="{StaticResource OptionLabel}"
+                           Text="{Binding ExpandedRatio, StringFormat='ExpandedRatio {0:F2}'}" />
+                    <Slider Value="{Binding ExpandedRatio}"
+                            Minimum="0.5" Maximum="1" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Style="{StaticResource OptionStack}">
+                    <Label Style="{StaticResource OptionLabel}"
+                           Text="{Binding CornerRadius, StringFormat='CornerRadius {0:F0}'}" />
+                    <Slider Value="{Binding CornerRadius}"
+                            Minimum="0" Maximum="32" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Style="{StaticResource OptionStack}">
+                    <Label Style="{StaticResource OptionLabel}"
+                           Text="{Binding BackdropOpacity, StringFormat='BackdropOpacity {0:F2}'}" />
+                    <Slider Value="{Binding BackdropOpacity}"
+                            Minimum="0" Maximum="1" />
+                </VerticalStackLayout>
+
+                <Grid Style="{StaticResource OptionGrid}"
+                      ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource OptionLabel}"
+                           Text="{Binding ItemCount, StringFormat='Items {0}'}" />
+                    <Stepper Grid.Column="1"
+                             Value="{Binding ItemCount}"
+                             Minimum="1" Maximum="20" />
+                </Grid>
+
+                <Grid Style="{StaticResource OptionGrid}"
+                      ColumnDefinitions="*,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource OptionLabel}"
+                           Text="SheetBackgroundColor" />
+                    <Picker Grid.Column="1"
+                            ItemsSource="{x:Static local:SampleColors.Names}"
+                            SelectedIndex="{Binding SheetBackgroundColorIndex}" />
+                </Grid>
+
+                <Grid Style="{StaticResource OptionGrid}"
+                      ColumnDefinitions="*,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource OptionLabel}"
+                           Text="GrabberColor" />
+                    <Picker Grid.Column="1"
+                            ItemsSource="{x:Static local:SampleColors.Names}"
+                            SelectedIndex="{Binding GrabberColorIndex}" />
+                </Grid>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <controls:BottomSheetView BackdropOpacity="{Binding BackdropOpacity}"
+                                  CornerRadius="{Binding CornerRadius}"
+                                  ExpandedRatio="{Binding ExpandedRatio}"
+                                  GrabberColor="{Binding GrabberColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#BDBDBD}"
+                                  HalfExpandedRatio="{Binding HalfExpandedRatio}"
+                                  IsOpen="{Binding IsOpen}"
+                                  SheetBackgroundColor="{Binding SheetBackgroundColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#FFFFFF}">
+            <controls:BottomSheetView.SheetTemplate>
+                <DataTemplate x:DataType="local:BottomSheetPageViewModel">
+                    <VerticalStackLayout Padding="16,0,16,24">
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Items}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="local:SampleAction">
+                                    <Label Style="{StaticResource SheetItemLabel}"
+                                           Text="{Binding Text}">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Command}" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
+                        <Button Margin="0,12,0,0"
+                                Command="{Binding CloseCommand}"
+                                Text="Close" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </controls:BottomSheetView.SheetTemplate>
+        </controls:BottomSheetView>
+    </Grid>
+
+</ContentPage>

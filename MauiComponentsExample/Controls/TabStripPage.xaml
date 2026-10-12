@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:local="clr-namespace:MauiComponentsExample.Controls"
+             xmlns:controls="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             x:Class="MauiComponentsExample.Controls.TabStripPage"
+             x:DataType="{x:Type local:TabStripPageViewModel}"
+             s:BindingContextResolver.Type="{x:Type local:TabStripPageViewModel}"
+             Title="TabStrip">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="TabLabel"
+                   TargetType="Label">
+                <Setter Property="Padding" Value="16,14" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="#757575" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <controls:TabStrip Grid.Row="0"
+                           ItemsSource="{Binding Tabs}"
+                           IndicatorColor="{Binding IndicatorColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#000000}"
+                           IndicatorHeight="{Binding IndicatorHeight}"
+                           IndicatorInset="{Binding IndicatorInset}"
+                           PagePosition="{Binding PagePosition}"
+                           SelectedIndex="{Binding SelectedIndex}">
+            <controls:TabStrip.ItemTemplate>
+                <DataTemplate x:DataType="x:String">
+                    <Label Style="{StaticResource TabLabel}"
+                           Text="{Binding .}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="TabStates">
+                                    <VisualState x:Name="Unselected" />
+                                    <VisualState x:Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="TextColor" Value="#212121" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                    </Label>
+                </DataTemplate>
+            </controls:TabStrip.ItemTemplate>
+        </controls:TabStrip>
+
+        <BoxView Grid.Row="1"
+                 HeightRequest="1"
+                 Color="#E0E0E0" BackgroundColor="Transparent" />
+
+        <ScrollView Grid.Row="2">
+            <VerticalStackLayout Style="{StaticResource SampleStack}">
+
+                <Border Style="{StaticResource SampleBorder}"
+                        HeightRequest="160"
+                        BackgroundColor="#F5F5F5">
+                    <Label Text="{Binding Current}"
+                           FontSize="32"
+                           TextColor="#424242"
+                           HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
+
+                <VerticalStackLayout Style="{StaticResource OptionStack}">
+                    <Label Style="{StaticResource OptionLabel}"
+                           Text="{Binding Swipe, StringFormat='Swipe {0:F2}'}" />
+                    <Slider Value="{Binding Swipe}"
+                            Minimum="-1" Maximum="1"
+                            DragCompletedCommand="{Binding SwipeCompletedCommand}" />
+                </VerticalStackLayout>
+
+                <Grid Style="{StaticResource ButtonGrid}"
+                      ColumnDefinitions="*,*">
+                    <Button Grid.Column="0"
+                            Command="{Binding PreviousCommand}"
+                            Text="Previous" />
+                    <Button Grid.Column="1"
+                            Command="{Binding NextCommand}"
+                            Text="Next" />
+                </Grid>
+
+                <Grid Style="{StaticResource ButtonGrid}"
+                      ColumnDefinitions="*,*">
+                    <Button Grid.Column="0"
+                            Command="{Binding RemoveCommand}"
+                            Text="Remove tab" />
+                    <Button Grid.Column="1"
+                            Command="{Binding AddCommand}"
+                            Text="Add tab" />
+                </Grid>
+
+                <VerticalStackLayout Style="{StaticResource OptionStack}">
+                    <Label Style="{StaticResource OptionLabel}"
+                           Text="{Binding IndicatorHeight, StringFormat='IndicatorHeight {0:F0}'}" />
+                    <Slider Value="{Binding IndicatorHeight}"
+                            Minimum="1" Maximum="8" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Style="{StaticResource OptionStack}">
+                    <Label Style="{StaticResource OptionLabel}"
+                           Text="{Binding IndicatorInset, StringFormat='IndicatorInset {0:F0}'}" />
+                    <Slider Value="{Binding IndicatorInset}"
+                            Minimum="0" Maximum="24" />
+                </VerticalStackLayout>
+
+                <Grid Style="{StaticResource OptionGrid}"
+                      ColumnDefinitions="*,*">
+                    <Label Grid.Column="0"
+                           Style="{StaticResource OptionLabel}"
+                           Text="IndicatorColor" />
+                    <Picker Grid.Column="1"
+                            ItemsSource="{x:Static local:SampleColors.Names}"
+                            SelectedIndex="{Binding IndicatorColorIndex}" />
+                </Grid>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+
+</ContentPage>

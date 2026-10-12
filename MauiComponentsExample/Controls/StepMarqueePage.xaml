@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:local="clr-namespace:MauiComponentsExample.Controls"
+             xmlns:controls="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             x:Class="MauiComponentsExample.Controls.StepMarqueePage"
+             x:DataType="{x:Type local:StepMarqueePageViewModel}"
+             s:BindingContextResolver.Type="{x:Type local:StepMarqueePageViewModel}"
+             Title="StepIndicator / MarqueeLabel">
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource SampleStack}">
+
+            <Label Style="{StaticResource SectionLabel}"
+                   Text="StepIndicator" />
+
+            <Border Style="{StaticResource SampleBorder}"
+                    Padding="16,28">
+                <controls:StepIndicator AccentColor="{Binding AccentColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#2196F3}"
+                                        CurrentStep="{Binding CurrentStep}"
+                                        IsCountVisible="{Binding IsCountVisible}"
+                                        TotalSteps="{Binding TotalSteps}"
+                                        UpcomingColor="{Binding UpcomingColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#E0E0E0}" />
+            </Border>
+
+            <Grid Style="{StaticResource ButtonGrid}"
+                  ColumnDefinitions="*,*">
+                <Button Grid.Column="0"
+                        Command="{Binding PreviousCommand}"
+                        Text="Previous" />
+                <Button Grid.Column="1"
+                        Command="{Binding NextCommand}"
+                        Text="Next" />
+            </Grid>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="{Binding TotalSteps, StringFormat='TotalSteps {0}'}" />
+                <Stepper Grid.Column="1"
+                         Value="{Binding TotalSteps}"
+                         Minimum="2" Maximum="8" />
+            </Grid>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="IsCountVisible" />
+                <Switch Grid.Column="1"
+                        IsToggled="{Binding IsCountVisible}" />
+            </Grid>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="AccentColor" />
+                <Picker Grid.Column="1"
+                        ItemsSource="{x:Static local:SampleColors.Names}"
+                        SelectedIndex="{Binding AccentColorIndex}" />
+            </Grid>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="UpcomingColor" />
+                <Picker Grid.Column="1"
+                        ItemsSource="{x:Static local:SampleColors.Names}"
+                        SelectedIndex="{Binding UpcomingColorIndex}" />
+            </Grid>
+
+            <Label Style="{StaticResource SectionLabel}"
+                   Text="MarqueeLabel" />
+
+            <Border Style="{StaticResource SampleBorder}"
+                    Padding="0,16"
+                    BackgroundColor="#ECEFF1">
+                <controls:MarqueeLabel Text="{Binding MarqueeText}"
+                                       FontSize="{Binding MarqueeFontSize}"
+                                       TextColor="{Binding TextColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#000000}"
+                                       Speed="{Binding Speed}" />
+            </Border>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="Text" />
+                <Entry Text="{Binding MarqueeText}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding Speed, StringFormat='Speed {0:F0}'}" />
+                <Slider Value="{Binding Speed}"
+                        Minimum="10" Maximum="200" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding MarqueeFontSize, StringFormat='FontSize {0:F0}'}" />
+                <Slider Value="{Binding MarqueeFontSize}"
+                        Minimum="12" Maximum="32" />
+            </VerticalStackLayout>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="TextColor" />
+                <Picker Grid.Column="1"
+                        ItemsSource="{x:Static local:SampleColors.Names}"
+                        SelectedIndex="{Binding TextColorIndex}" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net10.0-android;net10.0-ios</TargetFrameworks>
+    <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
+
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">27.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Components.Maui.Controls</PackageId>
+    <Title>Components.Maui.Controls</Title>
+    <Description>Controls for MAUI application</Description>
+    <PackageTags>maui controls layout</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$([System.String]::Copy('$(TargetFramework)').Contains('-android')) == 'true'">
+    <Compile Update="**\*.android.cs">
+      <DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.android',''))</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup Condition="$([System.String]::Copy('$(TargetFramework)').Contains('-android')) == 'false'">
+    <Compile Remove="**\*.android.cs" />
+    <None Include="**\*.android.cs">
+      <DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.android',''))</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup Condition="$([System.String]::Copy('$(TargetFramework)').Contains('-ios')) == 'true'">
+    <Compile Update="**\*.ios.cs">
+      <DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.ios',''))</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup Condition="$([System.String]::Copy('$(TargetFramework)').Contains('-ios')) == 'false'">
+    <Compile Remove="**\*.ios.cs" />
+    <None Include="**\*.ios.cs">
+      <DependentUpon>$([System.String]::Copy('%(FileName)%(Extension)').Replace('.ios',''))</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.110" />
+  </ItemGroup>
+
+</Project>

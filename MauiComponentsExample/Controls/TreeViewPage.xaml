@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:s="http://smart/maui"
+             xmlns:local="clr-namespace:MauiComponentsExample.Controls"
+             xmlns:controls="clr-namespace:MauiComponents.Controls;assembly=MauiComponents.Controls"
+             x:Class="MauiComponentsExample.Controls.TreeViewPage"
+             x:DataType="{x:Type local:TreeViewPageViewModel}"
+             s:BindingContextResolver.Type="{x:Type local:TreeViewPageViewModel}"
+             Title="TreeView">
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource SampleStack}">
+
+            <Border Style="{StaticResource SampleBorder}"
+                    Padding="4,8">
+                <controls:TreeView ItemsSource="{Binding Nodes}"
+                                   CollapsedIcon="{Binding CollapsedIcon}"
+                                   ExpandedIcon="{Binding ExpandedIcon}"
+                                   IconColor="{Binding IconColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#616161}"
+                                   IndentSize="{Binding IndentSize}"
+                                   SelectedBackground="{Binding SelectedBackgroundIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#BBDEFB}"
+                                   SelectedNode="{Binding SelectedNode}" />
+            </Border>
+
+            <Grid Style="{StaticResource ButtonGrid}"
+                  ColumnDefinitions="*,*">
+                <Button Grid.Column="0"
+                        Command="{Binding CollapseAllCommand}"
+                        Text="Collapse all" />
+                <Button Grid.Column="1"
+                        Command="{Binding ExpandAllCommand}"
+                        Text="Expand all" />
+            </Grid>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding IndentSize, StringFormat='IndentSize {0:F0}'}" />
+                <Slider Value="{Binding IndentSize}"
+                        Minimum="0" Maximum="40" />
+            </VerticalStackLayout>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="ExpandedIcon / CollapsedIcon" />
+                <Picker Grid.Column="1"
+                        ItemsSource="{Binding IconSets}"
+                        SelectedIndex="{Binding IconSetIndex}" />
+            </Grid>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="IconColor" />
+                <Picker Grid.Column="1"
+                        ItemsSource="{x:Static local:SampleColors.Names}"
+                        SelectedIndex="{Binding IconColorIndex}" />
+            </Grid>
+
+            <Grid Style="{StaticResource OptionGrid}"
+                  ColumnDefinitions="*,*">
+                <Label Grid.Column="0"
+                       Style="{StaticResource OptionLabel}"
+                       Text="SelectedBackground" />
+                <Picker Grid.Column="1"
+                        ItemsSource="{x:Static local:SampleColors.Names}"
+                        SelectedIndex="{Binding SelectedBackgroundIndex}" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
