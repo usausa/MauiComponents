@@ -4,8 +4,6 @@ public sealed partial class SideDrawer : Grid
 {
     private const string AnimationName = "DrawerMove";
 
-    private const uint Duration = 150;
-
     private const uint AnimationRate = 16;
 
     private const uint MinFlingDuration = 80;
@@ -104,6 +102,12 @@ public sealed partial class SideDrawer : Grid
         typeof(SideDrawer),
         0.4d);
 
+    public static readonly BindableProperty DurationProperty = BindableProperty.Create(
+        nameof(Duration),
+        typeof(uint),
+        typeof(SideDrawer),
+        150u);
+
     public bool IsOpen
     {
         get => (bool)GetValue(IsOpenProperty);
@@ -144,6 +148,12 @@ public sealed partial class SideDrawer : Grid
     {
         get => (double)GetValue(BackdropOpacityProperty);
         set => SetValue(BackdropOpacityProperty, value);
+    }
+
+    public uint Duration
+    {
+        get => (uint)GetValue(DurationProperty);
+        set => SetValue(DurationProperty, value);
     }
 
     //--------------------------------------------------------------------------------
@@ -236,27 +246,38 @@ public sealed partial class SideDrawer : Grid
         MoveTo(open ? 0 : -DrawerWidth, open, duration, easing);
     }
 
-    private void MoveTo(double x, bool open, uint duration = Duration, Easing? easing = null)
+    private void MoveTo(double x, bool open, uint duration, Easing? easing)
     {
         panel.AbortAnimation(AnimationName);
         var start = panel.TranslationX;
         var startOpacity = backdrop.Opacity;
         var endOpacity = open ? BackdropOpacity : 0;
-        panel.Animate(
-            AnimationName,
-            v =>
-            {
-                panel.TranslationX = start + ((x - start) * v);
-                backdrop.Opacity = startOpacity + ((endOpacity - startOpacity) * v);
-            },
-            AnimationRate,
-            duration,
-            easing ?? (open ? Easing.CubicOut : Easing.CubicIn),
-            (_, _) =>
-            {
-                backdrop.IsVisible = IsOpen;
-                panel.IsVisible = IsOpen;
-            });
+        if (duration > 0)
+        {
+            panel.Animate(
+                AnimationName,
+                v =>
+                {
+                    panel.TranslationX = start + ((x - start) * v);
+                    backdrop.Opacity = startOpacity + ((endOpacity - startOpacity) * v);
+                },
+                AnimationRate,
+                duration,
+                easing ?? (open ? Easing.CubicOut : Easing.CubicIn),
+                (_, _) => UpdateVisibility());
+        }
+        else
+        {
+            panel.TranslationX = x;
+            backdrop.Opacity = endOpacity;
+            UpdateVisibility();
+        }
+    }
+
+    private void UpdateVisibility()
+    {
+        backdrop.IsVisible = IsOpen;
+        panel.IsVisible = IsOpen;
     }
 
     //--------------------------------------------------------------------------------
@@ -333,7 +354,7 @@ public sealed partial class SideDrawer : Grid
             open = x > -DrawerWidth / 2;
         }
 
-        var duration = FlingDuration(open ? -x : x + DrawerWidth, open ? velocity : -velocity);
+        var duration = FlingDuration(open ? -x : x + DrawerWidth, open ? velocity : -velocity, Duration);
         if (open == IsOpen)
         {
             MoveTo(open ? 0 : -DrawerWidth, open, duration, Easing.SinOut);
@@ -345,6 +366,6 @@ public sealed partial class SideDrawer : Grid
         }
     }
 
-    private static uint FlingDuration(double distance, double velocity) =>
-        velocity > 0 ? (uint)Math.Clamp(FlingSlope * distance / velocity, MinFlingDuration, MaxFlingDuration) : Duration;
+    private static uint FlingDuration(double distance, double velocity, uint duration) =>
+        velocity > 0 ? (uint)Math.Clamp(FlingSlope * distance / velocity, MinFlingDuration, MaxFlingDuration) : duration;
 }

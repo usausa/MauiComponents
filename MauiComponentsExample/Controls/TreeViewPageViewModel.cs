@@ -53,6 +53,21 @@ public sealed partial class TreeViewPageViewModel : ExtendViewModelBase
     public partial double IndentSize { get; set; } = 20;
 
     [ObservableProperty]
+    public partial double RowSpacing { get; set; } = 2;
+
+    [ObservableProperty]
+    public partial double RowPaddingHorizontal { get; set; } = 4;
+
+    [ObservableProperty]
+    public partial double RowPaddingVertical { get; set; } = 6;
+
+    [ObservableProperty]
+    public partial Thickness RowPadding { get; set; } = new(4, 6);
+
+    [ObservableProperty]
+    public partial double IconSpacing { get; set; } = 4;
+
+    [ObservableProperty]
     public partial int IconSetIndex { get; set; }
 
     [ObservableProperty]
@@ -84,6 +99,13 @@ public sealed partial class TreeViewPageViewModel : ExtendViewModelBase
             ExpandedIcon = icons[0];
             CollapsedIcon = icons[1];
         });
+        SubscribeRowPaddingHorizontal(_ => UpdateRowPadding());
+        SubscribeRowPaddingVertical(_ => UpdateRowPadding());
+    }
+
+    private void UpdateRowPadding()
+    {
+        RowPadding = new Thickness(RowPaddingHorizontal, RowPaddingVertical);
     }
 
     private void ExpandAll(bool expanded)

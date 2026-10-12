@@ -46,13 +46,9 @@ public sealed class AccordionItem : Grid
 {
     private const string AnimationName = "AccordionItemExpand";
 
-    private const uint Duration = 250;
-
     private const uint AnimationRate = 16;
 
     private const double IconMargin = 8;
-
-    private const double LineThickness = 0.5;
 
     private const double ExpandedRotation = 180;
 
@@ -128,11 +124,24 @@ public sealed class AccordionItem : Grid
         Color.FromArgb("#CAC4D0"),
         propertyChanged: static (bindable, _, newValue) => ((AccordionItem)bindable).line.Color = (Color)newValue);
 
+    public static readonly BindableProperty LineThicknessProperty = BindableProperty.Create(
+        nameof(LineThickness),
+        typeof(double),
+        typeof(AccordionItem),
+        0.5d,
+        propertyChanged: static (bindable, _, newValue) => ((AccordionItem)bindable).line.HeightRequest = (double)newValue);
+
     public static readonly BindableProperty HeaderRowStyleProperty = BindableProperty.Create(
         nameof(HeaderRowStyle),
         typeof(Style),
         typeof(AccordionItem),
         propertyChanged: static (bindable, _, newValue) => ((AccordionItem)bindable).headerRow.Style = (Style?)newValue);
+
+    public static readonly BindableProperty DurationProperty = BindableProperty.Create(
+        nameof(Duration),
+        typeof(uint),
+        typeof(AccordionItem),
+        250u);
 
     public View? Header
     {
@@ -182,10 +191,22 @@ public sealed class AccordionItem : Grid
         set => SetValue(LineColorProperty, value);
     }
 
+    public double LineThickness
+    {
+        get => (double)GetValue(LineThicknessProperty);
+        set => SetValue(LineThicknessProperty, value);
+    }
+
     public Style? HeaderRowStyle
     {
         get => (Style?)GetValue(HeaderRowStyleProperty);
         set => SetValue(HeaderRowStyleProperty, value);
+    }
+
+    public uint Duration
+    {
+        get => (uint)GetValue(DurationProperty);
+        set => SetValue(DurationProperty, value);
     }
 
     public ICommand ToggleCommand { get; }
@@ -273,7 +294,7 @@ public sealed class AccordionItem : Grid
         }
 
         this.AbortAnimation(AnimationName);
-        if ((Width > 0) && (Content is IView content))
+        if ((Duration > 0) && (Width > 0) && (Content is IView content))
         {
             var from = body.IsVisible ? body.Height : 0;
             var to = expanded ? content.Measure(Width, Double.PositiveInfinity).Height : 0;
@@ -310,7 +331,18 @@ public sealed class AccordionItem : Grid
             body.IsVisible = expanded;
             body.ClearValue(HeightRequestProperty);
             icon.Rotation = expanded ? ExpandedRotation : 0;
+            if (expanded && revealOnExpanded && (Content is not null))
+            {
+                revealOnExpanded = false;
+                SizeChanged += OnExpandedSizeChanged;
+            }
         }
+    }
+
+    private void OnExpandedSizeChanged(object? sender, EventArgs e)
+    {
+        SizeChanged -= OnExpandedSizeChanged;
+        Reveal();
     }
 
     private void Reveal()

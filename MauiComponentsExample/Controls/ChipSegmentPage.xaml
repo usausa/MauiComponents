@@ -30,6 +30,7 @@
                         HorizontalScrollBarVisibility="Never">
                 <controls:ChipGroup ItemsSource="{Binding Fruits}"
                                     ChipCornerRadius="{Binding ChipCornerRadius}"
+                                    ChipStrokeThickness="{Binding ChipStrokeThickness}"
                                     ChipTextSize="{Binding ChipTextSize}"
                                     SelectedChipBackground="{Binding SelectedChipColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#0000FF}"
                                     SelectedItem="{Binding SelectedFruit}"
@@ -39,6 +40,7 @@
             <controls:ChipGroup ItemsSource="{Binding Fruits}"
                                 ChipCornerRadius="{Binding ChipCornerRadius}"
                                 ChipPadding="0,0,8,8"
+                                ChipStrokeThickness="{Binding ChipStrokeThickness}"
                                 ChipTextSize="{Binding ChipTextSize}"
                                 SelectedChipBackground="{Binding SelectedChipColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#0000FF}"
                                 SelectedItem="{Binding SelectedFruit}"
@@ -47,6 +49,7 @@
             <controls:ChipGroup ItemsSource="{Binding Categories}"
                                 ChipCornerRadius="{Binding ChipCornerRadius}"
                                 ChipPadding="0,0,8,8"
+                                ChipStrokeThickness="{Binding ChipStrokeThickness}"
                                 ChipTextSize="{Binding ChipTextSize}"
                                 SelectedChipBackground="{Binding SelectedChipColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#0000FF}"
                                 SelectedItem="{Binding SelectedCategory}"
@@ -84,6 +87,13 @@
 
             <VerticalStackLayout Style="{StaticResource OptionStack}">
                 <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding ChipStrokeThickness, StringFormat='ChipStrokeThickness {0:F1}'}" />
+                <Slider Value="{Binding ChipStrokeThickness}"
+                        Minimum="0" Maximum="4" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
                        Text="{Binding Spacing, StringFormat='Spacing {0:F0}'}" />
                 <Slider Value="{Binding Spacing}"
                         Minimum="0" Maximum="16" />
@@ -113,11 +123,13 @@
 
             <controls:SegmentedView ItemsSource="{Binding Periods}"
                                     FontSize="{Binding SegmentFontSize}"
+                                    Duration="{Binding SegmentDuration}"
                                     CornerRadius="{Binding SegmentCornerRadius}"
                                     SegmentHeight="{Binding SegmentHeight}"
                                     SegmentWidth="{Binding SegmentWidth}"
                                     SelectedBackground="{Binding SelectedBackgroundIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#6750A4}"
-                                    SelectedIndex="{Binding PeriodIndex}" />
+                                    SelectedIndex="{Binding PeriodIndex}"
+                                    StrokeThickness="{Binding SegmentStrokeThickness}" />
 
             <Grid Style="{StaticResource ButtonGrid}"
                   ColumnDefinitions="*,*">
@@ -152,9 +164,23 @@
 
             <VerticalStackLayout Style="{StaticResource OptionStack}">
                 <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding SegmentStrokeThickness, StringFormat='StrokeThickness {0:F1}'}" />
+                <Slider Value="{Binding SegmentStrokeThickness}"
+                        Minimum="0" Maximum="4" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
                        Text="{Binding SegmentFontSize, StringFormat='FontSize {0:F0}'}" />
                 <Slider Value="{Binding SegmentFontSize}"
                         Minimum="12" Maximum="22" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding SegmentDuration, StringFormat='Duration {0:F0}'}" />
+                <Slider Value="{Binding SegmentDuration}"
+                        Minimum="0" Maximum="1000" />
             </VerticalStackLayout>
 
             <Grid Style="{StaticResource OptionGrid}"

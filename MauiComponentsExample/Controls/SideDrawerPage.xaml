@@ -56,6 +56,13 @@
                             Minimum="200" Maximum="340" />
                 </VerticalStackLayout>
 
+                <VerticalStackLayout Style="{StaticResource OptionStack}">
+                    <Label Style="{StaticResource OptionLabel}"
+                           Text="{Binding Duration, StringFormat='Duration {0:F0}'}" />
+                    <Slider Value="{Binding Duration}"
+                            Minimum="0" Maximum="1000" />
+                </VerticalStackLayout>
+
                 <Grid Style="{StaticResource OptionGrid}"
                       ColumnDefinitions="*,*">
                     <Label Grid.Column="0"
@@ -69,7 +76,8 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <controls:SideDrawer DrawerBackgroundColor="{Binding DrawerBackgroundColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#FFFFFF}"
+        <controls:SideDrawer Duration="{Binding Duration}"
+                             DrawerBackgroundColor="{Binding DrawerBackgroundColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#FFFFFF}"
                              DrawerWidth="{Binding DrawerWidth}"
                              EdgeSwipeEnabled="{Binding EdgeSwipeEnabled}"
                              EdgeWidth="{Binding EdgeWidth}"

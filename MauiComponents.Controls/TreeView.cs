@@ -2,14 +2,6 @@ namespace MauiComponents.Controls;
 
 public sealed class TreeView : ContentView
 {
-    private const double RowSpacing = 2;
-
-    private const double RowHorizontalPadding = 4;
-
-    private const double RowVerticalPadding = 6;
-
-    private const double IconSpacing = 4;
-
     //--------------------------------------------------------------------------------
     // Member
     //--------------------------------------------------------------------------------
@@ -38,6 +30,27 @@ public sealed class TreeView : ContentView
         typeof(double),
         typeof(TreeView),
         20d,
+        propertyChanged: static (bindable, _, _) => ((TreeView)bindable).Rebuild());
+
+    public static readonly BindableProperty RowSpacingProperty = BindableProperty.Create(
+        nameof(RowSpacing),
+        typeof(double),
+        typeof(TreeView),
+        2d,
+        propertyChanged: static (bindable, _, newValue) => ((TreeView)bindable).container.Spacing = (double)newValue);
+
+    public static readonly BindableProperty RowPaddingProperty = BindableProperty.Create(
+        nameof(RowPadding),
+        typeof(Thickness),
+        typeof(TreeView),
+        new Thickness(4, 6),
+        propertyChanged: static (bindable, _, _) => ((TreeView)bindable).Rebuild());
+
+    public static readonly BindableProperty IconSpacingProperty = BindableProperty.Create(
+        nameof(IconSpacing),
+        typeof(double),
+        typeof(TreeView),
+        4d,
         propertyChanged: static (bindable, _, _) => ((TreeView)bindable).Rebuild());
 
     public static readonly BindableProperty ExpandedIconProperty = BindableProperty.Create(
@@ -125,6 +138,24 @@ public sealed class TreeView : ContentView
     {
         get => (double)GetValue(IndentSizeProperty);
         set => SetValue(IndentSizeProperty, value);
+    }
+
+    public double RowSpacing
+    {
+        get => (double)GetValue(RowSpacingProperty);
+        set => SetValue(RowSpacingProperty, value);
+    }
+
+    public Thickness RowPadding
+    {
+        get => (Thickness)GetValue(RowPaddingProperty);
+        set => SetValue(RowPaddingProperty, value);
+    }
+
+    public double IconSpacing
+    {
+        get => (double)GetValue(IconSpacingProperty);
+        set => SetValue(IconSpacingProperty, value);
     }
 
     public string ExpandedIcon
@@ -225,9 +256,10 @@ public sealed class TreeView : ContentView
 
     private Grid BuildRow(TreeNode node, int depth)
     {
+        var padding = RowPadding;
         var row = new Grid
         {
-            Padding = new Thickness((depth * IndentSize) + RowHorizontalPadding, RowVerticalPadding, RowHorizontalPadding, RowVerticalPadding),
+            Padding = new Thickness((depth * IndentSize) + padding.Left, padding.Top, padding.Right, padding.Bottom),
             ColumnSpacing = IconSpacing,
             ColumnDefinitions =
             {

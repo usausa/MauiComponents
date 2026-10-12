@@ -27,6 +27,7 @@
 
         <controls:TabStrip Grid.Row="0"
                            ItemsSource="{Binding Tabs}"
+                           Duration="{Binding Duration}"
                            IndicatorColor="{Binding IndicatorColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#000000}"
                            IndicatorHeight="{Binding IndicatorHeight}"
                            IndicatorInset="{Binding IndicatorInset}"
@@ -109,6 +110,13 @@
                            Text="{Binding IndicatorInset, StringFormat='IndicatorInset {0:F0}'}" />
                     <Slider Value="{Binding IndicatorInset}"
                             Minimum="0" Maximum="24" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Style="{StaticResource OptionStack}">
+                    <Label Style="{StaticResource OptionLabel}"
+                           Text="{Binding Duration, StringFormat='Duration {0:F0}'}" />
+                    <Slider Value="{Binding Duration}"
+                            Minimum="0" Maximum="1000" />
                 </VerticalStackLayout>
 
                 <Grid Style="{StaticResource OptionGrid}"

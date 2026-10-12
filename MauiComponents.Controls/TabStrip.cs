@@ -8,8 +8,6 @@ public sealed class TabStrip : ContentView
 
     private const string ColorAnimationName = "TabStripIndicatorColor";
 
-    private const uint Duration = 250;
-
     private const uint AnimationRate = 16;
 
     private const string SelectedState = "Selected";
@@ -82,6 +80,12 @@ public sealed class TabStrip : ContentView
         Double.NaN,
         propertyChanged: static (bindable, oldValue, newValue) => ((TabStrip)bindable).OnPagePositionChanged((double)oldValue, (double)newValue));
 
+    public static readonly BindableProperty DurationProperty = BindableProperty.Create(
+        nameof(Duration),
+        typeof(uint),
+        typeof(TabStrip),
+        250u);
+
     public IEnumerable? ItemsSource
     {
         get => (IEnumerable?)GetValue(ItemsSourceProperty);
@@ -122,6 +126,12 @@ public sealed class TabStrip : ContentView
     {
         get => (double)GetValue(PagePositionProperty);
         set => SetValue(PagePositionProperty, value);
+    }
+
+    public uint Duration
+    {
+        get => (uint)GetValue(DurationProperty);
+        set => SetValue(DurationProperty, value);
     }
 
     private bool IsFollowing => !Double.IsNaN(PagePosition) && (Math.Abs(PagePosition - SelectedIndex) < FollowRange);
@@ -201,10 +211,10 @@ public sealed class TabStrip : ContentView
         else if ((index >= 0) && (index < headers.Count) && (headers[index] is View header) && (header.Width > 0))
         {
             var width = Math.Max(header.Width - (IndicatorInset * 2), 0);
-            MoveIndicator(header.X + IndicatorInset, width / IndicatorWidth, animated);
+            MoveIndicator(header.X + IndicatorInset, width / IndicatorWidth, animated && (Duration > 0));
             if (animated)
             {
-                _ = scroll.ScrollToAsync(header, ScrollToPosition.Center, true);
+                _ = scroll.ScrollToAsync(header, ScrollToPosition.Center, Duration > 0);
             }
         }
     }
@@ -243,13 +253,22 @@ public sealed class TabStrip : ContentView
     private void ChangeIndicatorColor(Color from, Color to)
     {
         indicator.AbortAnimation(ColorAnimationName);
-        indicator.Animate(
-            ColorAnimationName,
-            v => indicator.Color = new Color(
-                (float)Lerp(from.Red, to.Red, v),
-                (float)Lerp(from.Green, to.Green, v),
-                (float)Lerp(from.Blue, to.Blue, v),
-                (float)Lerp(from.Alpha, to.Alpha, v)));
+        if (Duration > 0)
+        {
+            indicator.Animate(
+                ColorAnimationName,
+                v => indicator.Color = new Color(
+                    (float)Lerp(from.Red, to.Red, v),
+                    (float)Lerp(from.Green, to.Green, v),
+                    (float)Lerp(from.Blue, to.Blue, v),
+                    (float)Lerp(from.Alpha, to.Alpha, v)),
+                AnimationRate,
+                Duration);
+        }
+        else
+        {
+            indicator.Color = to;
+        }
     }
 
     private void MoveIndicator(double x, double scale, bool animated)

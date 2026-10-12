@@ -5,12 +5,6 @@ using System.Text;
 
 public sealed class StepIndicator : ContentView
 {
-    private const double DotSpacing = 6;
-
-    private const double DotSize = 10;
-
-    private const double CurrentDotWidth = 24;
-
     private const double CountMargin = 10;
 
     private static readonly CompositeFormat CountFormat = CompositeFormat.Parse("{0} / {1}");
@@ -45,6 +39,27 @@ public sealed class StepIndicator : ContentView
         typeof(Color),
         typeof(StepIndicator),
         Color.FromArgb("#E0E0E0"),
+        propertyChanged: Rebuild);
+
+    public static readonly BindableProperty DotSizeProperty = BindableProperty.Create(
+        nameof(DotSize),
+        typeof(double),
+        typeof(StepIndicator),
+        10d,
+        propertyChanged: Rebuild);
+
+    public static readonly BindableProperty CurrentDotWidthProperty = BindableProperty.Create(
+        nameof(CurrentDotWidth),
+        typeof(double),
+        typeof(StepIndicator),
+        24d,
+        propertyChanged: Rebuild);
+
+    public static readonly BindableProperty DotSpacingProperty = BindableProperty.Create(
+        nameof(DotSpacing),
+        typeof(double),
+        typeof(StepIndicator),
+        6d,
         propertyChanged: Rebuild);
 
     public static readonly BindableProperty CountFontSizeProperty = BindableProperty.Create(
@@ -90,6 +105,24 @@ public sealed class StepIndicator : ContentView
     {
         get => (Color)GetValue(UpcomingColorProperty);
         set => SetValue(UpcomingColorProperty, value);
+    }
+
+    public double DotSize
+    {
+        get => (double)GetValue(DotSizeProperty);
+        set => SetValue(DotSizeProperty, value);
+    }
+
+    public double CurrentDotWidth
+    {
+        get => (double)GetValue(CurrentDotWidthProperty);
+        set => SetValue(CurrentDotWidthProperty, value);
+    }
+
+    public double DotSpacing
+    {
+        get => (double)GetValue(DotSpacingProperty);
+        set => SetValue(DotSpacingProperty, value);
     }
 
     public double CountFontSize

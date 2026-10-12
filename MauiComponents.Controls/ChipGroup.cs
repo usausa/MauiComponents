@@ -14,8 +14,6 @@ public sealed class ChipGroup : ContentView
 
     private const double HeightPadding = 13;
 
-    private const double StrokeThickness = 1;
-
     //--------------------------------------------------------------------------------
     // Property
     //--------------------------------------------------------------------------------
@@ -94,6 +92,13 @@ public sealed class ChipGroup : ContentView
         typeof(ChipGroup),
         Colors.LightGray,
         propertyChanged: static (bindable, _, _) => ((ChipGroup)bindable).UpdateChips());
+
+    public static readonly BindableProperty ChipStrokeThicknessProperty = BindableProperty.Create(
+        nameof(ChipStrokeThickness),
+        typeof(double),
+        typeof(ChipGroup),
+        1d,
+        propertyChanged: static (bindable, _, _) => ((ChipGroup)bindable).CreateChips());
 
     public static readonly BindableProperty ChipTextColorProperty = BindableProperty.Create(
         nameof(ChipTextColor),
@@ -182,6 +187,12 @@ public sealed class ChipGroup : ContentView
         set => SetValue(ChipStrokeProperty, value);
     }
 
+    public double ChipStrokeThickness
+    {
+        get => (double)GetValue(ChipStrokeThicknessProperty);
+        set => SetValue(ChipStrokeThicknessProperty, value);
+    }
+
     public Color ChipTextColor
     {
         get => (Color)GetValue(ChipTextColorProperty);
@@ -263,7 +274,7 @@ public sealed class ChipGroup : ContentView
             Margin = ChipPadding,
             Padding = 0,
             HeightRequest = (ChipTextSize * TextHeightRate) + HeightPadding,
-            StrokeThickness = StrokeThickness,
+            StrokeThickness = ChipStrokeThickness,
             StrokeShape = new RoundRectangle { CornerRadius = ChipCornerRadius },
             Content = label
         };

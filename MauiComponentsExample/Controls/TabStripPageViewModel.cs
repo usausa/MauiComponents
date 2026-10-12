@@ -36,6 +36,9 @@ public sealed partial class TabStripPageViewModel : ExtendViewModelBase
     [ObservableProperty]
     public partial double IndicatorInset { get; set; } = 12;
 
+    [ObservableProperty]
+    public partial double Duration { get; set; } = 250;
+
     public ICommand SwipeCompletedCommand { get; }
 
     public ICommand PreviousCommand { get; }

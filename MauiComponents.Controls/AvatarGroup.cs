@@ -9,8 +9,6 @@ using Microsoft.Maui.Controls.Shapes;
 
 public sealed class AvatarGroup : ContentView
 {
-    private const double StrokeThickness = 2d;
-
     private static readonly CompositeFormat CountFormat = CompositeFormat.Parse("+{0}");
 
     //--------------------------------------------------------------------------------
@@ -68,6 +66,13 @@ public sealed class AvatarGroup : ContentView
         typeof(Color),
         typeof(AvatarGroup),
         Colors.White,
+        propertyChanged: Rebuild);
+
+    public static readonly BindableProperty StrokeThicknessProperty = BindableProperty.Create(
+        nameof(StrokeThickness),
+        typeof(double),
+        typeof(AvatarGroup),
+        2d,
         propertyChanged: Rebuild);
 
     public static readonly BindableProperty CountBackgroundColorProperty = BindableProperty.Create(
@@ -131,6 +136,12 @@ public sealed class AvatarGroup : ContentView
     {
         get => (Color)GetValue(StrokeColorProperty);
         set => SetValue(StrokeColorProperty, value);
+    }
+
+    public double StrokeThickness
+    {
+        get => (double)GetValue(StrokeThicknessProperty);
+        set => SetValue(StrokeThicknessProperty, value);
     }
 
     public Color CountBackgroundColor

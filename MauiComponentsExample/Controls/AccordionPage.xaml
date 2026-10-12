@@ -16,6 +16,8 @@
                 <Setter Property="Icon" Value="{Binding Icon}" />
                 <Setter Property="IconColor" Value="{Binding IconColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#49454F}" />
                 <Setter Property="LineColor" Value="{Binding LineColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#CAC4D0}" />
+                <Setter Property="LineThickness" Value="{Binding LineThickness}" />
+                <Setter Property="Duration" Value="{Binding Duration}" />
             </Style>
 
             <Style x:Key="HeaderLabel"
@@ -147,6 +149,13 @@
                         IsToggled="{Binding IsShippingExpanded}" />
             </Grid>
 
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding Duration, StringFormat='Duration {0:F0}'}" />
+                <Slider Value="{Binding Duration}"
+                        Minimum="0" Maximum="1000" />
+            </VerticalStackLayout>
+
             <Grid Style="{StaticResource OptionGrid}"
                   ColumnDefinitions="*,*">
                 <Label Grid.Column="0"
@@ -176,6 +185,13 @@
                         ItemsSource="{x:Static local:SampleColors.Names}"
                         SelectedIndex="{Binding LineColorIndex}" />
             </Grid>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding LineThickness, StringFormat='LineThickness {0:F1}'}" />
+                <Slider Value="{Binding LineThickness}"
+                        Minimum="0.5" Maximum="4" />
+            </VerticalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>

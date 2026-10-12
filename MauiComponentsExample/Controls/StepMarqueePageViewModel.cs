@@ -18,6 +18,15 @@ public sealed partial class StepMarqueePageViewModel : ExtendViewModelBase
     public partial bool IsCountVisible { get; set; } = true;
 
     [ObservableProperty]
+    public partial double DotSize { get; set; } = 10;
+
+    [ObservableProperty]
+    public partial double CurrentDotWidth { get; set; } = 24;
+
+    [ObservableProperty]
+    public partial double DotSpacing { get; set; } = 6;
+
+    [ObservableProperty]
     public partial int AccentColorIndex { get; set; }
 
     [ObservableProperty]

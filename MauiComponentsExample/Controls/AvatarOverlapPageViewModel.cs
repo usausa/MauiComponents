@@ -44,6 +44,9 @@ public sealed partial class AvatarOverlapPageViewModel : ExtendViewModelBase
     public partial int StrokeColorIndex { get; set; }
 
     [ObservableProperty]
+    public partial double StrokeThickness { get; set; } = 2;
+
+    [ObservableProperty]
     public partial double OffsetX { get; set; } = 32;
 
     [ObservableProperty]

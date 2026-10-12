@@ -24,5 +24,11 @@ public sealed partial class AccordionPageViewModel : ExtendViewModelBase
     public partial int LineColorIndex { get; set; }
 
     [ObservableProperty]
+    public partial double LineThickness { get; set; } = 0.5;
+
+    [ObservableProperty]
     public partial bool IsShippingExpanded { get; set; } = true;
+
+    [ObservableProperty]
+    public partial double Duration { get; set; } = 250;
 }

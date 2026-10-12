@@ -9,11 +9,7 @@ public sealed class SegmentedView : ContentView
 {
     private const string AnimationName = "SegmentedViewSelection";
 
-    private const uint Duration = 250;
-
     private const uint AnimationRate = 16;
-
-    private const double StrokeThickness = 1;
 
     //--------------------------------------------------------------------------------
     // Member
@@ -104,12 +100,25 @@ public sealed class SegmentedView : ContentView
         Color.FromArgb("#79747E"),
         propertyChanged: static (bindable, _, _) => ((SegmentedView)bindable).CreateSegments());
 
+    public static readonly BindableProperty StrokeThicknessProperty = BindableProperty.Create(
+        nameof(StrokeThickness),
+        typeof(double),
+        typeof(SegmentedView),
+        1d,
+        propertyChanged: static (bindable, _, _) => ((SegmentedView)bindable).CreateSegments());
+
     public static readonly BindableProperty CornerRadiusProperty = BindableProperty.Create(
         nameof(CornerRadius),
         typeof(double),
         typeof(SegmentedView),
         20d,
         propertyChanged: static (bindable, _, newValue) => ((SegmentedView)bindable).border.StrokeShape = new RoundRectangle { CornerRadius = (double)newValue });
+
+    public static readonly BindableProperty DurationProperty = BindableProperty.Create(
+        nameof(Duration),
+        typeof(uint),
+        typeof(SegmentedView),
+        250u);
 
     public IEnumerable? ItemsSource
     {
@@ -171,10 +180,22 @@ public sealed class SegmentedView : ContentView
         set => SetValue(StrokeProperty, value);
     }
 
+    public double StrokeThickness
+    {
+        get => (double)GetValue(StrokeThicknessProperty);
+        set => SetValue(StrokeThicknessProperty, value);
+    }
+
     public double CornerRadius
     {
         get => (double)GetValue(CornerRadiusProperty);
         set => SetValue(CornerRadiusProperty, value);
+    }
+
+    public uint Duration
+    {
+        get => (uint)GetValue(DurationProperty);
+        set => SetValue(DurationProperty, value);
     }
 
     public ICommand SelectCommand { get; }
@@ -219,6 +240,7 @@ public sealed class SegmentedView : ContentView
         grid.ColumnDefinitions.Clear();
         labels.Clear();
         border.Stroke = Stroke;
+        border.StrokeThickness = StrokeThickness;
 
         items = ItemsSource?.Cast<object?>().ToList() ?? [];
         selection.WidthRequest = SegmentWidth;
@@ -288,7 +310,7 @@ public sealed class SegmentedView : ContentView
     private void MoveSelection(int index, bool animated)
     {
         selection.AbortAnimation(AnimationName);
-        if (animated && (labels.Count > 0))
+        if (animated && (Duration > 0) && (labels.Count > 0))
         {
             var start = position;
             selection.Animate(AnimationName, v => SetPosition(start + ((index - start) * v)), AnimationRate, Duration, Easing.CubicOut);

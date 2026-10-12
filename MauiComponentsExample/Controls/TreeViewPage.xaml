@@ -18,7 +18,10 @@
                                    CollapsedIcon="{Binding CollapsedIcon}"
                                    ExpandedIcon="{Binding ExpandedIcon}"
                                    IconColor="{Binding IconColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#616161}"
+                                   IconSpacing="{Binding IconSpacing}"
                                    IndentSize="{Binding IndentSize}"
+                                   RowPadding="{Binding RowPadding}"
+                                   RowSpacing="{Binding RowSpacing}"
                                    SelectedBackground="{Binding SelectedBackgroundIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#BBDEFB}"
                                    SelectedNode="{Binding SelectedNode}" />
             </Border>
@@ -38,6 +41,34 @@
                        Text="{Binding IndentSize, StringFormat='IndentSize {0:F0}'}" />
                 <Slider Value="{Binding IndentSize}"
                         Minimum="0" Maximum="40" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding RowSpacing, StringFormat='RowSpacing {0:F0}'}" />
+                <Slider Value="{Binding RowSpacing}"
+                        Minimum="0" Maximum="16" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding RowPaddingHorizontal, StringFormat='RowPadding horizontal {0:F0}'}" />
+                <Slider Value="{Binding RowPaddingHorizontal}"
+                        Minimum="0" Maximum="16" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding RowPaddingVertical, StringFormat='RowPadding vertical {0:F0}'}" />
+                <Slider Value="{Binding RowPaddingVertical}"
+                        Minimum="0" Maximum="16" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding IconSpacing, StringFormat='IconSpacing {0:F0}'}" />
+                <Slider Value="{Binding IconSpacing}"
+                        Minimum="0" Maximum="16" />
             </VerticalStackLayout>
 
             <Grid Style="{StaticResource OptionGrid}"

@@ -25,6 +25,9 @@ public sealed partial class BottomSheetPageViewModel : ExtendViewModelBase
     public partial double BackdropOpacity { get; set; } = 0.4;
 
     [ObservableProperty]
+    public partial double Duration { get; set; } = 250;
+
+    [ObservableProperty]
     public partial int SheetBackgroundColorIndex { get; set; }
 
     [ObservableProperty]

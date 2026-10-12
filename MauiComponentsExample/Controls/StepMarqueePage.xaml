@@ -18,7 +18,10 @@
             <Border Style="{StaticResource SampleBorder}"
                     Padding="16,28">
                 <controls:StepIndicator AccentColor="{Binding AccentColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#2196F3}"
+                                        CurrentDotWidth="{Binding CurrentDotWidth}"
                                         CurrentStep="{Binding CurrentStep}"
+                                        DotSize="{Binding DotSize}"
+                                        DotSpacing="{Binding DotSpacing}"
                                         IsCountVisible="{Binding IsCountVisible}"
                                         TotalSteps="{Binding TotalSteps}"
                                         UpcomingColor="{Binding UpcomingColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#E0E0E0}" />
@@ -52,6 +55,27 @@
                 <Switch Grid.Column="1"
                         IsToggled="{Binding IsCountVisible}" />
             </Grid>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding DotSize, StringFormat='DotSize {0:F0}'}" />
+                <Slider Value="{Binding DotSize}"
+                        Minimum="4" Maximum="24" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding CurrentDotWidth, StringFormat='CurrentDotWidth {0:F0}'}" />
+                <Slider Value="{Binding CurrentDotWidth}"
+                        Minimum="4" Maximum="48" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding DotSpacing, StringFormat='DotSpacing {0:F0}'}" />
+                <Slider Value="{Binding DotSpacing}"
+                        Minimum="0" Maximum="16" />
+            </VerticalStackLayout>
 
             <Grid Style="{StaticResource OptionGrid}"
                   ColumnDefinitions="*,*">

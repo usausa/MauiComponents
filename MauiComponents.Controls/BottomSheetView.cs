@@ -6,8 +6,6 @@ public sealed class BottomSheetView : Grid
 {
     private const string AnimationName = "SheetMove";
 
-    private const uint Duration = 250;
-
     private const uint AnimationRate = 16;
 
     private const uint MinFlingDuration = 80;
@@ -129,6 +127,12 @@ public sealed class BottomSheetView : Grid
         typeof(BottomSheetView),
         0.4d);
 
+    public static readonly BindableProperty DurationProperty = BindableProperty.Create(
+        nameof(Duration),
+        typeof(uint),
+        typeof(BottomSheetView),
+        250u);
+
     public bool IsOpen
     {
         get => (bool)GetValue(IsOpenProperty);
@@ -181,6 +185,12 @@ public sealed class BottomSheetView : Grid
     {
         get => (double)GetValue(BackdropOpacityProperty);
         set => SetValue(BackdropOpacityProperty, value);
+    }
+
+    public uint Duration
+    {
+        get => (uint)GetValue(DurationProperty);
+        set => SetValue(DurationProperty, value);
     }
 
     private double SheetHeight { get; set; }
@@ -310,37 +320,56 @@ public sealed class BottomSheetView : Grid
             var fling = closeDuration is not null;
             var duration = closeDuration ?? Duration;
             closeDuration = null;
-            sheet.Animate(
-                AnimationName,
-                v =>
-                {
-                    sheet.TranslationY = start + ((end - start) * v);
-                    backdrop.Opacity = startOpacity * (1 - v);
-                },
-                AnimationRate,
-                duration,
-                fling ? Easing.SinOut : Easing.CubicIn,
-                (_, _) => IsVisible = IsOpen);
+            if (duration > 0)
+            {
+                sheet.Animate(
+                    AnimationName,
+                    v =>
+                    {
+                        sheet.TranslationY = start + ((end - start) * v);
+                        backdrop.Opacity = startOpacity * (1 - v);
+                    },
+                    AnimationRate,
+                    duration,
+                    fling ? Easing.SinOut : Easing.CubicIn,
+                    (_, _) => IsVisible = IsOpen);
+            }
+            else
+            {
+                sheet.TranslationY = end;
+                backdrop.Opacity = 0;
+                IsVisible = IsOpen;
+            }
         }
     }
 
-    private void MoveTo(double y, uint duration = Duration, Easing? easing = null)
+    private void MoveTo(double y) => MoveTo(y, Duration, null);
+
+    private void MoveTo(double y, uint duration, Easing? easing)
     {
         expanded = y < HalfY;
         sheet.AbortAnimation(AnimationName);
         var start = sheet.TranslationY;
         var startOpacity = backdrop.Opacity;
         var endOpacity = BackdropOpacity * (1 - (y / SheetHeight));
-        sheet.Animate(
-            AnimationName,
-            v =>
-            {
-                sheet.TranslationY = start + ((y - start) * v);
-                backdrop.Opacity = startOpacity + ((endOpacity - startOpacity) * v);
-            },
-            AnimationRate,
-            duration,
-            easing ?? Easing.CubicOut);
+        if (duration > 0)
+        {
+            sheet.Animate(
+                AnimationName,
+                v =>
+                {
+                    sheet.TranslationY = start + ((y - start) * v);
+                    backdrop.Opacity = startOpacity + ((endOpacity - startOpacity) * v);
+                },
+                AnimationRate,
+                duration,
+                easing ?? Easing.CubicOut);
+        }
+        else
+        {
+            sheet.TranslationY = y;
+            backdrop.Opacity = endOpacity;
+        }
     }
 
     //--------------------------------------------------------------------------------
@@ -411,11 +440,11 @@ public sealed class BottomSheetView : Grid
         {
             if (y < HalfY - SwipeDistance)
             {
-                MoveTo(HalfY, FlingDuration(HalfY - y, velocity), Easing.SinOut);
+                MoveTo(HalfY, FlingDuration(HalfY - y, velocity, Duration), Easing.SinOut);
             }
             else
             {
-                closeDuration = FlingDuration(SheetHeight - y, velocity);
+                closeDuration = FlingDuration(SheetHeight - y, velocity, Duration);
                 IsOpen = false;
             }
 
@@ -425,7 +454,7 @@ public sealed class BottomSheetView : Grid
         if ((velocity <= -SwipeVelocity) || ((velocity <= 0) && (panDirection < 0) && (panTotal <= -SwipeDistance)))
         {
             var target = y > HalfY + SwipeDistance ? HalfY : 0;
-            MoveTo(target, FlingDuration(y - target, -velocity), Easing.SinOut);
+            MoveTo(target, FlingDuration(y - target, -velocity, Duration), Easing.SinOut);
             return;
         }
 
@@ -438,6 +467,6 @@ public sealed class BottomSheetView : Grid
         MoveTo(y < HalfY / 2 ? 0 : HalfY);
     }
 
-    private static uint FlingDuration(double distance, double velocity) =>
-        velocity > 0 ? (uint)Math.Clamp(FlingSlope * distance / velocity, MinFlingDuration, MaxFlingDuration) : Duration;
+    private static uint FlingDuration(double distance, double velocity, uint duration) =>
+        velocity > 0 ? (uint)Math.Clamp(FlingSlope * distance / velocity, MinFlingDuration, MaxFlingDuration) : duration;
 }

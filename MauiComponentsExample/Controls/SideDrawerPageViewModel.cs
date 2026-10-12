@@ -21,6 +21,9 @@ public sealed partial class SideDrawerPageViewModel : ExtendViewModelBase
     public partial double DrawerWidth { get; set; } = 280;
 
     [ObservableProperty]
+    public partial double Duration { get; set; } = 150;
+
+    [ObservableProperty]
     public partial double EdgeWidth { get; set; } = 24;
 
     [ObservableProperty]

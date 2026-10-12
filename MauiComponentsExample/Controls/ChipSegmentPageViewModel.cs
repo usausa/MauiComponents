@@ -44,6 +44,9 @@ public sealed partial class ChipSegmentPageViewModel : ExtendViewModelBase
     public partial double ChipCornerRadius { get; set; } = 18;
 
     [ObservableProperty]
+    public partial double ChipStrokeThickness { get; set; } = 1;
+
+    [ObservableProperty]
     public partial double Spacing { get; set; } = 8;
 
     [ObservableProperty]
@@ -62,7 +65,13 @@ public sealed partial class ChipSegmentPageViewModel : ExtendViewModelBase
     public partial double SegmentCornerRadius { get; set; } = 20;
 
     [ObservableProperty]
+    public partial double SegmentStrokeThickness { get; set; } = 1;
+
+    [ObservableProperty]
     public partial double SegmentFontSize { get; set; } = 16;
+
+    [ObservableProperty]
+    public partial double SegmentDuration { get; set; } = 250;
 
     [ObservableProperty]
     public partial int SelectedBackgroundIndex { get; set; }

@@ -57,6 +57,13 @@
                             Minimum="0" Maximum="1" />
                 </VerticalStackLayout>
 
+                <VerticalStackLayout Style="{StaticResource OptionStack}">
+                    <Label Style="{StaticResource OptionLabel}"
+                           Text="{Binding Duration, StringFormat='Duration {0:F0}'}" />
+                    <Slider Value="{Binding Duration}"
+                            Minimum="0" Maximum="1000" />
+                </VerticalStackLayout>
+
                 <Grid Style="{StaticResource OptionGrid}"
                       ColumnDefinitions="*,Auto">
                     <Label Grid.Column="0"
@@ -90,7 +97,8 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <controls:BottomSheetView BackdropOpacity="{Binding BackdropOpacity}"
+        <controls:BottomSheetView Duration="{Binding Duration}"
+                                  BackdropOpacity="{Binding BackdropOpacity}"
                                   CornerRadius="{Binding CornerRadius}"
                                   ExpandedRatio="{Binding ExpandedRatio}"
                                   GrabberColor="{Binding GrabberColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#BDBDBD}"

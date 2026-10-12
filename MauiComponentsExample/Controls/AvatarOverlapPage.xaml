@@ -65,13 +65,15 @@
                                           MaxDisplayed="{Binding MaxDisplayed}"
                                           Overlap="{Binding Overlap}"
                                           ShowCount="{Binding ShowCount}"
-                                          StrokeColor="{Binding StrokeColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#FFFFFF}" />
+                                          StrokeColor="{Binding StrokeColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#FFFFFF}"
+                                          StrokeThickness="{Binding StrokeThickness}" />
                     <controls:AvatarGroup ItemsSource="{Binding People}"
                                           AvatarSize="48"
                                           MaxDisplayed="{Binding MaxDisplayed}"
                                           Overlap="{Binding Overlap}"
                                           ShowCount="{Binding ShowCount}"
-                                          StrokeColor="{Binding StrokeColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#FFFFFF}">
+                                          StrokeColor="{Binding StrokeColorIndex, Converter={StaticResource ColorIndexConverter}, ConverterParameter=#FFFFFF}"
+                                          StrokeThickness="{Binding StrokeThickness}">
                         <controls:AvatarGroup.ItemTemplate>
                             <DataTemplate x:DataType="local:SamplePerson">
                                 <Border Style="{StaticResource InitialBorder}"
@@ -137,6 +139,13 @@
                         ItemsSource="{x:Static local:SampleColors.Names}"
                         SelectedIndex="{Binding StrokeColorIndex}" />
             </Grid>
+
+            <VerticalStackLayout Style="{StaticResource OptionStack}">
+                <Label Style="{StaticResource OptionLabel}"
+                       Text="{Binding StrokeThickness, StringFormat='StrokeThickness {0:F1}'}" />
+                <Slider Value="{Binding StrokeThickness}"
+                        Minimum="0" Maximum="6" />
+            </VerticalStackLayout>
 
             <Label Style="{StaticResource SectionLabel}"
                    Text="OverlapPanel" />
