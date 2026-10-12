@@ -12,7 +12,9 @@ using MauiComponents;
 
 using MauiComponentsExample.Dialogs;
 
+#if DEBUG
 using Microsoft.Extensions.Logging;
+#endif
 
 using Smart.Maui;
 
