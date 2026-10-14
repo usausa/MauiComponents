@@ -52,7 +52,7 @@
   <Import Project="..\MauiComponents.targets" />
 
   <ItemGroup>
-    <PackageReference Include="BunnyTail.DependencyInjection" Version="0.8.0" />
+    <PackageReference Include="BunnyTail.DependencyInjection" Version="0.9.0" />
     <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.110" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.12" />
     <PackageReference Include="Usa.Smart.Core" Version="2.20.0" />
