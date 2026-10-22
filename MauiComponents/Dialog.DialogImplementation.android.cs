@@ -81,6 +81,7 @@ public sealed partial class DialogImplementation
 #pragma warning restore CA2000
         builder
             .SetView(layout)!
+            .SetOnKeyListener(IndicatorKeyListener.Instance)!
             .SetCancelable(false);
 
 #pragma warning disable CA2000
@@ -125,6 +126,13 @@ public sealed partial class DialogImplementation
         }
 
         public void Dispose() => alertDialog.Dismiss();
+    }
+
+    private sealed class IndicatorKeyListener : Java.Lang.Object, IDialogInterfaceOnKeyListener
+    {
+        public static IndicatorKeyListener Instance { get; } = new();
+
+        public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e) => keyCode == Keycode.Escape;
     }
 
     private sealed class InformationDialog : Java.Lang.Object, IDialogInterfaceOnKeyListener
@@ -180,14 +188,18 @@ public sealed partial class DialogImplementation
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e is not null) && (e.Action == KeyEventActions.Up) && config.DismissKeys.Contains(e.KeyCode))
+            if ((e is null) || !config.DismissKeys.Contains(e.KeyCode))
+            {
+                return false;
+            }
+
+            if (e.Action == KeyEventActions.Up)
             {
                 alertDialog.Dismiss();
                 result.TrySetResult();
-                return true;
             }
 
-            return false;
+            return true;
         }
     }
 
@@ -245,14 +257,18 @@ public sealed partial class DialogImplementation
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e is not null) && (e.Action == KeyEventActions.Up) && config.DismissKeys.Contains(e.KeyCode))
+            if ((e is null) || !config.DismissKeys.Contains(e.KeyCode))
+            {
+                return false;
+            }
+
+            if (e.Action == KeyEventActions.Up)
             {
                 alertDialog.Dismiss();
                 result.TrySetResult(false);
-                return true;
             }
 
-            return false;
+            return true;
         }
     }
 
@@ -311,14 +327,18 @@ public sealed partial class DialogImplementation
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e is not null) && (e.Action == KeyEventActions.Up) && config.DismissKeys.Contains(e.KeyCode))
+            if ((e is null) || !config.DismissKeys.Contains(e.KeyCode))
+            {
+                return false;
+            }
+
+            if (e.Action == KeyEventActions.Up)
             {
                 alertDialog.Dismiss();
                 result.TrySetResult(Confirm3Result.Negative);
-                return true;
             }
 
-            return false;
+            return true;
         }
     }
 
@@ -375,14 +395,18 @@ public sealed partial class DialogImplementation
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e is not null) && (e.Action == KeyEventActions.Up) && config.DismissKeys.Contains(e.KeyCode))
+            if ((e is null) || !config.DismissKeys.Contains(e.KeyCode))
+            {
+                return false;
+            }
+
+            if (e.Action == KeyEventActions.Up)
             {
                 alertDialog.Dismiss();
                 result.TrySetResult(-1);
-                return true;
             }
 
-            return false;
+            return true;
         }
     }
 
@@ -414,11 +438,14 @@ public sealed partial class DialogImplementation
 
         public Task<PromptResult> ShowAsync(string? defaultValue, string? message, string? title, string ok, string cancel, string? placeHolder, PromptParameter parameter)
         {
+            var suppressSoftInput = config.SuppressPromptSoftInput?.Invoke() ?? false;
+
 #pragma warning disable CA2000
             var input = new EditText(activity)
             {
                 Hint = placeHolder,
-                Text = defaultValue
+                Text = defaultValue,
+                ShowSoftInputOnFocus = !suppressSoftInput
             };
 #pragma warning restore CA2000
 
@@ -472,7 +499,7 @@ public sealed partial class DialogImplementation
                 .Create();
 #pragma warning restore CA2000
 
-            alertDialog.Window!.SetSoftInputMode(SoftInput.StateVisible);
+            alertDialog.Window!.SetSoftInputMode(suppressSoftInput ? SoftInput.StateHidden : SoftInput.StateVisible);
 
             alertDialog.Show();
 
@@ -483,14 +510,18 @@ public sealed partial class DialogImplementation
 
         public bool OnKey(IDialogInterface? dialog, Keycode keyCode, KeyEvent? e)
         {
-            if ((e is not null) && (e.Action == KeyEventActions.Up) && config.DismissKeys.Contains(e.KeyCode) && !config.IgnorePromptDismissKeys.Contains(e.KeyCode))
+            if ((e is null) || !config.DismissKeys.Contains(e.KeyCode) || config.IgnorePromptDismissKeys.Contains(e.KeyCode))
+            {
+                return false;
+            }
+
+            if (e.Action == KeyEventActions.Up)
             {
                 alertDialog.Dismiss();
                 result.TrySetResult(PromptResult.Cancel);
-                return true;
             }
 
-            return false;
+            return true;
         }
 
         public bool OnEditorAction(TextView? v, ImeAction actionId, KeyEvent? e)

@@ -59,6 +59,8 @@ public sealed class DialogConfig
     public Keycode[] DismissKeys { get; set; } = [];
 
     public Keycode[] IgnorePromptDismissKeys { get; set; } = [];
+
+    public Func<bool>? SuppressPromptSoftInput { get; set; }
 #pragma warning restore CA1819
 #endif
 }
