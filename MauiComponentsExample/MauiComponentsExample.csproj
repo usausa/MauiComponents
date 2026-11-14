@@ -56,8 +56,8 @@
     <PackageReference Include="Microsoft.Maui.Controls" Version="10.0.130" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.13" />
     <PackageReference Include="Usa.Smart.Core" Version="2.22.0" />
-    <PackageReference Include="Usa.Smart.Maui" Version="2.33.0" />
-    <PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.33.0" />
+    <PackageReference Include="Usa.Smart.Maui" Version="2.35.0" />
+    <PackageReference Include="Usa.Smart.Maui.Extensions" Version="2.35.0" />
   </ItemGroup>
 
 </Project>
