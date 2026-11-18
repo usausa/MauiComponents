@@ -6,7 +6,6 @@
     <RootNamespace>MauiComponentsExample</RootNamespace>
     <UseMaui>true</UseMaui>
     <SingleProject>true</SingleProject>
-    <CodeAnalysisRuleSet>..\Analyzers.ruleset</CodeAnalysisRuleSet>
 
     <!-- Display name -->
     <ApplicationTitle>MauiComponentsExample</ApplicationTitle>
