@@ -1,5 +1,7 @@
 namespace MauiComponents.Resolver;
 
+using System.Diagnostics.CodeAnalysis;
+
 using CommunityToolkit.Maui.Media;
 
 using Smart.Resolver;
@@ -57,7 +59,7 @@ public static class ResolverConfigExtensions
         return config;
     }
 
-    public static ResolverConfig AddComponentsPopupPlugin<T>(this ResolverConfig config)
+    public static ResolverConfig AddComponentsPopupPlugin<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.NonPublicProperties)] T>(this ResolverConfig config)
         where T : class, IPopupPlugin
     {
         config.BindSingleton<IPopupPlugin, T>();
